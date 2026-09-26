@@ -22,12 +22,15 @@ $managedEnvironment = @{
     HINDSIGHT_API_LLM_PROVIDER = 'gemini'
     HINDSIGHT_API_LLM_MODEL = 'gemini-3.5-flash'
     HINDSIGHT_API_LLM_API_KEY = $env:GEMINI_API_KEY
-    HINDSIGHT_API_LLM_MAX_RETRIES = '2'
+    HINDSIGHT_API_LLM_MAX_RETRIES = '1'
+    HINDSIGHT_API_LLM_INITIAL_BACKOFF = '2'
+    HINDSIGHT_API_LLM_MAX_BACKOFF = '5'
     HINDSIGHT_API_REFLECT_LLM_TIMEOUT = '120'
     HINDSIGHT_API_LLM_DEBUG_DUMP_4XX = 'false'
     HINDSIGHT_API_EMBEDDINGS_PROVIDER = 'local'
     HINDSIGHT_API_RERANKER_PROVIDER = 'local'
     HINDSIGHT_API_WORKER_ENABLED = 'true'
+    PYTHONPATH = if ([string]::IsNullOrWhiteSpace($env:PYTHONPATH)) { $PSScriptRoot } else { "$PSScriptRoot$([IO.Path]::PathSeparator)$env:PYTHONPATH" }
     PYTHONUTF8 = '1'
 }
 $previousEnvironment = @{}

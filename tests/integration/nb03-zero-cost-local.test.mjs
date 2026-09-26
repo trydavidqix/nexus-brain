@@ -14,8 +14,12 @@ test('local runtime is pinned, local-only, and has no automatic paid fallback', 
   assert.match(start, /HINDSIGHT_API_DATABASE_URL = 'pg0:\/\/nexus-dev'/);
   assert.match(start, /HINDSIGHT_API_LLM_PROVIDER = 'gemini'/);
   assert.match(start, /HINDSIGHT_API_LLM_MODEL = 'gemini-3\.5-flash'/);
-  assert.match(start, /HINDSIGHT_API_LLM_MAX_RETRIES = '2'/);
+  assert.match(start, /HINDSIGHT_API_LLM_MAX_RETRIES = '1'/);
+  assert.match(start, /HINDSIGHT_API_LLM_INITIAL_BACKOFF = '2'/);
+  assert.match(start, /HINDSIGHT_API_LLM_MAX_BACKOFF = '5'/);
   assert.match(start, /HINDSIGHT_API_REFLECT_LLM_TIMEOUT = '120'/);
+  assert.match(start, /PYTHONPATH = .*PSScriptRoot/);
+  assert.match(read('sitecustomize.py'), /gemini_quota_guard/);
   assert.match(start, /HINDSIGHT_API_LLM_DEBUG_DUMP_4XX = 'false'/);
   assert.match(start, /HINDSIGHT_API_EMBEDDINGS_PROVIDER = 'local'/);
   assert.match(start, /HINDSIGHT_API_RERANKER_PROVIDER = 'local'/);
@@ -23,6 +27,18 @@ test('local runtime is pinned, local-only, and has no automatic paid fallback', 
   assert.match(start, /AllowNonSensitiveGeminiData/);
   assert.doesNotMatch(start, /HINDSIGHT_API_LLM_STRATEGY|HINDSIGHT_API_LLM_1_PROVIDER|vertexai|cloud run|cloud sql/i);
   assert.doesNotMatch(start, /sk-[A-Za-z0-9]{12,}|AIza[A-Za-z0-9_-]{30,}/);
+});
+
+test('daily Gemini Free Tier quota guard is persistent, fail-closed, and distinguishes daily from transient errors', () => {
+  const guard = read('gemini_quota_guard.py');
+  const guardTests = read('tests/test_gemini_quota_guard.py');
+
+  assert.match(guard, /GenerateRequestsPerDay/i);
+  assert.match(guard, /gemini-rpd-circuit\.json/);
+  assert.match(guard, /America\/Los_Angeles/);
+  assert.match(guard, /no provider request sent/);
+  assert.match(guardTests, /test_daily_quota_trips_persistent_breaker/);
+  assert.match(guardTests, /test_service_unavailable_does_not_trip_daily_breaker/);
 });
 
 test('local setup uses hash-locked dependencies and keeps its virtual environment untracked', () => {
