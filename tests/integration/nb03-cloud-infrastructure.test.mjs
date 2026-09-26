@@ -13,9 +13,12 @@ function readConfiguration() {
     .join('\n');
 }
 
-test('NB-03 config uses approved project, region, environment, and only approved APIs plus explicit billing API', () => {
+test('NB-03 cloud IaC remains a historical proposal with no active provisioning authorization', () => {
   const config = readConfiguration();
+  const referenceReadme = readFileSync('infra/cloud/tofu/README.md', 'utf8');
 
+  assert.match(referenceReadme, /Historical NB-03 cloud proposal — do not apply/);
+  assert.match(referenceReadme, /Do not link billing[\s\S]*run `tofu plan`\/`tofu apply`/);
   assert.match(config, /variable\s+"project_id"/);
   assert.match(config, /europe-west1/);
   assert.match(config, /prefix\s*=\s*"nexus-\$\{var\.environment\}"/);
@@ -63,7 +66,7 @@ test('NB-03 secrets have no checked-in values or Terraform-managed secret versio
   assert.doesNotMatch(config, /HINDSIGHT_API_LLM_API_KEY\s*=\s*"[^"$]/);
 });
 
-test('NB-03 applies only regional, non-HA Cloud SQL and least-privilege storage/IAM', () => {
+test('NB-03 historical cloud reference records the former resources without changing their files', () => {
   const config = readConfiguration();
 
   assert.match(config, /google_sql_database_instance/);

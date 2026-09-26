@@ -10,6 +10,8 @@ The single active implementation plan is
 Original source plans are preserved in `docs/blueprints/sources/` and historical
 project documentation remains archived. [`docs/STATUS.md`](docs/STATUS.md)
 tracks verified MCG component evidence; it is not a second project plan.
+The [documentation sync policy](docs/DOCUMENTATION_SYNC_POLICY.md) requires
+important project state to be committed and pushed on its corresponding branch.
 
 ## Runtime data
 

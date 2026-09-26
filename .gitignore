@@ -15,6 +15,9 @@ config/wire.json
 *.bak-*
 node_modules/
 **/node_modules/
+**/.venv/
+__pycache__/
+*.py[cod]
 .tools/
 **/.terraform/
 *.tfstate
