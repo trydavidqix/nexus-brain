@@ -12,17 +12,23 @@
     "./knowledge": "./src/knowledge/index.ts",
     "./maestri-memory": "./src/maestri-memory/index.ts",
     "./context-engine": "./src/context/context-engine.ts",
-    "./learning": "./src/learning/learning-os.ts"
+    "./learning": "./src/learning/learning-os.ts",
+    "./memory-engine": "./src/memory-engine.mjs",
+    "./local-memory": "./src/local-memory.mjs",
+    "./hindsight-adapter": "./src/hindsight-adapter.mjs",
+    "./postgres-memory-store": "./src/postgres-memory-store.mjs"
   },
   "scripts": {
     "test:unit": "node --test tests/*.test.mjs && vitest run tests/context-engine.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/pg": "8.23.1",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@nexus-brain/contracts": "workspace:*"
+    "@nexus-brain/contracts": "workspace:*",
+    "pg": "8.23.0"
   }
 }

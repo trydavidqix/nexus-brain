@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nexus.memory-sighting.v1",
+  "title": "Nexus Evidence Sighting",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sighting_id", "evidence_id", "project_id", "run_id", "observed_at", "source", "content_hash", "provenance"],
+  "properties": {
+    "sighting_id": { "type": "string", "minLength": 1 },
+    "evidence_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "string", "minLength": 1 },
+    "content_hash": { "type": "string", "minLength": 1 },
+    "provenance": { "type": "object" },
+    "metadata": { "type": "object" }
+  }
+}
