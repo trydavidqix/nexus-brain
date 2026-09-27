@@ -2,11 +2,11 @@
 
 This repository is the canonical home for Nexus Brain (`trydavidqix/nexus-brain`). Maestri Context Gateway (MCG), extracted from Lumenva on 2026-09-23, is one internal module. This repository contains its current source, contracts, configuration templates, registries, tests, evaluation datasets, and CI; other Nexus modules remain tracked in the active blueprint until transferred and verified.
 
-## Current authoritative snapshot — 2026-09-27
+## Current authoritative snapshot — 2026-09-28
 
-- Main: PR #73 merged as `12997f220dff5a5540411d1c7af5ae03de5fbbde`; local `main` synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource changed.
+- Main: PR #73 merged as `12997f220dff5a5540411d1c7af5ae03de5fbbde`; NB-03 follow-up evidence PR #80 merged as `1cbdf841bbe91e333280bf9c4c612f1255064116`; local `main` synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource changed.
 - NB-04 is merged and accepted. Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. Evidence: [`NB-04_PREPARATION.md`](engineering/NB-04_PREPARATION.md).
-- Migration Readiness NB-24–NB-29 is complete. PR #75 closes NB-19 G10 policy/evidence; NB-05 is next after PR #75 merges.
+- Migration Readiness NB-24–NB-29 is complete. PR #75 closes NB-19 G10 policy/evidence. NB-05 is in progress; trusted identity issuer/transport binding and server-enforced Reach budget source remain unresolved. Evidence: [`NB-05_API_MCP_PROGRESS.md`](engineering/NB-05_API_MCP_PROGRESS.md).
 - DEV remains zero-additional-cost and local-first. No PROD, paid cloud provisioning, billing changes, Gemini API key, or paid provider fallback is authorized.
 
 ## Historical migration snapshot — 2026-09-26

@@ -65,6 +65,9 @@ importers:
       '@modelcontextprotocol/server':
         specifier: 2.1.0
         version: 2.1.0
+      '@nexus-brain/brain':
+        specifier: workspace:*
+        version: link:../../packages/brain
       '@nexus-brain/context-gateway':
         specifier: workspace:*
         version: link:../../packages/context-gateway
