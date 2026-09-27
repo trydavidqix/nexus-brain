@@ -1,6 +1,6 @@
 # NB-19 G9: Safe Local Branch Retirement
 
-**Status:** Implementation under validation. No project branch or worktree was retired.
+**Status:** Implementation under validation. No user project work branch or worktree was retired.
 
 ## Workflow
 
@@ -22,13 +22,21 @@
 - `node tooling/scripts/scan-sensitive.mjs`: passed; 293 files scanned.
 - `actionlint` passed for all four workflow files.
 - `pnpm task:hygiene:retire -- --branch codex/nb19-g9-safe-retirement --recovery-clear` classified the active, checked-out task branch as `ACTIVE`, returned `eligible=false`, and performed 0 mutations.
-- No project branch or worktree was retired. The source branch is pushed; PR/CI integration is still pending.
+- No user project work branch or worktree was retired. The source branch is pushed; PR/CI integration is still pending.
 
 ## Latest local revalidation (2026-09-27)
 
 - `pnpm test:engineering-gates`: 43/43 passed, including all G8 ownership/inventory checks and four G9 retirement-proof tests.
 - `node --test tooling/tests/git-retirement.test.mjs`: 4/4 passed.
 - The read-only retirement plan again classified this active, checked-out branch as `ACTIVE`, `eligible=false`, and `mutations_performed=0`; the fail-closed CLI exited with its unsafe-plan status.
-- `pnpm report:engineering-gates`: `REPORT_ONLY`, `cleanup_enabled=false`, complete open-PR inventory (4 PRs), 0 orphan owner records, 0 equivalent tree groups, and 0 mutations.
+- `pnpm report:engineering-gates`: `REPORT_ONLY`, `cleanup_enabled=false`, complete open-PR inventory, 0 orphan owner records, 0 equivalent tree groups, and 0 mutations.
 - `actionlint` passed for all four workflow files.
 - The implementation has no PR CI or integration result yet. G9 remains under validation and is not `DONE`.
+
+## Synthetic empty-branch retirement proof (2026-09-27)
+
+- Created local branch `codex/nb19-g9-retirement-probe` from `origin/main`; it had zero commits ahead, a clean tree, no open PR, released task ownership, and was not checked out at apply time.
+- Dry run classified it `EMPTY`, `eligible=true`, with complete ownership/PR inventories and zero mutations.
+- Applied only the exact local branch retirement with `--confirm-branch codex/nb19-g9-retirement-probe --recovery-clear`; the result was `retired=true`, `scope=LOCAL_BRANCH_ONLY`, `mutations_performed=1`.
+- Verified the probe branch no longer exists and the existing worktrees were not removed or changed. The post-retirement report found six open PRs, zero empty branches, zero orphan owner records, zero equivalent tree groups, and zero mutations in report-only mode.
+- This exercises the cleanup path only on an empty synthetic branch. No user project branch or remote branch was retired.
