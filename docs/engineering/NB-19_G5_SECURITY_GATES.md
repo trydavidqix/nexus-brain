@@ -1,7 +1,7 @@
 # NB-19 G5: Security and Dependency Gates
 
 **Captured:** 2026-09-27  
-**Status:** Implementation merged and validated; closeout evidence pending integration.
+**Status:** COMPLETE.
 
 ## Repository security baseline
 
@@ -43,7 +43,8 @@
 
 - Implementation PR [#60](https://github.com/trydavidqix/nexus-brain/pull/60) merged on 2026-09-27.
 - PR head: `60351eb8c112e135940e3ade993d88eb6dcfebbc`; squash merge commit: `26c085fba80c9c56b1438dbda6e1e7728ba56bae`.
+- Evidence closeout PR [#63](https://github.com/trydavidqix/nexus-brain/pull/63) merged on 2026-09-27 at `29fdbb24199058ee60dd113b897c0ba38a39b1db`.
 - Required checks passed on the PR head: `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`.
 - Other configured PR checks also passed: JavaScript/TypeScript analysis, Semgrep, OSV-Scanner, and ZAP baseline.
 - Active ruleset ID `24075255` readback confirms those five required checks, strict up-to-date checks, `main`-only targeting, and zero bypass actors.
-- PR merge state was `CLEAN` before squash merge.
+- Both PRs had merge state `CLEAN` before squash merge.
