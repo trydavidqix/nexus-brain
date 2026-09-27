@@ -22,4 +22,13 @@
 - `node tooling/scripts/scan-sensitive.mjs`: passed; 293 files scanned.
 - `actionlint` passed for all four workflow files.
 - `pnpm task:hygiene:retire -- --branch codex/nb19-g9-safe-retirement --recovery-clear` classified the active, checked-out task branch as `ACTIVE`, returned `eligible=false`, and performed 0 mutations.
-- Project cleanup has not been applied. PR creation and integration remain subject to the existing instruction not to work on PR #72.
+- No project branch or worktree was retired. The source branch is pushed; PR/CI integration is still pending.
+
+## Latest local revalidation (2026-09-27)
+
+- `pnpm test:engineering-gates`: 43/43 passed, including all G8 ownership/inventory checks and four G9 retirement-proof tests.
+- `node --test tooling/tests/git-retirement.test.mjs`: 4/4 passed.
+- The read-only retirement plan again classified this active, checked-out branch as `ACTIVE`, `eligible=false`, and `mutations_performed=0`; the fail-closed CLI exited with its unsafe-plan status.
+- `pnpm report:engineering-gates`: `REPORT_ONLY`, `cleanup_enabled=false`, complete open-PR inventory (4 PRs), 0 orphan owner records, 0 equivalent tree groups, and 0 mutations.
+- `actionlint` passed for all four workflow files.
+- The implementation has no PR CI or integration result yet. G9 remains under validation and is not `DONE`.
