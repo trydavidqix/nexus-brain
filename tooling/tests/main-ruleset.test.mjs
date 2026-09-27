@@ -22,7 +22,12 @@ test('requires squash-only PRs, resolved conversations, and current CI/security 
 
   const statusChecks = rules.get('required_status_checks');
   assert.equal(statusChecks.strict_required_status_checks_policy, true);
-  assert.deepEqual(statusChecks.required_status_checks.map(({ context }) => context).sort(), ['CodeQL', 'mcg', 'tofu']);
+  assert.deepEqual(
+    statusChecks.required_status_checks
+      .map(({ context, integration_id }) => [context, integration_id])
+      .sort(([left], [right]) => left.localeCompare(right)),
+    [['CodeQL', 57789], ['mcg', 15368], ['tofu', 15368]]
+  );
 });
 
 test('blocks branch deletion, force push, and non-linear history', () => {
