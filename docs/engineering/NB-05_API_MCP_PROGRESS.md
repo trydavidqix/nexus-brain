@@ -1,7 +1,7 @@
 # NB-05 Brain API and MCP progress
 
-**Status:** IN_PROGRESS  
-**Branch:** `codex/nb05-brain-api-mcp-contract`  
+**Status:** IN_PROGRESS
+**Branch:** `codex/nb05-brain-api-mcp-contract`
 **Base:** `main` at `1cbdf841bbe91e333280bf9c4c612f1255064116`
 
 ## Implemented boundary
