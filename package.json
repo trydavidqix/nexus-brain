@@ -28,6 +28,7 @@
     "test": "pnpm test:integration",
     "test:integration": "node --test tests/integration/*.test.mjs",
     "check:architecture": "node tooling/scripts/check-package-architecture.mjs",
+    "test:git-naming": "node --test tooling/tests/git-naming.test.mjs",
     "check:syntax": "node tooling/scripts/check-syntax.mjs",
     "scan:sensitive": "node tooling/scripts/scan-sensitive.mjs",
     "smoke:dashboard": "node --test apps/control-center/tests/dashboard.test.mjs",
