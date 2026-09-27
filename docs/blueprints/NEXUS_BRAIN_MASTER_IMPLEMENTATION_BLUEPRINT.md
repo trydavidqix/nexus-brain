@@ -2031,6 +2031,8 @@ R9  custom multi-head Maestri Reflex candidate, only when data proves benefit
 R10 staged promotion/rollback with continued drift/regression monitoring
 ```
 
+**Implementation note (2026-09-27 Gmail assimilation):** this branch implements the R0 typed `MaestriDecisionInput`/`MaestriDecisionResult` contracts and the first policy-first deterministic `maestri.decide()` baseline in `packages/control-plane/src/decisions/maestri-decision.ts`. Hard denial/approval/R4 gates outrank confidence, exact deterministic routes execute without a model, and conflicting/unsupported/insufficient evidence explicitly abstains to fallback. R1 remains incomplete until the golden decision corpus and broader policy baseline are proven.
+
 **V1 does not require custom model training.** V1 establishes the contracts, deterministic baseline, local open-component path, calibration, abstention, evaluation and telemetry. A Nexus-trained Maestri Reflex becomes eligible only when the evidence dataset is large/clean enough and a candidate beats the baseline on the relevant acceptance metrics without weakening safety.
 
 ### Acceptance gates
