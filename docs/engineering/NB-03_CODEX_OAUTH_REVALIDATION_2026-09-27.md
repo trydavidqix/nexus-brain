@@ -21,3 +21,11 @@ The Hindsight LLM-request registry is the runtime evidence source. This file sto
 - The reflect response matched the synthetic marker `REFLECT_CODEX_PASS`; response text remains withheld.
 - The latest matching Hindsight LLM trace recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, `operation=reflect`, `scope=reflect`, at 2026-09-28 00:07:17 Europe/Lisbon.
 - No Gemini request, API key access, Google project change, billing change, or cloud resource action occurred.
+
+## Supplemental verification — 2026-09-28 00:41 Europe/Lisbon
+
+- `GET /health` returned HTTP 200.
+- One low-budget synthetic `POST /v1/default/banks/nb03-e2e-check/reflect` returned HTTP 200.
+- The Hindsight LLM-request registry recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, `operation=reflect`, `scope=reflect_tool_call`.
+- Response content was not printed or persisted. The literal prompt marker was not asserted as a response contract.
+- No Gemini request, API key access, Google project change, billing change, or cloud resource action occurred.
