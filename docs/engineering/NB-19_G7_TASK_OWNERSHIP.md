@@ -1,6 +1,6 @@
 # NB-19 G7: Task, Agent, Branch, and Worktree Ownership
 
-**Status:** Follow-up correction in progress. PR [#67](https://github.com/trydavidqix/nexus-brain/pull/67) added the registry, but its same-task multi-owner rule did not enforce Blueprint §7.5. This follow-up closes that gap before G7 is treated as canonically complete.
+**Status:** Complete on 2026-09-27. Registry implementation PR [#67](https://github.com/trydavidqix/nexus-brain/pull/67) merged as `2963f21f443c6c4f9c31f264796328fad6f7b1c8`; Blueprint-alignment correction PR [#69](https://github.com/trydavidqix/nexus-brain/pull/69) merged as `a9537f2d98a144e62168975eafa11d91d9cdaa94`.
 
 ## Registry behavior
 
@@ -40,4 +40,5 @@ The report continues to perform zero mutations. Ownership alone never proves pre
 - `pnpm check:syntax`: passed; 136 modules parsed.
 - `pnpm scan:sensitive`: passed; 287 files.
 - `actionlint` passed for all three workflow files.
-- The base G7 implementation and PR checks remain recorded in its merge commit; this correction still requires fresh GitHub checks before G7 closeout.
+- PR #67 head `cf4980b52dfffdb442d4d23880fbcf343a18d42b` passed required checks and merged; it was not deleted and no worktree was retired.
+- Correction PR #69 head `5a7fcc5df0d45989e67c77063bd39dd2f486eb17` passed MCG, Tofu, CodeQL, Analyze, Gitleaks, dependency review, OSV-Scanner, Semgrep, Jazzer.js, and ZAP, then merged as `a9537f2d98a144e62168975eafa11d91d9cdaa94`.
