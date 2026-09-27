@@ -1,6 +1,6 @@
 # NB-19 G10: Ownership and Merge-Queue Concurrency
 
-**Status:** In progress. Local ownership serialization and merge-group workflow support are implemented and validated. PR integration, the CodeQL setup transition, and a real merge-queue run remain outstanding; the live queue is not enabled yet.
+**Status:** In progress. Local ownership serialization, merge-group workflow support, and the CodeQL setup transition are validated. PR integration and a real merge-queue run remain outstanding; the live queue is not enabled yet.
 
 ## Observed concurrent delivery
 
@@ -21,7 +21,15 @@ The test starts two independent Node processes at the same time and proves both 
 - Gitleaks uses its pinned action for pull requests and a SHA-256-pinned official CLI archive for the queue commit range because the action does not emit a merge-group check.
 - Dependency Review receives the base and head SHA from the merge-group event.
 - The queue uses squash, matching the repository's only allowed merge method.
-- CodeQL advanced setup is checked in so the required `CodeQL` Actions status can run on merge-group commits. The repository currently uses managed default setup; the settings transition is deliberately deferred until this branch passes PR checks. Keep the queue disabled until advanced CodeQL is active and a real queued PR reports all required checks.
+- CodeQL advanced setup is checked in so the required `CodeQL` Actions status can run on merge-group commits. PR #74 confirmed that managed default setup rejects advanced uploads (`CodeQL analyses from advanced configurations cannot be processed when the default setup is enabled`). The repository setting is now `not-configured`, and the advanced workflow rerun passed. Keep the queue disabled until a real queued PR reports all required checks.
+
+### CodeQL and required-check transition
+
+- The first advanced CodeQL run on PR #74 failed with the managed-setup conflict above; the managed `Analyze (javascript-typescript)` scan itself passed.
+- The repository's default CodeQL setup was changed to `not-configured` using GitHub's repository configuration API. No Actions permissions or required check were removed.
+- Rerunning the advanced CodeQL workflow on PR #74 succeeded and uploaded results.
+- The active protected-main ruleset now binds `CodeQL` to the GitHub Actions integration (`15368`), preserving all five required contexts and all other rules.
+- On PR #74 head `f9d4e2e610922a2a6c8c47e18d88a9e15928f041`, `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review` all passed. The merge queue remains disabled pending merge-group proof.
 
 ## Local validation
 
@@ -32,15 +40,14 @@ The test starts two independent Node processes at the same time and proves both 
 - Workspace typechecks: passed across configured packages.
 - `pnpm check:architecture`: passed for 13 packages.
 - `node tooling/scripts/check-syntax.mjs`: 140 modules parsed.
-- `node tooling/scripts/scan-sensitive.mjs`: 294 files scanned.
+- `node tooling/scripts/scan-sensitive.mjs`: 295 files scanned.
 - `actionlint` passed for all five workflow files; `git diff --check` passed.
 
 ## Remaining acceptance evidence
 
 1. Integrate the tested workflow and lock changes through a pull request.
-2. Switch CodeQL from managed default setup to the committed advanced workflow without dropping the required check.
-3. Apply the versioned merge-queue policy to the active ruleset only after the CodeQL `CodeQL` status is verified from GitHub Actions.
-4. Queue an existing eligible PR and confirm all five required contexts (`mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`) succeed on its merge-group commit.
-5. Confirm the main ruleset readback matches `.github/rulesets/main.json` and the repository has no `BEHIND` merge condition caused by strict status checks.
+2. Apply the versioned merge-queue policy to the active ruleset.
+3. Queue an existing eligible PR and confirm all five required contexts (`mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`) succeed on its merge-group commit.
+4. Confirm the main ruleset readback matches `.github/rulesets/main.json` and the repository has no `BEHIND` merge condition caused by strict status checks.
 
 Until those steps pass, NB-19 remains `IN_PROGRESS`.
