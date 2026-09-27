@@ -13,6 +13,13 @@
 
 ## Validation
 
-- `tooling/scripts/git-retirement-core.mjs` requires every proof field to be present and boolean; missing evidence is `UNKNOWN`.
-- `tooling/tests/git-retirement.test.mjs` covers eligible empty/merged classes and fail-closed behavior for unavailable evidence, dirty/active/checked-out/open-PR/unmerged/recovery-protected branches, and missing preservation/redundancy proof.
+- `pnpm test:engineering-gates`: 43/43 passed, including four retirement-proof tests.
+- `pnpm -r --if-present test:unit`: passed across 13 configured workspace packages.
+- `pnpm test:integration`: 20/20 passed.
+- `pnpm -r --if-present typecheck`: passed across configured packages.
+- `pnpm check:architecture`: passed; 13 packages.
+- `node tooling/scripts/check-syntax.mjs`: passed; 140 modules parsed.
+- `node tooling/scripts/scan-sensitive.mjs`: passed; 293 files scanned.
+- `actionlint` passed for all four workflow files.
+- `pnpm task:hygiene:retire -- --branch codex/nb19-g9-safe-retirement --recovery-clear` classified the active, checked-out task branch as `ACTIVE`, returned `eligible=false`, and performed 0 mutations.
 - Project cleanup has not been applied. PR creation and integration remain subject to the existing instruction not to work on PR #72.
