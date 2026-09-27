@@ -28,7 +28,11 @@
       "import": "./src/workforce/workforce-scheduler.ts"
     },
     "./scheduler/dag": "./src/scheduler/dag.mjs",
-    "./scheduler": "./src/scheduler/scheduler.mjs"
+    "./scheduler": "./src/scheduler/scheduler.mjs",
+    "./decisions/maestri": {
+      "types": "./src/decisions/maestri-decision.ts",
+      "import": "./src/decisions/maestri-decision.ts"
+    }
   },
   "scripts": {
     "test:unit": "vitest run tests",
