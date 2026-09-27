@@ -50,4 +50,4 @@ node tooling/scripts/check-git-naming.mjs --branch "feature/NB-03-zero-cost-loca
 
 ## Enforcement boundary
 
-G1 provides the contract, executable validator, and regression tests. GitHub Actions and local hooks do not yet enforce the validator; G2 wires it into CI after workflow permission and supply-chain review. This local check is not a substitute for required GitHub checks.
+G1 provides the contract, executable validator, and regression tests. G2 runs the regression tests and validates PR titles and task branches in MCG CI, plus the first commit subject pushed to `main`. The check reports failures on the PR workflow, but it is not a server-enforced required status until the `main` ruleset is installed in G4. No local hook is required for correctness.
