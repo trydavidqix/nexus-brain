@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nexus.maestri-decision-result.v1",
+  "title": "Nexus Maestri Decision Result",
+  "type": "object",
+  "required": ["project_id", "task_id", "agent_id", "decision_id", "route", "risk", "priority", "retry_allowed", "needs_review", "needs_approval", "needs_ceo", "abstain", "confidence", "decision_source", "reason_codes", "evidence_refs"],
+  "properties": {
+    "project_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "agent_id": { "type": "string", "minLength": 1 },
+    "decision_id": { "type": "string", "minLength": 1 },
+    "route": { "type": "string", "minLength": 1 },
+    "risk": { "enum": ["R0", "R1", "R2", "R3", "R4"] },
+    "priority": { "type": "integer", "minimum": 0 },
+    "retry_allowed": { "type": "boolean" },
+    "needs_review": { "type": "boolean" },
+    "needs_approval": { "type": "boolean" },
+    "needs_ceo": { "type": "boolean" },
+    "escalation_target": { "type": "string", "minLength": 1 },
+    "abstain": { "type": "boolean" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "decision_source": { "enum": ["deterministic", "classifier", "contextual", "fallback"] },
+    "reason_codes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "evidence_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}
