@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { writeOwnershipRegistry } from '../scripts/ownership-registry-store.mjs';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const reportScript = resolve(repositoryRoot, 'tooling/scripts/report-engineering-gates.mjs');
@@ -32,7 +33,7 @@ test('emits a report-only summary without mutating the repository or exposing wo
   assert.equal(report.blocking, false);
   assert.equal(report.cleanup_enabled, false);
   assert.equal(report.git_hygiene.mutations_performed, 0);
-  assert.equal(report.git_hygiene.ownership_registry, 'UNAVAILABLE');
+  assert.ok(['AVAILABLE', 'UNAVAILABLE'].includes(report.git_hygiene.ownership_registry));
   assert.ok('excluded_worktrees' in report.git_hygiene);
   assert.doesNotMatch(result.stdout, /lumenva/i);
   assert.equal(gitStatus(), before);
@@ -64,4 +65,46 @@ test('rejects event and summary paths outside the runner temporary directory', (
   } finally {
     rmSync(testRoot, { recursive: true, force: true });
   }
+});
+
+test('classifies a clean worktree ACTIVE only when local registry proves task and agent ownership', t => {
+  const testRoot = mkdtempSync(join(tmpdir(), 'nexus-ownership-report-'));
+  const temporaryRepo = join(testRoot, 'nexus-brain');
+  mkdirSync(temporaryRepo);
+  t.after(() => rmSync(testRoot, { recursive: true, force: true }));
+
+  const runGitInTempRepo = (...args) => {
+    const result = spawnSync('git', args, { cwd: temporaryRepo, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  };
+
+  runGitInTempRepo('init', '-b', 'main');
+  runGitInTempRepo('config', 'user.name', 'Nexus Test');
+  runGitInTempRepo('config', 'user.email', 'nexus-test@example.invalid');
+  writeFileSync(join(temporaryRepo, 'README.md'), 'test repository\n', 'utf8');
+  runGitInTempRepo('add', 'README.md');
+  runGitInTempRepo('commit', '-m', 'docs: add temporary test repository');
+  runGitInTempRepo('switch', '-c', 'codex/nb19-g7-owner');
+
+  const commonDirectory = runGitInTempRepo('rev-parse', '--git-common-dir');
+  writeOwnershipRegistry(resolve(temporaryRepo, commonDirectory, 'nexus-ownership', 'registry.json'), [{
+    taskId: 'NB-19-G7',
+    agentId: 'codex-root',
+    branch: 'codex/nb19-g7-owner',
+    worktree: temporaryRepo,
+    status: 'ACTIVE'
+  }]);
+
+  const result = spawnSync(process.execPath, [reportScript], {
+    cwd: temporaryRepo,
+    encoding: 'utf8',
+    env: { ...process.env, GITHUB_ACTIONS: '', GITHUB_EVENT_NAME: '', GITHUB_EVENT_PATH: '', GITHUB_HEAD_REF: '', GITHUB_REF_NAME: '', GITHUB_STEP_SUMMARY: '' }
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.git_hygiene.ownership_registry, 'AVAILABLE');
+  assert.equal(report.git_hygiene.classifications.worktrees.ACTIVE, 1);
+  assert.doesNotMatch(result.stdout, /codex\/nb19-g7-owner|nexus-ownership-report-/i);
 });
