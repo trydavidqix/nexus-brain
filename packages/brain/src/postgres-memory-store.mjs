@@ -148,3 +148,4 @@ function assertScopeBindings(record) {
 function eventId(memoryId, version, eventType) { return 'memory-' + memoryId + ':' + version + ':' + eventType; }
 
 
+\n
