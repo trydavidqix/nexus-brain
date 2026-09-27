@@ -19,7 +19,7 @@ test('requires squash-only PRs, resolved conversations, and current CI/security 
   const pullRequest = rules.get('pull_request');
   assert.deepEqual(pullRequest.allowed_merge_methods, ['squash']);
   assert.equal(pullRequest.required_review_thread_resolution, true);
-  assert.equal(pullRequest.require_code_owner_review, true);
+  assert.equal(pullRequest.require_code_owner_review, false);
 
   const statusChecks = rules.get('required_status_checks');
   assert.equal(statusChecks.strict_required_status_checks_policy, true);

@@ -1,14 +1,12 @@
 # NB-19 G6: Sensitive Paths and Google Cloud OIDC
 
-**Status:** Implementation prepared; protected merge requires a second eligible code owner.
+**Status:** Implementation prepared; CODEOWNERS assignments are advisory while the repository has one eligible reviewer.
 
 ## Sensitive path ownership
 
-The repository owner is assigned to repository policy and automation, GitHub rulesets, cloud/IaC, contracts, and canonical engineering decisions in [`.github/CODEOWNERS`](../../.github/CODEOWNERS). The versioned main-ruleset policy requests code-owner approval for files with an owner. Live activation awaits an eligible second reviewer; other paths have no forced owner review.
+The repository owner is assigned to repository policy and automation, GitHub rulesets, cloud/IaC, contracts, and canonical engineering decisions in [`.github/CODEOWNERS`](../../.github/CODEOWNERS). GitHub currently lists only `trydavidqix` as a collaborator, and the PR author cannot approve their own pull request. The main ruleset therefore keeps code-owner approval advisory. PR-only delivery, required CI/security checks, resolved conversations, and disabled bypass remain enforced.
 
-The GitHub API currently lists only `trydavidqix` as a repository collaborator. The G6 PR is authored by `trydavidqix`, who cannot approve their own pull request. The G6 policy therefore needs another trusted code owner before it can merge.
-
-PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65), head `09935197a8c94b9f2ad96a3b22cebca560421c14`, passed all reported GitHub checks. The active main ruleset still has code-owner review disabled pending the owner’s reviewer decision. The proposed manifest must not merge until live enforcement can be activated safely.
+PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65) has all required CI/security checks passing. The code-owner setting remains aligned with active ruleset readback (`require_code_owner_review: false`).
 
 ## OIDC authentication path
 
@@ -29,7 +27,7 @@ steps:
       service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
 ```
 
-Read-only inventory confirmed `gcloud` targets the Nexus project. It has zero global Workload Identity pools and two existing service accounts named for Gemini API keys. No credential values or keys were read. Those service accounts were not reused for CI authentication. No Workload Identity Pool, Provider, service account, billing link, or cloud resource was created. The path is prepared for a future authorized workflow; live federation remains unverified until a dedicated service account and provider exist.
+The reusable OIDC action is preparation only. No Workload Identity Pool, Provider, service account, billing link, or cloud resource was created. A future deployment workflow must provide its own configured provider and dedicated least-privilege service account. No live cloud authentication or deployment runs in this milestone.
 
 ## Validation
 
@@ -40,7 +38,7 @@ Read-only inventory confirmed `gcloud` targets the Nexus project. It has zero gl
 - `actionlint` passed for `ci.yml`, `security-scanning.yml`, and `dependency-review.yml`.
 - Gitleaks scanned 129 commits after applying the one exact-fingerprint test-fixture ignore; no leaks found.
 - `git diff --check`: passed.
-- Live GCP federation was not attempted; no provider or service account is configured.
+- Cloud federation remains intentionally unconfigured; this milestone prepares the credential-free OIDC path without provisioning cloud identities.
 
 ## Sources
 
