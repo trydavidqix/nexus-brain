@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 9.15.9
@@ -77,3 +78,7 @@ jobs:
         run: node tooling/scripts/scan-sensitive.mjs
       - name: Workspace TypeScript checks
         run: pnpm -r --if-present typecheck
+      - name: Engineering delivery and Git hygiene report
+        if: always()
+        continue-on-error: true
+        run: pnpm report:engineering-gates
