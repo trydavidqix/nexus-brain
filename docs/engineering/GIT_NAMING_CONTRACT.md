@@ -50,4 +50,4 @@ node tooling/scripts/check-git-naming.mjs --branch "feature/NB-03-zero-cost-loca
 
 ## Enforcement boundary
 
-G1 provides the contract, executable validator, and regression tests. G2 runs the regression tests and validates PR titles and task branches in MCG CI, plus the first commit subject pushed to `main`. The check reports failures on the PR workflow, but it is not a server-enforced required status until the `main` ruleset is installed in G4. No local hook is required for correctness.
+G1 provides the contract, executable validator, and regression tests. G2 runs the regression tests and validates PR titles and task branches in MCG CI, plus the first commit subject pushed to `main`. The active `main` ruleset requires the `mcg`, `tofu`, and `CodeQL` checks, requires squash-only PR merges, and blocks direct updates. No local hook is required for correctness.
