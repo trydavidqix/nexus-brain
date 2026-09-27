@@ -34,6 +34,12 @@ test('emits a report-only summary without mutating the repository or exposing wo
   assert.equal(report.cleanup_enabled, false);
   assert.equal(report.git_hygiene.mutations_performed, 0);
   assert.ok(['AVAILABLE', 'UNAVAILABLE'].includes(report.git_hygiene.ownership_registry));
+  assert.ok(['AVAILABLE', 'UNAVAILABLE', 'INVALID', 'INCOMPLETE'].includes(report.git_hygiene.open_pull_request_inventory));
+  assert.equal(typeof report.git_hygiene.open_pull_requests, 'number');
+  assert.equal(typeof report.git_hygiene.orphaned_owner_records, 'number');
+  assert.equal(typeof report.git_hygiene.equivalent_tree_groups, 'number');
+  assert.equal(typeof report.git_hygiene.equivalent_tree_branches, 'number');
+  assert.equal(report.git_hygiene.safe_retirement_proof, 'UNAVAILABLE');
   assert.ok('excluded_worktrees' in report.git_hygiene);
   assert.doesNotMatch(result.stdout, /lumenva/i);
   assert.equal(gitStatus(), before);
