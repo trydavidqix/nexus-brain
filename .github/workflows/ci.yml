@@ -51,6 +51,8 @@ jobs:
         run: pnpm check:architecture
       - name: Workspace package unit tests
         run: pnpm -r --if-present test:unit
+      - name: Engineering delivery and Git hygiene regression tests
+        run: pnpm test:engineering-gates
       - name: Enforce Git naming contract
         env:
           NEXUS_BRANCH: ${{ github.head_ref || github.ref_name }}
