@@ -2295,7 +2295,7 @@ G9  safe retirement workflow for proven SAFE_MERGED_CLEAN/EMPTY resources
 G10 concurrency validation; enable merge queue only if real parallel PR load justifies it
 ```
 
-G0 completed 2026-09-27. The read-only repository and Git baseline is recorded in [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md). G1 completed on 2026-09-27: [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), executable commit/PR/branch validator, and regression tests are in place; validation is in [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md). G2 completed on 2026-09-27: workflow permissions, checkout credential persistence, action SHA pins, and CI naming enforcement are recorded in [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md). G3 is next; repository Actions settings remain unchanged.
+G0 completed 2026-09-27. The read-only repository and Git baseline is recorded in [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md). G1 completed on 2026-09-27: [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), executable commit/PR/branch validator, and regression tests are in place; validation is in [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md). G2 completed on 2026-09-27: workflow permissions, checkout credential persistence, action SHA pins, CI naming enforcement, and the repository full-SHA pinning requirement are recorded in [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md). G3 is next.
 
 **Migration gate:** configuration that can move/delete/retire branches or worktrees remains subject to ownership, preservation and clean/merged proof. During any active recovery gate, the Git Hygiene Guard is discovery/report-only for protected resources.
 

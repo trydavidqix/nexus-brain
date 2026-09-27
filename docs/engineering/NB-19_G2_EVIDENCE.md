@@ -2,7 +2,7 @@
 
 **Captured:** 2026-09-27
 **Branch:** `codex/nb19-g2-ci-security`
-**Scope:** repository-authored CI, security-scan, and fuzzing workflows. No repository Actions settings, secrets, or cloud resources changed.
+**Scope:** repository-authored CI, security-scan, and fuzzing workflows, plus the repository action-pinning policy. No secrets or cloud resources changed.
 
 ## Changes
 
@@ -17,9 +17,11 @@
 - Added MCG CI regression execution plus validation for PR title and task branch, and for the first subject line pushed to `main`.
 - Existing security workflow actions were already pinned to full SHAs; the SHA scan confirms every repository-authored workflow action remains pinned.
 
-The security scanners remain report-only in this milestone. G2 does not convert their current `continue-on-error` behavior into merge gates; G5 will review the existing alert backlog and gate reliability before promotion. GitHub's repository setting `sha_pinning_required` is still disabled and remains for the settings milestones.
+The security scanners remain report-only in this milestone. G2 does not convert their current `continue-on-error` behavior into merge gates; G5 will review the existing alert backlog and gate reliability before promotion.
 
 Every SHA pin retains its release tag as a same-line comment so Dependabot can resolve and update the pinned action reference. The existing weekly, grouped Dependabot policy was not changed.
+
+After workflow PR #55 merged, the GitHub Actions repository policy was updated and read back: Actions remain enabled, `allowed_actions` remains `all`, and `sha_pinning_required` is now `true`. This makes GitHub reject any workflow action reference that is not pinned to a full commit SHA.
 
 ## Validation
 
@@ -35,11 +37,13 @@ Every SHA pin retains its release tag as a same-line comment so Dependabot can r
 | Syntax/import smoke | Passed; 124 modules |
 | Secret/path/personal-data scan | Passed; 266 files |
 | `git diff --check` | Passed |
+| GitHub Actions policy readback | `sha_pinning_required: true`; `enabled: true`; `allowed_actions: all` preserved |
 
 Local OpenTofu remains unavailable; the PR's remote MCG `tofu` job validates the pinned setup action and infrastructure syntax.
 
 ## References
 
 - [GitHub Actions secure-use reference](https://docs.github.com/en/actions/reference/security/secure-use) recommends least-privilege `GITHUB_TOKEN` permissions and full commit SHA pins.
+- [Repository Actions permissions API](https://docs.github.com/en/rest/actions/permissions) documents the `sha_pinning_required` setting.
 - [Dependabot version updates](https://docs.github.com/en/code-security/concepts/supply-chain-security/dependabot-version-updates) documents updates for actions referenced by version or commit SHA.
 - [Gitleaks Action README](https://github.com/gitleaks/gitleaks-action/blob/master/README.md) documents the token use for pull request API operations and the optional comment control.
