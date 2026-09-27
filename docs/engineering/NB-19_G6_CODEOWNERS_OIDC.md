@@ -8,6 +8,8 @@ The repository owner is assigned to repository policy and automation, GitHub rul
 
 The GitHub API currently lists only `trydavidqix` as a repository collaborator. The G6 PR is authored by `trydavidqix`, who cannot approve their own pull request. The G6 policy therefore needs another trusted code owner before it can merge.
 
+PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65), head `09935197a8c94b9f2ad96a3b22cebca560421c14`, passed all reported GitHub checks. The active main ruleset still has code-owner review disabled pending the owner’s reviewer decision. The proposed manifest must not merge until live enforcement can be activated safely.
+
 ## OIDC authentication path
 
 [`.github/actions/google-cloud-oidc/action.yml`](../../.github/actions/google-cloud-oidc/action.yml) wraps Google’s `google-github-actions/auth` action at a full commit SHA. Each caller must explicitly provide a project ID, full Workload Identity Provider resource name, and dedicated service account. The caller grants only `contents: read` and `id-token: write` to the job. The composite action creates short-lived credentials for the job and cleans up the generated file. Root `.gitignore` excludes `gha-creds-*.json`.
@@ -27,7 +29,7 @@ steps:
       service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
 ```
 
-No Workload Identity Pool, Provider, service account, billing link, or cloud resource was created. The repository has no existing provider resource name or service-account identity to use. The path is prepared for a future authorized workflow; live federation remains unverified until those identities exist.
+Read-only inventory confirmed `gcloud` targets the Nexus project. It has zero global Workload Identity pools and two existing service accounts named for Gemini API keys. No credential values or keys were read. Those service accounts were not reused for CI authentication. No Workload Identity Pool, Provider, service account, billing link, or cloud resource was created. The path is prepared for a future authorized workflow; live federation remains unverified until a dedicated service account and provider exist.
 
 ## Validation
 
