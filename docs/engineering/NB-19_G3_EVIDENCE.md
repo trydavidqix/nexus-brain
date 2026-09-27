@@ -12,13 +12,14 @@
 - Excluded paths outside the Nexus checkout parent and repository-named Nexus siblings before inspecting worktree paths. Symlink candidates are skipped. The report exposes only an excluded-worktree count, never paths or branch names.
 - Kept ownership and safe-retirement proof explicitly `UNAVAILABLE`. The reporter performs zero mutations and never enables cleanup.
 - Added a non-blocking, always-run CI summary step. MCG checkout fetches full history so `origin/main` comparisons can be made in CI.
-- Added package scripts and regression tests for classifications, output privacy, and no repository mutation.
+- Added package scripts and regression tests for classifications, output privacy, path confinement, and no repository mutation. MCG CI runs these regression tests directly.
 
 ## Validation
 
 | Gate | Result |
 | --- | --- |
 | Engineering-gate tests | Passed, 12/12 |
+| CI invocation of engineering-gate tests | Added as an explicit MCG job step |
 | Local report-only invocation | Passed; mode `REPORT_ONLY`, blocking false, cleanup false, mutations 0 |
 | Reporter privacy and no-mutation regression | Passed; no `Lumenva` text or worktree paths in output; Git status unchanged |
 | Workspace unit tests | Passed |
