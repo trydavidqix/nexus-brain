@@ -25,3 +25,5 @@ __pycache__/
 *.tfplan
 terraform.tfvars
 *.auto.tfvars
+# Temporary credentials created by google-github-actions/auth.
+gha-creds-*.json
