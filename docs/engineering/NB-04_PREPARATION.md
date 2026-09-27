@@ -1,6 +1,6 @@
 # NB-04: Canonical Memory Integration
 
-**Status:** Acceptance evidence complete on `codex/nb04-temporal-provenance-prep`; PR #73 carries the integration. NB-04 is marked `DONE` in the Blueprint after the gates below. Main integration remains pending PR checks and merge.
+**Status:** NB-04 `DONE`, merged into `main` by PR #73 as `12997f220dff5a5540411d1c7af5ae03de5fbbde` on 2026-09-27. Acceptance evidence and required PR checks passed.
 
 ## Authority and scope
 
@@ -39,4 +39,4 @@ The pg0 database uses PostgreSQL's logical dump/restore format. DEV migration to
 
 ## Final gate
 
-NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariants, security scans, and restore/import evidence. PR #73 must pass required GitHub checks and merge before the next milestone starts.
+NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariants, security scans, restore/import evidence, and passing required GitHub checks. PR #73 is merged. NB-05 remains gated on the active PR #75 closeout of NB-19 G10.

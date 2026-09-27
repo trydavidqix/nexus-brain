@@ -43,16 +43,8 @@ test('blocks branch deletion, force push, and non-linear history', () => {
   assert.ok(rules.has('required_linear_history'));
 });
 
-test('uses a bounded squash merge queue when real concurrent PR activity exists', () => {
-  assert.deepEqual(rules.get('merge_queue'), {
-    check_response_timeout_minutes: 60,
-    grouping_strategy: 'ALLGREEN',
-    max_entries_to_build: 2,
-    max_entries_to_merge: 1,
-    merge_method: 'SQUASH',
-    min_entries_to_merge: 1,
-    min_entries_to_merge_wait_minutes: 5
-  });
+test('keeps unsupported merge queue policy out of the personal-account ruleset', () => {
+  assert.equal(rules.has('merge_queue'), false);
 });
 
 test('required CI, secret, dependency, and CodeQL workflows run for merge queue commits', () => {

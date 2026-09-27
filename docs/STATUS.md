@@ -4,9 +4,9 @@ This repository is the canonical home for Nexus Brain (`trydavidqix/nexus-brain`
 
 ## Current authoritative snapshot — 2026-09-27
 
-- Main: PR #79 merged at `8c57994a7ae6a1c502f210b8c4ae4ea13b2e7425`; local `main` was synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource was changed.
-- NB-04 implementation and acceptance evidence are on PR #73 (`codex/nb04-temporal-provenance-prep`). Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. PR checks must pass on the updated head and the PR must merge before NB-04 is complete.
-- Migration Readiness remains below 100%. NB-19 G10 validation is in PR #75; NB-29 cutover re-audit follows it. Do not start later implementation milestones before the Blueprint gate reaches 100%.
+- Main: PR #73 merged as `12997f220dff5a5540411d1c7af5ae03de5fbbde`; local `main` synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource changed.
+- NB-04 is merged and accepted. Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. Evidence: [`NB-04_PREPARATION.md`](engineering/NB-04_PREPARATION.md).
+- Migration Readiness NB-24–NB-29 is complete. PR #75 closes NB-19 G10 policy/evidence; NB-05 is next after PR #75 merges.
 - DEV remains zero-additional-cost and local-first. No PROD, paid cloud provisioning, billing changes, Gemini API key, or paid provider fallback is authorized.
 
 ## Historical migration snapshot — 2026-09-26
