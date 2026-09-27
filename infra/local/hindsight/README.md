@@ -1,6 +1,6 @@
 # Local Hindsight DEV — zero additional monthly cost
 
-This is the active NB-03 runtime. It uses existing Windows hardware, Hindsight's full API package, embedded pg0 PostgreSQL/pgvector, local embeddings and local reranking. It has no cloud provisioning, paid database, hosted worker, cloud billing link, or paid provider fallback. The API and its internal worker run only while the local process is running.
+This is the active NB-03 runtime. It uses existing Windows hardware, Hindsight's full API package, embedded pg0 PostgreSQL/pgvector, local embeddings and local reranking. It has no cloud provisioning, paid database, hosted worker, cloud billing link, or automatic provider fallback. The API and its internal worker run only while the local process is running. The default provider is `openai-codex`, using the existing Codex OAuth profile and account plan; it does not use an OpenAI API key. Gemini Free Tier remains an optional provider when an unbilled project and its free plan are verified.
 
 ## Hardware and requirements
 
@@ -10,14 +10,16 @@ Hindsight's current installation guide lists 1.5 GiB minimum/2 GiB recommended R
 
 ```powershell
 ./infra/local/hindsight/install.ps1
-./infra/local/hindsight/run.ps1 -AllowNonSensitiveGeminiData
+./infra/local/hindsight/run.ps1
 ```
 
-Create the Gemini API key in AI Studio only for a project that shows the Free plan and has no billing account linked. Google AI Pro does not pay Gemini Developer API charges. Do not attach billing or select Paid tier. The optional USD 10/month Google Developer Program credit is not counted as authorization or budget. Never pass passwords, tokens, private customer data, confidential memories, or restricted source content to this Free Tier; Google currently documents that Free Tier content may be used to improve its products.
+`run.ps1` defaults to `openai-codex`. It checks that `%USERPROFILE%\.codex\auth.json` exists without displaying or copying its contents and reads the model from the Codex CLI `config.toml`; pass `-Model <model>` to override it. The Hindsight process reads the existing OAuth profile directly. Usage remains subject to the signed-in account's plan and limits. This lane does not configure an API key, billing account, Google project or cloud resource.
 
-Gemini quotas vary by model, project and account. Check the active RPM (requests/minute), TPM (input tokens/minute) and RPD (requests/day) in AI Studio before provider tests; RPD resets at midnight Pacific. Hindsight allows one retry after transient provider errors such as HTTP 503, with a 2-second initial and 5-second maximum backoff. A daily-quota HTTP 429 trips a local persistent circuit breaker at `%LOCALAPPDATA%\Nexus\Hindsight\gemini-rpd-circuit.json`; later calls fail locally until the next midnight Pacific and do not contact Gemini. The marker stores no key or prompt. Quota exhaustion is an error: there is no automatic provider/model or paid fallback. Standard Gemini text generation is the only remote model function; embeddings/reranking stay local and Search/Maps grounding, Batch, Vertex AI and paid features are not configured.
+Gemini remains available only when its separate Free Tier conditions are verified. Start it with `./infra/local/hindsight/run.ps1 -Provider gemini -AllowNonSensitiveGeminiData`; the key is requested using a secure PowerShell prompt and is never printed or stored by the script. Use only a project that shows the Free plan and has no billing account linked. Google AI Pro does not pay Gemini Developer API charges. Do not attach billing or select Paid tier. The optional USD 10/month Google Developer Program credit is not counted as authorization or budget. Google documents that Free Tier content may be used to improve products, so never send passwords, tokens, private customer data, confidential memories or restricted source content through that lane.
 
-The breaker loads at process startup through `sitecustomize.py`. Restart Hindsight after changing `start.ps1`; startup performs a Gemini provider verification request. Do not restart during an exhausted daily quota window.
+Gemini quotas vary by model, project and account. Check the active RPM (requests/minute), TPM (input tokens/minute) and RPD (requests/day) in AI Studio before Gemini tests; RPD resets at midnight Pacific. Hindsight allows one retry after transient provider errors such as HTTP 503, with a 2-second initial and 5-second maximum backoff. A daily-quota HTTP 429 trips a local persistent circuit breaker at `%LOCALAPPDATA%\Nexus\Hindsight\gemini-rpd-circuit.json`; later Gemini calls fail locally until the next midnight Pacific and do not contact Gemini. The marker stores no key or prompt. Quota exhaustion is an error: there is no automatic provider/model or paid fallback. Embeddings and reranking stay local; Search/Maps grounding, Batch, Vertex AI and paid cloud features are not configured.
+
+The Gemini quota breaker loads at process startup through `sitecustomize.py` and affects only Gemini. Startup verifies the selected provider. Restart Hindsight after changing `start.ps1`; do not restart in a Gemini daily-quota window.
 
 ## Persistent data, backups and migration
 
@@ -30,6 +32,6 @@ Future external PostgreSQL migration preserves the PostgreSQL schema: stop write
 ## Safety
 
 - Bind only to `127.0.0.1`; do not expose Hindsight's API/MCP to a LAN or Internet.
-- Keep the API key in process environment or an OS secret store; never commit it or put it in a tracked `.env` file.
-- A Free Tier API key does not create a hard spend cap if its project later becomes billing-linked. Keep this project's billing disabled and check its AI Studio plan before use.
+- Keep Gemini keys in process environment or an OS secret store; never commit them or put them in a tracked `.env` file. Codex OAuth remains in the existing provider-owned Codex home.
+- A Gemini Free Tier API key does not create a hard spend cap if its project later becomes billing-linked. Keep the selected project's billing disabled and check its AI Studio plan before use.
 - IaC in `infra/cloud/tofu/` is historical reference only. Never apply it under the current zero-cost decision.

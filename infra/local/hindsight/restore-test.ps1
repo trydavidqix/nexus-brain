@@ -19,14 +19,23 @@ if (-not $pgRestore) { throw "pg_restore.exe not found under $Installation." }
 $instanceName = 'nexus-restore-' + (Get-Date -Format 'yyyyMMddHHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8)
 $started = $false
 try {
-    & $Pg0 start --name $instanceName --username hindsight --password hindsight --database hindsight *> $null
-    if ($LASTEXITCODE -ne 0) { throw 'Could not start isolated restore-test instance.' }
+    $pg0Start = Start-Process -FilePath $Pg0 -ArgumentList @(
+        'start', '--name', $instanceName, '--username', 'hindsight', '--password', 'hindsight', '--database', 'hindsight'
+    ) -WindowStyle Hidden -PassThru -RedirectStandardOutput 'NUL' -RedirectStandardError '\\.\NUL'
     $started = $true
-    $info = ((& $Pg0 info --name $instanceName --output json) -join "`n") | ConvertFrom-Json
-    if (-not $info.port) { throw 'Restore-test instance did not report a port.' }
+    $info = $null
+    for ($attempt = 0; $attempt -lt 60; $attempt++) {
+        if ($pg0Start.HasExited -and $pg0Start.ExitCode -ne 0) {
+            throw 'Could not start isolated restore-test instance.'
+        }
+        $info = ((& $Pg0 info --name $instanceName --output json) -join "`n") | ConvertFrom-Json
+        if ($info.running -and $info.port) { break }
+        Start-Sleep -Seconds 1
+    }
+    if (-not $info.running -or -not $info.port) { throw 'Restore-test instance did not become ready.' }
 
     $env:PGPASSWORD = 'hindsight'
-    & $pgRestore.FullName --exit-on-error --no-owner --no-acl --host 127.0.0.1 --port $info.port --username hindsight --dbname hindsight $BackupPath
+    & $pgRestore.FullName --exit-on-error --no-owner --no-acl --host 127.0.0.1 --port $info.port --username hindsight --no-password --dbname hindsight $BackupPath
     if ($LASTEXITCODE -ne 0) { throw 'pg_restore failed.' }
 
     $tableCount = & $Pg0 psql --name $instanceName --no-psqlrc --tuples-only --no-align --command "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';"
