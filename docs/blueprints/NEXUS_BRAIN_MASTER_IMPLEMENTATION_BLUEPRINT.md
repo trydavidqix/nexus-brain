@@ -158,7 +158,7 @@ Canonical ownership:
 - Evidence owns proof and provenance.
 - Project Factory coordinates these owners and may not create parallel stores or authorities.
 
-Contracts-first V1 adds `project-factory-request` and `project-factory-plan`. The plan records discovery evidence, architecture decisions, build/reuse/provider decisions, task seeds, completion gates and human gates. Runtime implementation must stay behind these contracts and existing Nexus package owners.
+Contracts-first V1 adds `project-factory-request` and `project-factory-plan`. The plan records discovery evidence, architecture decisions, build/reuse/provider decisions, task seeds, completion gates and human gates. `packages/execution/src/cloud-fabric/project-factory.ts` implements the first deterministic compiler: it requires discovery evidence, enforces candidate budgets, prefers `REUSE → USE_PROVIDER → ADAPT → BUILD`, emits bounded task seeds, and requires an owner gate for R3/R4 work. It coordinates existing owners rather than replacing them.
 
 The same audit assimilates Capability OS / Tool Hub / Tool Gateway patterns into existing Reach/Capability Registry/Execution/Governance owners: progressive discovery, provider health/version telemetry, per-task tool profiles, implementation selection/evaluation and Credential Broker semantics. Do not inject the full tool catalog into agents and do not create separate Capability OS, Tool Hub or Tool Gateway products.
 
