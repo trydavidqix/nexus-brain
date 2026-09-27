@@ -12,3 +12,12 @@ This is a supplemental live check for the accepted zero-cost local Hindsight pro
 - No Gemini request, Google project change, billing change, or cloud resource action occurred.
 
 The Hindsight LLM-request registry is the runtime evidence source. This file stores only safe verification metadata.
+
+## Follow-up verification — 2026-09-28
+
+- The local Hindsight process was already serving the `openai-codex` provider; no restart or API key was needed.
+- `GET /health` returned HTTP 200 with the database connected.
+- One synthetic request to `POST /v1/default/banks/nb03-e2e-check/reflect` returned HTTP 200.
+- The reflect response matched the synthetic marker `REFLECT_CODEX_PASS`; response text remains withheld.
+- The latest matching Hindsight LLM trace recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, `operation=reflect`, `scope=reflect`, at 2026-09-28 00:07:17 Europe/Lisbon.
+- No Gemini request, API key access, Google project change, billing change, or cloud resource action occurred.
