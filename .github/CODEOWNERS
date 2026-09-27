@@ -1,1 +1,11 @@
-* @trydavidqix
+# Owner review required for repository policy, cloud, identity, and contract boundaries.
+/.github/CODEOWNERS @trydavidqix
+/.github/rulesets/ @trydavidqix
+/.github/workflows/ @trydavidqix
+/.github/actions/ @trydavidqix
+/.gitignore @trydavidqix
+/.gitleaksignore @trydavidqix
+/infra/ @trydavidqix
+/packages/contracts/ @trydavidqix
+/docs/blueprints/ @trydavidqix
+/docs/engineering/ @trydavidqix
