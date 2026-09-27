@@ -1,6 +1,6 @@
 # NB-19 G7: Task, Agent, Branch, and Worktree Ownership
 
-**Status:** Implementation in progress. G7 records ownership and feeds read-only hygiene classification. It performs no branch or worktree cleanup.
+**Status:** Complete on 2026-09-27 via PR [#67](https://github.com/trydavidqix/nexus-brain/pull/67), merged as `2963f21f443c6c4f9c31f264796328fad6f7b1c8`. G7 records ownership and feeds read-only hygiene classification. It performs no branch or worktree cleanup.
 
 ## Registry behavior
 
@@ -40,4 +40,5 @@ The report continues to perform zero mutations. Ownership alone never proves pre
 - `pnpm scan:sensitive`: passed; 287 files.
 - `actionlint` passed for all three workflow files.
 - Local report read the registry as `AVAILABLE`, classified the dirty implementation worktree as `DIRTY`, and reported zero mutations.
-- GitHub pull-request checks and merge evidence remain pending.
+- PR #67 head `cf4980b52dfffdb442d4d23880fbcf343a18d42b` passed required checks: MCG, Tofu, CodeQL, Analyze, Gitleaks, dependency review, OSV-Scanner, Semgrep, Jazzer.js, and ZAP.
+- PR #67 merged as `2963f21f443c6c4f9c31f264796328fad6f7b1c8`; the branch was not deleted and no worktree was retired.
