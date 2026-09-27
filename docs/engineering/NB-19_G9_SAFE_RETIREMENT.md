@@ -1,6 +1,6 @@
 # NB-19 G9: Safe Local Branch Retirement
 
-**Status:** Implementation under validation. No user project work branch or worktree was retired.
+**Status:** Complete. PR [#72](https://github.com/trydavidqix/nexus-brain/pull/72) merged after its required checks passed. No user project work branch or worktree was retired.
 
 ## Workflow
 
@@ -31,7 +31,7 @@
 - The read-only retirement plan again classified this active, checked-out branch as `ACTIVE`, `eligible=false`, and `mutations_performed=0`; the fail-closed CLI exited with its unsafe-plan status.
 - `pnpm report:engineering-gates`: `REPORT_ONLY`, `cleanup_enabled=false`, complete open-PR inventory, 0 orphan owner records, 0 equivalent tree groups, and 0 mutations.
 - `actionlint` passed for all four workflow files.
-- The implementation has no PR CI or integration result yet. G9 remains under validation and is not `DONE`.
+- PR #72 integrated the implementation; all required checks passed before merge.
 
 ## Synthetic empty-branch retirement proof (2026-09-27)
 
