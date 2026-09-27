@@ -122,6 +122,46 @@ Provider agents execute bounded work inside the selected project's repository/wo
 
 The Nexus Control Center must support portfolio-level and project-level views. Portfolio view shows registered projects, health/status, active tasks, agents, budgets, incidents and blockers. Project drill-down exposes that project's tasks, sessions, memory, knowledge, Git/PRs, tests, deployments, evidence, costs and history without mixing unrelated project state.
 
+## 3A.1 Project Factory and email-blueprint assimilation
+
+The 2026-09-27 Gmail blueprint audit is recorded in `docs/audits/NEXUS_EMAIL_BLUEPRINT_AUDIT_2026-09-27.md`. Source plans are provenance, not authority by title. Business-only Lumenva modules remain outside Nexus; technical capabilities are assimilated into existing Nexus owners and must not create duplicate control planes, routers, memory engines, gateways or evidence stores.
+
+The main missing capability promoted by that audit is **Project Factory**. It is a coordination domain above existing owners, not a second orchestrator.
+
+```text
+OWNER OBJECTIVE
+  ↓
+ProjectFactoryRequest
+  ↓
+discovery + evidence + resource/capability discovery
+  ↓
+REUSE | USE_PROVIDER | ADAPT | BUILD
+  ↓
+architecture decisions + bounded ProjectFactoryPlan
+  ↓
+Maestri task graph
+  ↓
+Engineering Control + Execution
+  ↓
+independent validation
+  ↓
+completion gates
+```
+
+Canonical ownership:
+
+- Maestri owns task/session/DAG lifecycle and recovery.
+- Reach owns capability/provider/tool discovery.
+- Engineering Control owns methodology, scope and verification requirements.
+- Execution owns provider/runtime/agent execution.
+- Governance owns risk, approvals, secrets and policy.
+- Evidence owns proof and provenance.
+- Project Factory coordinates these owners and may not create parallel stores or authorities.
+
+Contracts-first V1 adds `project-factory-request` and `project-factory-plan`. The plan records discovery evidence, architecture decisions, build/reuse/provider decisions, task seeds, completion gates and human gates. Runtime implementation must stay behind these contracts and existing Nexus package owners.
+
+The same audit assimilates Capability OS / Tool Hub / Tool Gateway patterns into existing Reach/Capability Registry/Execution/Governance owners: progressive discovery, provider health/version telemetry, per-task tool profiles, implementation selection/evaluation and Credential Broker semantics. Do not inject the full tool catalog into agents and do not create separate Capability OS, Tool Hub or Tool Gateway products.
+
 ## 3B. V1 memory engine: Hindsight
 
 **Decision:** Hindsight is the V1 memory engine. Nexus Brain remains the authority over canonical truth, scope, provenance, conflict resolution, policy and context delivery. For DEV, run the full Hindsight API on demand on existing Windows hardware, use pg0's embedded PostgreSQL/pgvector, and leave Hindsight's internal worker enabled. No paid cloud runtime or external database is part of this phase.
