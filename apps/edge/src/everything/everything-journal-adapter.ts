@@ -89,7 +89,7 @@ function normalizedPath(value: string): string {
 }
 
 function canonicalPath(value: string): string {
-  return normalizedPath(value).replace(/[\\/]+$/, "").toLowerCase();
+  return normalizedPath(value).toLowerCase();
 }
 
 function relativePath(root: string, target: string): string {
