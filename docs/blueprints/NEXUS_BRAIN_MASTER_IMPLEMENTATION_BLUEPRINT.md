@@ -2361,13 +2361,13 @@ Current tracker snapshot: `DONE 3/25`, `BLOCKED 0/25`, `IN_PROGRESS 2/25`, `PEND
 
 ### NB-01 audit record
 
+The ownership and local-path audit is [`NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md`](NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md). NB-01 is accepted as source inventory/ownership work; final path cutover belongs to NB-29. The prior blocked snapshot is superseded by the completed migration record below. CRM/voice and separate project code remain out of scope.
+
 ### NB-10 implementation evidence (2026-09-27)
 
 NB-10 implementation is in progress on `feature/NB-10-everything-git-edge`. The Edge package now has a bounded Everything 1.5 Index Journal adapter, an external atomic cursor, explicit project-root and ignore filters, first-poll/restart baselines, bounded Git status/diff fallback, and per-project four-second burst aggregation. Journal polling reads event metadata only and does not read changed file contents. The optional read-only Git fallback may return diff content (bounded to 512 KiB); callers must treat it as workspace data and apply context policy before forwarding it. The local launcher uses a named portable instance, indexes only the selected Nexus root, disables automatic volume indexing, and keeps installation/database state outside Git. It verifies the official archive checksum and executable signature and does not register startup execution.
 
 Evidence so far: `pnpm --dir apps/edge test:unit` passed 43 tests, including cursor baselines/resets, filtering, Git fallback, large 64-bit journal IDs and burst coalescing; `pnpm --dir apps/edge typecheck` passed. A live local smoke test observed one real Everything Journal `CREATE` event after fixing JavaScript rounding of 64-bit journal IDs; the temporary probe file was removed. Full local repository gates passed: architecture check (13 packages), workspace unit tests, integration tests (20/20), syntax/import check (122 modules), sensitive-data scan (261 files), workspace typechecks, PowerShell parser validation and `git diff --check`. PR CI exposed two issues missed by Windows: lowercased roots broke Linux `realpath`, and CodeQL flagged trailing-separator regex on arbitrary paths. Fixes preserve path casing for Git operations, use native path normalization and match ignore globs with segment-based dynamic programming; regressions cover mixed-case roots and 100 nested path components. Final PR CI and merge remain outstanding. Do not mark NB-10 `DONE` until those gates pass and the change is integrated through the repository PR flow.
-
-The ownership and local-path audit is [`NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md`](NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md). NB-01 is accepted as source inventory/ownership work; final path cutover belongs to NB-29. The prior blocked snapshot is superseded by the completed migration record below. CRM/voice and separate project code remain out of scope.
 
 ### Migration readiness completion record (NB-24–NB-29)
 
