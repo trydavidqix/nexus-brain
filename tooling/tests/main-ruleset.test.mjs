@@ -26,7 +26,13 @@ test('requires squash-only PRs, resolved conversations, and current CI/security 
     statusChecks.required_status_checks
       .map(({ context, integration_id }) => [context, integration_id])
       .sort(([left], [right]) => left.localeCompare(right)),
-    [['CodeQL', 57789], ['mcg', 15368], ['tofu', 15368]]
+    [
+      ['CodeQL', 57789],
+      ['dependency-review', 15368],
+      ['Gitleaks secrets scan', 15368],
+      ['mcg', 15368],
+      ['tofu', 15368]
+    ]
   );
 });
 
