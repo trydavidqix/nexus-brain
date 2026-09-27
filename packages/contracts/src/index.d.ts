@@ -6,7 +6,8 @@ export type { EngineeringAutonomyLevel, EngineeringPlan, EngineeringSkillPolicy,
 export type { NexusIdentity } from "./identity.js";
 export type { NexusTask } from "./nexus-task.js";
 export type { NexusEvidence } from "./evidence.js";
-export type { NexusMemoryRecord, MemoryScope, MemoryStatus } from "./memory.js";
+export type { NexusMemoryRecord, NexusCanonicalMemoryRecord, NexusMemoryEvent, NexusEvidenceSighting, MemoryScope, MemoryStatus, MemoryLifecycleEventType, MemoryRecordProvenance, MemoryTemporalFacts, MemoryAccessControl } from "./memory.js";
+export type { NexusResearchRun } from "./research.js";
 export type { NexusPermission, PermissionState } from "./permission.js";
 export type { BrowserAction, BrowserBackend, BrowserHost, BrowserObservation, BrowserPlan, BrowserProfile, BrowserRecipe, BrowserRecipeAction, BrowserSession, BrowserTask } from "./browser.js";
 export type { BrainCoverage, BrainOperation, BrainRequest, BrainResponse, ReachStatus } from "./brain.js";
