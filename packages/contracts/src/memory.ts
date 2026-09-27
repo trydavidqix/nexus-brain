@@ -1,5 +1,6 @@
 export type MemoryScope = 'GLOBAL' | 'PROJECT' | 'SESSION' | 'TASK';
 export type MemoryStatus = 'OBSERVED' | 'CANDIDATE' | 'VERIFIED' | 'CANONICAL' | 'SUPERSEDED' | 'CONFLICTED' | 'REVOKED';
+export type MemoryDataClassification = 'SYNTHETIC' | 'NON_SENSITIVE' | 'SENSITIVE' | 'RESTRICTED';
 
 export interface NexusMemoryRecord {
   memory_id: string;
@@ -40,6 +41,7 @@ export interface NexusCanonicalMemoryRecord extends NexusMemoryRecord {
   provenance: MemoryRecordProvenance;
   temporal: MemoryTemporalFacts;
   acl: MemoryAccessControl;
+  data_classification: MemoryDataClassification;
   task_id?: string;
   session_id?: string;
   tags?: string[];

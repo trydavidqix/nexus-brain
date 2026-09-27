@@ -75,6 +75,7 @@ describe("shared TypeScript contracts", () => {
         valid_from: "2026-09-27T00:00:00.000Z",
       },
       acl: { policy_id: "default-deny", read_permission_ids: [], write_permission_ids: [] },
+      data_classification: "SYNTHETIC",
       version: 1,
     };
     const memoryEvent: NexusMemoryEvent = {

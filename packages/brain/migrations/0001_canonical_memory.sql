@@ -1,5 +1,4 @@
--- NB-04 preparation only. Do not apply until NB-03 local Hindsight/pg0 validation.
--- Plain PostgreSQL objects only; Hindsight remains owner of vector/index mechanics.
+-- NB-04 Nexus-owned canonical records and events; Hindsight owns derived index mechanics.
 
 create table if not exists nexus_research_runs (
   run_id text primary key,
@@ -68,6 +67,7 @@ create table if not exists nexus_memory_records (
   status text not null check (status in ('OBSERVED', 'CANDIDATE', 'VERIFIED', 'CANONICAL', 'SUPERSEDED', 'CONFLICTED', 'REVOKED')),
   content text not null check (length(content) > 0),
   content_hash text not null check (length(content_hash) > 0),
+  data_classification text not null check (data_classification in ('SYNTHETIC', 'NON_SENSITIVE', 'SENSITIVE', 'RESTRICTED')),
   evidence_ids text[] not null default '{}',
   provenance jsonb not null,
   observed_at timestamptz not null,

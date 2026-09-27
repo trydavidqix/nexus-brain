@@ -15,6 +15,7 @@ const record = {
   provenance: { source_type: 'task', source_id: 'task-1', actor_id: 'agent-1' },
   temporal: { observed_at: timestamp, recorded_at: timestamp, valid_from: timestamp },
   acl: { policy_id: 'default-deny', read_permission_ids: [], write_permission_ids: [] },
+  data_classification: 'SYNTHETIC',
   version: 1
 };
 

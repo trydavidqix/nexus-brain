@@ -2,7 +2,14 @@
 
 This repository is the canonical home for Nexus Brain (`trydavidqix/nexus-brain`). Maestri Context Gateway (MCG), extracted from Lumenva on 2026-09-23, is one internal module. This repository contains its current source, contracts, configuration templates, registries, tests, evaluation datasets, and CI; other Nexus modules remain tracked in the active blueprint until transferred and verified.
 
-## CURRENT migration snapshot — 2026-09-26
+## Current authoritative snapshot — 2026-09-27
+
+- Main: PR #79 merged at `8c57994a7ae6a1c502f210b8c4ae4ea13b2e7425`; local `main` was synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource was changed.
+- NB-04 implementation and acceptance evidence are on PR #73 (`codex/nb04-temporal-provenance-prep`). Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. PR checks must pass on the updated head and the PR must merge before NB-04 is complete.
+- Migration Readiness remains below 100%. NB-19 G10 validation is in PR #75; NB-29 cutover re-audit follows it. Do not start later implementation milestones before the Blueprint gate reaches 100%.
+- DEV remains zero-additional-cost and local-first. No PROD, paid cloud provisioning, billing changes, Gemini API key, or paid provider fallback is authorized.
+
+## Historical migration snapshot — 2026-09-26
 
 Migration PR #44 merged to `main` as `e5f3b14f6a2cb36a4830d5b9d8e9767557713bed`; the local `main` is fast-forwarded and clean at the same commit. All post-merge MCG, CodeQL analysis, security-scanning and fuzz workflow runs succeeded. The PR-only CodeQL alert annotation had flagged findings on moved legacy paths; none were dismissed, and the existing alert inventory remains visible. Live Codex eval commands are intentionally excluded because they execute real provider requests; runner behavior is covered by unit/integration tests.
 
@@ -14,7 +21,7 @@ Migration PR #44 merged to `main` as `e5f3b14f6a2cb36a4830d5b9d8e9767557713bed`;
 
 The sections below are dated historical snapshots. They are not current instructions when they conflict with this migration snapshot or the Master Blueprint.
 
-## Current authoritative snapshot — 2026-09-25
+## Historical snapshot — 2026-09-25
 
 - Repository: `trydavidqix/nexus-brain` (renamed from `trydavidqix/maestri-context-gateway` on 2026-09-25); local `main` and `origin/main` are synchronized after the blueprint/source consolidation updates.
 - PRs #38 (dashboard title/accessibility regression), #39 (security triage/release-gate documentation), #40 (hostile-input redaction fuzz coverage), and #41 (blueprint status consolidation) are historical merged PRs. The rename preserves those records. Recorded MCG gates, security scanning and fuzz workflows passed for product-code SHA `97ccad2`: [MCG](https://github.com/trydavidqix/nexus-brain/actions/runs/36147387550), [security](https://github.com/trydavidqix/nexus-brain/actions/runs/36147387653), [fuzz](https://github.com/trydavidqix/nexus-brain/actions/runs/36147387658). PR #41 checks passed before merge.

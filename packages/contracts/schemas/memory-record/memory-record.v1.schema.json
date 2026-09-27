@@ -4,7 +4,7 @@
   "title": "Nexus Canonical Memory Record",
   "type": "object",
   "additionalProperties": false,
-  "required": ["memory_id", "scope", "scope_id", "status", "content", "content_hash", "evidence_ids", "provenance", "temporal", "acl", "version"],
+  "required": ["memory_id", "scope", "scope_id", "status", "content", "content_hash", "evidence_ids", "provenance", "temporal", "acl", "data_classification", "version"],
   "properties": {
     "memory_id": { "type": "string", "minLength": 1 },
     "project_id": { "type": "string", "minLength": 1 },
@@ -13,6 +13,7 @@
     "status": { "enum": ["OBSERVED", "CANDIDATE", "VERIFIED", "CANONICAL", "SUPERSEDED", "CONFLICTED", "REVOKED"] },
     "content": { "type": "string", "minLength": 1 },
     "content_hash": { "type": "string", "minLength": 1 },
+    "data_classification": { "enum": ["SYNTHETIC", "NON_SENSITIVE", "SENSITIVE", "RESTRICTED"] },
     "evidence_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
     "provenance": {
       "type": "object",
