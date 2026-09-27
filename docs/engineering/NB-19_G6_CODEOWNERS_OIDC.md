@@ -1,12 +1,12 @@
 # NB-19 G6: Sensitive Paths and Google Cloud OIDC
 
-**Status:** Implementation prepared; CODEOWNERS assignments are advisory while the repository has one eligible reviewer.
+**Status:** Complete on 2026-09-27 via PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65), merged as `b89086a3d0be4b79411cc33d35372615b483d7d9`. CODEOWNERS assignments remain advisory while the repository has one eligible reviewer.
 
 ## Sensitive path ownership
 
 The repository owner is assigned to repository policy and automation, GitHub rulesets, cloud/IaC, contracts, and canonical engineering decisions in [`.github/CODEOWNERS`](../../.github/CODEOWNERS). GitHub currently lists only `trydavidqix` as a collaborator, and the PR author cannot approve their own pull request. The main ruleset therefore keeps code-owner approval advisory. PR-only delivery, required CI/security checks, resolved conversations, and disabled bypass remain enforced.
 
-PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65) has all required CI/security checks passing. The code-owner setting remains aligned with active ruleset readback (`require_code_owner_review: false`).
+PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65), head `fb8bd07b5231747c9506b0b256ae814e5d915179`, passed required CI/security checks and merged. The code-owner setting remains aligned with active ruleset readback (`require_code_owner_review: false`).
 
 ## OIDC authentication path
 
@@ -39,6 +39,7 @@ The reusable OIDC action is preparation only. No Workload Identity Pool, Provide
 - Gitleaks scanned 129 commits after applying the one exact-fingerprint test-fixture ignore; no leaks found.
 - `git diff --check`: passed.
 - Cloud federation remains intentionally unconfigured; this milestone prepares the credential-free OIDC path without provisioning cloud identities.
+- GitHub merge evidence: PR #65 merged at `b89086a3d0be4b79411cc33d35372615b483d7d9`; all required checks passed for head `fb8bd07b5231747c9506b0b256ae814e5d915179`.
 
 ## Sources
 
