@@ -8,3 +8,4 @@ export * from './handoff.js';
 export * from './result-digest.js';
 export * from './delegation.js';
 export * from './context-packet.js';
+export * from './project-factory.js';
