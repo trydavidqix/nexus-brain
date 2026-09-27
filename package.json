@@ -29,7 +29,7 @@
     "test:integration": "node --test tests/integration/*.test.mjs",
     "check:architecture": "node tooling/scripts/check-package-architecture.mjs",
     "test:git-naming": "node --test tooling/tests/git-naming.test.mjs",
-    "test:engineering-gates": "node --test tooling/tests/engineering-gates.test.mjs tooling/tests/report-engineering-gates.test.mjs tooling/tests/main-ruleset.test.mjs",
+    "test:engineering-gates": "node --test tooling/tests/engineering-gates.test.mjs tooling/tests/report-engineering-gates.test.mjs tooling/tests/main-ruleset.test.mjs tooling/tests/oidc-codeowners.test.mjs",
     "report:engineering-gates": "node tooling/scripts/report-engineering-gates.mjs",
     "check:syntax": "node tooling/scripts/check-syntax.mjs",
     "scan:sensitive": "node tooling/scripts/scan-sensitive.mjs",

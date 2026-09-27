@@ -1,0 +1,26 @@
+name: Google Cloud Workload Identity Federation
+description: Authenticate one GitHub Actions job to one explicitly selected Google Cloud service account without a stored key.
+
+inputs:
+  project_id:
+    description: Google Cloud project ID used by downstream tools.
+    required: true
+  workload_identity_provider:
+    description: Full Workload Identity Provider resource name, including project number, pool, and provider.
+    required: true
+  service_account:
+    description: Dedicated least-privilege service account email for this job.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Authenticate with Workload Identity Federation
+      uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+      with:
+        project_id: ${{ inputs.project_id }}
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}
+        create_credentials_file: true
+        export_environment_variables: true
+        cleanup_credentials: true
