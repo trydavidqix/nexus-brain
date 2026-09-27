@@ -71,3 +71,13 @@ test('refuses main ownership and releases metadata without removing it', t => {
   assert.match(listed.stdout, /RELEASED/);
   assert.doesNotMatch(listed.stdout, /nexus-ownership-cli-/i);
 });
+
+test('refuses a second active owner for a task without a Maestri task split', t => {
+  const { root } = createTemporaryNexus(t);
+  const first = runOwnership(root, 'register', '--task-id', 'NB-19-G7', '--agent-id', 'codex-root');
+  assert.equal(first.status, 0, first.stderr);
+
+  const second = runOwnership(root, 'register', '--task-id', 'NB-19-G7', '--agent-id', 'codex-reviewer');
+  assert.notEqual(second.status, 0);
+  assert.match(second.stderr, /Maestri subtask\/owner split required/i);
+});
