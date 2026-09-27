@@ -12,7 +12,7 @@ const temporaryRoots: string[] = [];
 async function fixture() {
   const base = await mkdtemp(join(tmpdir(), "nexus-everything-"));
   temporaryRoots.push(base);
-  const root = join(base, "project");
+  const root = join(base, "ProjectCase");
   const statePath = join(base, "state", "cursor.json");
   const { mkdir } = await import("node:fs/promises");
   await mkdir(root, { recursive: true });
@@ -132,7 +132,7 @@ describe("EverythingJournalAdapter", () => {
       health: { status: "degraded", journalSupported: false, reason: "everything_15_required" },
       events: [],
     });
-    expect(response.gitFallback).toEqual([{ projectRoot: paths.root.toLowerCase(), status: "## feature/test", diff: "" }]);
+    expect(response.gitFallback).toEqual([{ projectRoot: paths.root, status: "## feature/test", diff: "" }]);
   });
 
   it("does not allow cursor state inside a project root", async () => {

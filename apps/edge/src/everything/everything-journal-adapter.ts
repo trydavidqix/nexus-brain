@@ -93,7 +93,11 @@ function canonicalPath(value: string): string {
 }
 
 function relativePath(root: string, target: string): string {
-  return isWindowsPath(root) && isWindowsPath(target) ? win32.relative(root, target) : relative(root, target);
+  const normalizedRoot = canonicalPath(root);
+  const normalizedTarget = canonicalPath(target);
+  return isWindowsPath(normalizedRoot) && isWindowsPath(normalizedTarget)
+    ? win32.relative(normalizedRoot, normalizedTarget)
+    : relative(normalizedRoot, normalizedTarget);
 }
 
 function isWithin(root: string, target: string): boolean {
@@ -200,14 +204,14 @@ export class EverythingJournalAdapter {
 
   constructor(private readonly options: EverythingJournalAdapterOptions) {
     if (options.projectRoots.length === 0) throw new Error("everything_project_roots_required");
-    this.roots = options.projectRoots.map(canonicalPath);
+    this.roots = options.projectRoots.map(normalizedPath);
     this.executable = options.executable ?? "es.exe";
     this.instance = options.instance;
     this.ignores = [...DEFAULT_IGNORES, ...(options.ignorePatterns ?? [])].map(globToRegExp);
     this.now = options.now ?? (() => new Date());
     this.maxEvents = Math.max(1, Math.min(Math.trunc(options.maxEventsPerPoll ?? 500), 5000));
     const statePath = resolve(options.statePath);
-    if (options.projectRoots.some((root) => isWithin(canonicalPath(root), canonicalPath(statePath)))) {
+    if (this.roots.some((root) => isWithin(root, statePath))) {
       throw new Error("everything_cursor_must_be_outside_project_roots");
     }
   }
@@ -307,7 +311,7 @@ export class EverythingJournalAdapter {
       ? normalizedPath(record.newFilename!) : null;
     if (!oldPath && !newPath) return null;
     const path = newPath ?? oldPath!;
-    const relativeName = relativePath(root, canonicalPath(path)).replace(/\\/g, "/");
+    const relativeName = relativePath(root, path).replace(/\\/g, "/");
     if (this.ignores.some((pattern) => pattern.test(relativeName))) return null;
     const parsedDate = record.changedAt ? new Date(record.changedAt) : this.now();
     return {
