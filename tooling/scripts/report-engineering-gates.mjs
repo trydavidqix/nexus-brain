@@ -1,8 +1,10 @@
-import { appendFileSync, lstatSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { classifyBranch, classifyWorktree, GIT_HYGIENE_CLASSIFICATIONS, isInProjectWorktreeScope } from './engineering-gates-core.mjs';
+import { provesActiveWorktreeOwnership } from './ownership-registry-core.mjs';
+import { readOwnershipRegistry } from './ownership-registry-store.mjs';
 
 const repositoryName = 'nexus-brain';
 const namingValidator = resolve(dirname(fileURLToPath(import.meta.url)), 'check-git-naming.mjs');
@@ -88,7 +90,7 @@ function emptyCounts() {
   return Object.fromEntries(GIT_HYGIENE_CLASSIFICATIONS.map(classification => [classification, 0]));
 }
 
-function worktreeInspection(row, root, eventBranch, activeTaskProven) {
+function worktreeInspection(row, root, eventBranch, ownershipRecords) {
   if (!isInProjectWorktreeScope(row.path, root, repositoryName)) return { skipped: true };
 
   const symlink = !row.prunable && (() => {
@@ -105,7 +107,7 @@ function worktreeInspection(row, root, eventBranch, activeTaskProven) {
   const status = gitValue(['status', '--porcelain', '--untracked-files=all'], row.path);
   const dirty = status === undefined ? undefined : status.length > 0;
   const branch = row.branch ?? (resolve(row.path).toLowerCase() === resolve(root).toLowerCase() ? eventBranch : undefined);
-  const isActiveTask = Boolean(activeTaskProven && branch && eventBranch && branch === eventBranch);
+  const isActiveTask = Boolean(branch && provesActiveWorktreeOwnership(ownershipRecords, { branch, worktree: row.path }));
   return {
     skipped: false,
     branch,
@@ -114,7 +116,7 @@ function worktreeInspection(row, root, eventBranch, activeTaskProven) {
   };
 }
 
-function inspectHygiene(root, eventBranch, activeTaskProven) {
+function inspectHygiene(root, eventBranch) {
   const worktreeOutput = gitValue(['worktree', 'list', '--porcelain'], root);
   const worktreeCounts = emptyCounts();
   const branchCounts = emptyCounts();
@@ -122,12 +124,26 @@ function inspectHygiene(root, eventBranch, activeTaskProven) {
   const branchWorktreeStatus = new Map();
   let excludedWorktrees = 0;
   let inspectedWorktrees = 0;
+  let ownershipRegistryStatus = 'UNAVAILABLE';
+  let ownershipRecords = [];
 
+  const commonDirectory = gitValue(['rev-parse', '--git-common-dir'], root);
+  if (commonDirectory) {
+    const ownershipRegistryPath = resolve(root, commonDirectory, 'nexus-ownership', 'registry.json');
+    if (existsSync(ownershipRegistryPath)) {
+      try {
+        ownershipRecords = readOwnershipRegistry(ownershipRegistryPath).records;
+        ownershipRegistryStatus = 'AVAILABLE';
+      } catch {
+        ownershipRegistryStatus = 'INVALID';
+      }
+    }
+  }
   if (worktreeOutput === undefined) {
     worktreeCounts.UNKNOWN += 1;
   } else {
     for (const row of parseWorktrees(worktreeOutput)) {
-      const inspection = worktreeInspection(row, root, eventBranch, activeTaskProven);
+      const inspection = worktreeInspection(row, root, eventBranch, ownershipRecords);
       if (inspection.skipped) {
         excludedWorktrees += 1;
         if (row.branch) skippedBranches.add(row.branch);
@@ -174,7 +190,7 @@ function inspectHygiene(root, eventBranch, activeTaskProven) {
     classifications: { worktrees: worktreeCounts, branches: branchCounts },
     inspected_worktrees: inspectedWorktrees,
     excluded_worktrees: excludedWorktrees,
-    ownership_registry: 'UNAVAILABLE',
+    ownership_registry: ownershipRegistryStatus,
     safe_retirement_proof: 'UNAVAILABLE',
     mutations_performed: 0
   };
@@ -235,7 +251,7 @@ function buildReport() {
     blocking: false,
     cleanup_enabled: false,
     delivery,
-    git_hygiene: inspectHygiene(root, eventBranch, false)
+    git_hygiene: inspectHygiene(root, eventBranch)
   };
 }
 
