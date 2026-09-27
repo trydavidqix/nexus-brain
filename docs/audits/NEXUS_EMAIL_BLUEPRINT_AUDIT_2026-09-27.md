@@ -38,7 +38,7 @@ The two Nexus Cognitive Runtime v2 attachments are short index/stub files that s
 | 18 | Lumenva Phone — Google AI Pro + Codex Plus | LUMENVA | Phone/voice implementation choice. |
 | 19 | Lumenva Phone — Plano de Implementação CLI-First | LUMENVA | Phone/voice implementation choice. |
 | 20 | Lumenva Fast Decision Engine + Phone — Plano | LUMENVA/PARTIAL | Phone path stays Lumenva. Generic typed-decision ideas are already owned by maestri.decide and must not create a second router. |
-| 21 | Lumenva Fast Decision Engine — Master Implementation Plan | PARTIAL | Keep deterministic-first/abstain/fallback patterns only where compatible with canonical Maestri decision authority. |
+| 21 | Lumenva Fast Decision Engine — Master Implementation Plan | NEXUS/PARTIAL | Deterministic-first, confidence≠risk, policy-before-model and abstain/fallback map directly to canonical `maestri.decide()`. This audit implements typed decision contracts plus the first policy-first deterministic baseline; learned classifier/calibration stages remain gated. |
 | 22 | Lumenva Commerce OS — Canais e Países | LUMENVA | Commerce/business domain. |
 | 23 | Lumenva Commerce OS — Social Commerce | LUMENVA | Commerce/social business domain. |
 | 24 | Lumenva — MCP, CLI e APIs Selecionados | PARTIAL | Provider/tool candidates are discovery evidence only; Reach/Provider Registry decides current implementation after checks. |
@@ -94,3 +94,8 @@ CRM/business workflows, social/Meta operations, commerce, phone/voice, legal dep
 ## Implementation rule
 
 Email blueprints are provenance, not authority by title. A source capability is implemented only when it has a clear Nexus owner, does not duplicate an existing authority, has contracts/acceptance evidence, is not superseded by current repository decisions, and passes tests plus independent validation.
+
+
+#### Maestri Reflex / Fast Decision assimilation
+
+The Fast Decision source is not promoted as a second router. Its useful rules are absorbed into the single `maestri.decide()` authority: deterministic facts first, confidence separate from risk, policy/approval always authoritative, and explicit abstention/fallback when evidence is conflicting or insufficient. This branch adds typed decision input/result contracts and a deterministic baseline under the Nexus control plane. Learned classification, calibration, shadow mode and training remain evidence-gated Blueprint stages.
