@@ -41,6 +41,14 @@
           {
             "context": "CodeQL",
             "integration_id": 57789
+          },
+          {
+            "context": "Gitleaks secrets scan",
+            "integration_id": 15368
+          },
+          {
+            "context": "dependency-review",
+            "integration_id": 15368
           }
         ],
         "strict_required_status_checks_policy": true

@@ -44,7 +44,7 @@ jobs:
           category: semgrep
 
   gitleaks:
-    name: Gitleaks secrets scan (report only)
+    name: Gitleaks secrets scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -57,12 +57,11 @@ jobs:
           persist-credentials: false
       - name: Scan repository history for secrets
         id: gitleaks
-        continue-on-error: true
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITLEAKS_ENABLE_COMMENTS: 'false'
-          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: 'true'
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: 'false'
 
   osv-scanner:
     name: OSV-Scanner dependency scan (report only)
