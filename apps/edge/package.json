@@ -5,6 +5,8 @@
   "type": "module",
   "main": "src/index.ts",
   "exports": {
+    ".": "./src/index.ts",
+    "./everything": "./src/everything/index.ts",
     "./wire": "./src/bridge/wire.mjs",
     "./daemon-control": "./src/daemon/daemon-control.mjs"
   },
