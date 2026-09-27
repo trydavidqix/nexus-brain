@@ -1,7 +1,7 @@
 # NB-19 G5: Security and Dependency Gates
 
 **Captured:** 2026-09-27  
-**Status:** Implemented locally; pull request checks and required-ruleset activation pending.
+**Status:** Implementation merged and validated; closeout evidence pending integration.
 
 ## Repository security baseline
 
@@ -39,6 +39,11 @@
 - [GitHub secret scanning availability](https://docs.github.com/en/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enable-secret-scanning)
 - [Gitleaks configuration and finding fingerprints](https://github.com/gitleaks/gitleaks)
 
-## Pending integration evidence
+## Integration evidence
 
-Record the G5 pull request number, final head SHA, passing required-check contexts, active-ruleset readback, and merge commit here before marking G5 complete.
+- Implementation PR [#60](https://github.com/trydavidqix/nexus-brain/pull/60) merged on 2026-09-27.
+- PR head: `60351eb8c112e135940e3ade993d88eb6dcfebbc`; squash merge commit: `26c085fba80c9c56b1438dbda6e1e7728ba56bae`.
+- Required checks passed on the PR head: `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`.
+- Other configured PR checks also passed: JavaScript/TypeScript analysis, Semgrep, OSV-Scanner, and ZAP baseline.
+- Active ruleset ID `24075255` readback confirms those five required checks, strict up-to-date checks, `main`-only targeting, and zero bypass actors.
+- PR merge state was `CLEAN` before squash merge.
