@@ -46,14 +46,17 @@ test('prevents separate branches from sharing one active worktree', () => {
   assert.deepEqual(validateOwnershipRegistry([first, second]), ['active worktree is already owned']);
 });
 
-test('allows separate agents on the same task only with separate branches and worktrees', () => {
+test('requires a distinct Maestri task split before a task can have another active owner', () => {
   const second = {
     ...first,
     agentId: 'codex-reviewer',
     branch: 'codex/nb19-g7-ownership-review',
     worktree: resolve('nexus-brain-g7-review')
   };
-  assert.deepEqual(validateOwnershipRegistry([first, second]), []);
+  assert.deepEqual(validateOwnershipRegistry([first, second]), [
+    'active task is already assigned; Maestri subtask/owner split required: NB-19-G7'
+  ]);
+  assert.deepEqual(validateOwnershipRegistry([first, { ...second, taskId: 'NB-19-G7-CHILD-A' }]), []);
 });
 
 test('proves active ownership only when task, agent, branch, and worktree all match', () => {

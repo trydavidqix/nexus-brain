@@ -28,7 +28,7 @@ export function validateOwnershipRegistry(records) {
   const errors = [];
   const activeBranches = new Map();
   const activeWorktrees = new Map();
-  const activeBindings = new Set();
+  const activeTasks = new Set();
 
   records.forEach((record, index) => {
     const recordErrors = validateOwnershipRecord(record);
@@ -36,8 +36,10 @@ export function validateOwnershipRegistry(records) {
     if (recordErrors.length || record.status !== 'ACTIVE') return;
 
     const binding = `${record.taskId}\u0000${record.agentId}`;
-    if (activeBindings.has(binding)) errors.push(`active task/agent binding is already registered: ${record.taskId}/${record.agentId}`);
-    activeBindings.add(binding);
+    if (activeTasks.has(record.taskId)) {
+      errors.push(`active task is already assigned; Maestri subtask/owner split required: ${record.taskId}`);
+    }
+    activeTasks.add(record.taskId);
 
     const branchOwner = activeBranches.get(record.branch);
     if (branchOwner && branchOwner !== binding) errors.push(`active branch is already owned: ${record.branch}`);
