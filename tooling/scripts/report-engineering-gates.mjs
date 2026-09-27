@@ -2,7 +2,8 @@ import { appendFileSync, existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { classifyBranch, classifyWorktree, GIT_HYGIENE_CLASSIFICATIONS, isInProjectWorktreeScope } from './engineering-gates-core.mjs';
+import { classifyBranch, classifyWorktree, countOrphanedOwnershipRecords, findEquivalentTreeGroups, GIT_HYGIENE_CLASSIFICATIONS, isInProjectWorktreeScope } from './engineering-gates-core.mjs';
+import { parseOpenPullRequestBranches } from './github-pr-inventory.mjs';
 import { provesActiveWorktreeOwnership } from './ownership-registry-core.mjs';
 import { readOwnershipRegistry } from './ownership-registry-store.mjs';
 
@@ -90,7 +91,7 @@ function emptyCounts() {
   return Object.fromEntries(GIT_HYGIENE_CLASSIFICATIONS.map(classification => [classification, 0]));
 }
 
-function worktreeInspection(row, root, eventBranch, ownershipRecords) {
+function worktreeInspection(row, root, eventBranch, ownershipRecords, ownershipRegistryStatus, pullRequestInventory) {
   if (!isInProjectWorktreeScope(row.path, root, repositoryName)) return { skipped: true };
 
   const symlink = !row.prunable && (() => {
@@ -108,12 +109,47 @@ function worktreeInspection(row, root, eventBranch, ownershipRecords) {
   const dirty = status === undefined ? undefined : status.length > 0;
   const branch = row.branch ?? (resolve(row.path).toLowerCase() === resolve(root).toLowerCase() ? eventBranch : undefined);
   const isActiveTask = Boolean(branch && provesActiveWorktreeOwnership(ownershipRecords, { branch, worktree: row.path }));
+  const pullRequestStatus = pullRequestInventory.status !== 'AVAILABLE' ? 'UNKNOWN'
+    : pullRequestInventory.branches.has(branch) ? 'OPEN' : 'NONE';
   return {
     skipped: false,
     branch,
     dirty,
-    status: classifyWorktree({ dirty, activeTaskProven: isActiveTask })
+    status: classifyWorktree({
+      dirty,
+      activeTaskProven: isActiveTask,
+      ownershipRegistryAvailable: ownershipRegistryStatus === 'AVAILABLE',
+      pullRequestStatus
+    }),
+    activeTaskProven: isActiveTask
   };
+}
+
+function repositorySlug(root) {
+  const configured = process.env.GITHUB_REPOSITORY;
+  if (/^[^/]+\/[^/]+$/.test(configured || '')) return configured.replace(/\.git$/i, '');
+  const remote = gitValue(['remote', 'get-url', 'origin'], root);
+  const match = remote?.match(/(?:github\.com[:/])([^/]+\/[^/]+?)(?:\.git)?$/i);
+  return match?.[1];
+}
+
+function readOpenPullRequestInventory(root) {
+  const slug = repositorySlug(root);
+  if (!slug) return { status: 'UNAVAILABLE', branches: new Set(), count: 0 };
+  const result = spawnSync('gh', ['pr', 'list', '--repo', slug, '--state', 'open', '--json', 'headRefName,headRepositoryOwner', '--limit', '1000'], {
+    cwd: root,
+    encoding: 'utf8',
+    windowsHide: true,
+    timeout: 15000,
+    maxBuffer: 2 * 1024 * 1024,
+    env: process.env
+  });
+  if (result.status !== 0) return { status: 'UNAVAILABLE', branches: new Set(), count: 0 };
+  let rows;
+  try { rows = JSON.parse(result.stdout); } catch { return { status: 'INVALID', branches: new Set(), count: 0 }; }
+  const branches = parseOpenPullRequestBranches(result.stdout, slug.split('/')[0]);
+  if (!branches) return { status: 'INCOMPLETE', branches: new Set(), count: Array.isArray(rows) ? rows.length : 0 };
+  return { status: 'AVAILABLE', branches, count: rows.length };
 }
 
 function inspectHygiene(root, eventBranch) {
@@ -122,10 +158,13 @@ function inspectHygiene(root, eventBranch) {
   const branchCounts = emptyCounts();
   const skippedBranches = new Set();
   const branchWorktreeStatus = new Map();
+  const activeBranches = new Set();
   let excludedWorktrees = 0;
   let inspectedWorktrees = 0;
   let ownershipRegistryStatus = 'UNAVAILABLE';
   let ownershipRecords = [];
+  let orphanedOwnerRecords = 0;
+  const pullRequestInventory = readOpenPullRequestInventory(root);
 
   const commonDirectory = gitValue(['rev-parse', '--git-common-dir'], root);
   if (commonDirectory) {
@@ -142,8 +181,9 @@ function inspectHygiene(root, eventBranch) {
   if (worktreeOutput === undefined) {
     worktreeCounts.UNKNOWN += 1;
   } else {
-    for (const row of parseWorktrees(worktreeOutput)) {
-      const inspection = worktreeInspection(row, root, eventBranch, ownershipRecords);
+    const worktreeRows = parseWorktrees(worktreeOutput);
+    for (const row of worktreeRows) {
+      const inspection = worktreeInspection(row, root, eventBranch, ownershipRecords, ownershipRegistryStatus, pullRequestInventory);
       if (inspection.skipped) {
         excludedWorktrees += 1;
         if (row.branch) skippedBranches.add(row.branch);
@@ -154,13 +194,22 @@ function inspectHygiene(root, eventBranch) {
       worktreeCounts[inspection.status] += 1;
       if (inspection.branch) {
         branchWorktreeStatus.set(inspection.branch, inspection.dirty);
+        if (inspection.activeTaskProven) activeBranches.add(inspection.branch);
         if (row.branch) branchWorktreeStatus.set(row.branch, inspection.dirty);
       }
+    }
+    if (ownershipRegistryStatus === 'AVAILABLE') {
+      const scopedOwners = ownershipRecords.filter(record => record.status === 'ACTIVE'
+        && isInProjectWorktreeScope(record.worktree, root, repositoryName)
+        && !lstatIsSymlink(record.worktree));
+      orphanedOwnerRecords = countOrphanedOwnershipRecords(scopedOwners, worktreeRows) ?? 0;
+      worktreeCounts.ORPHANED_METADATA += orphanedOwnerRecords;
     }
   }
 
   const mainSha = gitValue(['rev-parse', '--verify', 'origin/main^{commit}'], root);
   const refs = gitValue(['for-each-ref', '--format=%(refname:short)%09%(objectname)', 'refs/heads'], root);
+  const branchEntries = [];
   if (!refs || !mainSha) {
     branchCounts.UNKNOWN += 1;
   } else {
@@ -178,12 +227,41 @@ function inspectHygiene(root, eventBranch) {
       const ahead = aheadText === undefined ? undefined : Number(aheadText);
       const ancestry = runGit(['merge-base', '--is-ancestor', branch, 'origin/main'], root);
       const merged = ancestry.status === 0 ? true : ancestry.status === 1 ? false : undefined;
-      branchCounts[classifyBranch({
+      const treeOid = gitValue(['rev-parse', '--verify', `${branch}^{tree}`], root);
+      const branchClean = branchWorktreeStatus.has(branch) ? branchWorktreeStatus.get(branch) === false : true;
+      branchEntries.push({
+        id: branch,
+        treeOid,
+        clean: branchClean,
         commitsAhead: ahead,
         merged,
-        clean: branchWorktreeStatus.get(branch)
-      })] += 1;
+        cleanForClassification: branchWorktreeStatus.get(branch),
+        activeTaskProven: activeBranches.has(branch),
+        pullRequestOpen: pullRequestInventory.status === 'AVAILABLE' && pullRequestInventory.branches.has(branch),
+        pullRequestInventoryComplete: pullRequestInventory.status === 'AVAILABLE'
+      });
     }
+  }
+
+  const equivalentTreeGroups = findEquivalentTreeGroups(branchEntries);
+  const duplicateBranches = new Set(equivalentTreeGroups.flatMap(group => group.ids ?? []));
+  const duplicateTreeOids = new Set();
+  for (const group of equivalentTreeGroups) {
+    for (const branch of group.ids ?? []) {
+      const entry = branchEntries.find(candidate => candidate.id === branch);
+      if (entry?.treeOid) duplicateTreeOids.add(entry.treeOid.toLowerCase());
+    }
+  }
+  for (const entry of branchEntries) {
+    branchCounts[classifyBranch({
+      commitsAhead: entry.commitsAhead,
+      merged: entry.merged,
+      clean: entry.cleanForClassification,
+      activeTaskProven: entry.activeTaskProven,
+      pullRequestOpen: entry.pullRequestOpen,
+      pullRequestInventoryComplete: entry.pullRequestInventoryComplete,
+      duplicateCandidate: duplicateBranches.has(entry.id) && duplicateTreeOids.has(entry.treeOid?.toLowerCase())
+    })] += 1;
   }
 
   return {
@@ -191,9 +269,18 @@ function inspectHygiene(root, eventBranch) {
     inspected_worktrees: inspectedWorktrees,
     excluded_worktrees: excludedWorktrees,
     ownership_registry: ownershipRegistryStatus,
+    orphaned_owner_records: orphanedOwnerRecords,
+    open_pull_request_inventory: pullRequestInventory.status,
+    open_pull_requests: pullRequestInventory.count,
+    equivalent_tree_groups: equivalentTreeGroups.length,
+    equivalent_tree_branches: equivalentTreeGroups.reduce((total, group) => total + group.count, 0),
     safe_retirement_proof: 'UNAVAILABLE',
     mutations_performed: 0
   };
+}
+
+function lstatIsSymlink(candidatePath) {
+  try { return lstatSync(candidatePath).isSymbolicLink(); } catch { return false; }
 }
 
 function firstLine(value) {
@@ -236,6 +323,11 @@ function buildReport() {
         inspected_worktrees: 0,
         excluded_worktrees: 0,
         ownership_registry: 'UNAVAILABLE',
+        orphaned_owner_records: 0,
+        open_pull_request_inventory: 'UNAVAILABLE',
+        open_pull_requests: 0,
+        equivalent_tree_groups: 0,
+        equivalent_tree_branches: 0,
         safe_retirement_proof: 'UNAVAILABLE',
         mutations_performed: 0
       }
@@ -275,6 +367,9 @@ function writeSummary(report) {
     `- Branch classifications: ${statusLine(branches)}`,
     `- Out-of-scope worktrees skipped: ${report.git_hygiene.excluded_worktrees}`,
     `- Ownership registry: ${report.git_hygiene.ownership_registry}`,
+    `- Orphaned active owner records: ${report.git_hygiene.orphaned_owner_records}`,
+    `- Open PR inventory: ${report.git_hygiene.open_pull_request_inventory} (${report.git_hygiene.open_pull_requests} PRs)`,
+    `- Equivalent tree groups: ${report.git_hygiene.equivalent_tree_groups} (${report.git_hygiene.equivalent_tree_branches} branches; review only)`,
     `- Mutations performed: ${report.git_hygiene.mutations_performed}`,
     ''
   ].join('\n');
