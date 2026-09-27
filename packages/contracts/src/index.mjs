@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan'];
+const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan','maestri-decision-input','maestri-decision-result'];
 const SET=new Set(TYPES);
 const DIR=join(dirname(fileURLToPath(import.meta.url)),'..','schemas');
 const SCHEMAS=Object.fromEntries(TYPES.map(type=>[type,JSON.parse(readFileSync(join(DIR,type,`${type}.v1.schema.json`),'utf8'))]));
