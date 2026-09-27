@@ -115,7 +115,7 @@ function globToRegExp(glob: string): RegExp {
       index += 1;
       if (normalized[index + 1] === "/") {
         index += 1;
-        source += "(?:.*/)?";
+        source += "(?:[^/]+/)*";
       } else {
         source += ".*";
       }
