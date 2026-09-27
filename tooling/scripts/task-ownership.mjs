@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { findActiveOwnership, releaseOwnership, upsertOwnership } from './ownership-registry-core.mjs';
-import { readOwnershipRegistry, writeOwnershipRegistry } from './ownership-registry-store.mjs';
+import { readOwnershipRegistry, updateOwnershipRegistry } from './ownership-registry-store.mjs';
 
 function gitValue(args, cwd) {
   const result = spawnSync('git', args, { cwd, encoding: 'utf8', windowsHide: true, maxBuffer: 1024 * 1024 });
@@ -53,10 +53,10 @@ function main(args) {
   }
   const options = parseOptions(optionArgs);
   const context = repositoryContext();
-  const registry = readOwnershipRegistry(context.registryPath);
 
   if (command === 'list') {
     if (options.size > 0) throw new Error('list does not accept identity options');
+    const registry = readOwnershipRegistry(context.registryPath);
     console.log(JSON.stringify({ version: registry.version, records: registry.records.map(sanitizedRecord) }, null, 2));
     return;
   }
@@ -69,23 +69,25 @@ function main(args) {
 
   if (command === 'register') {
     const record = { taskId, agentId, branch: context.branch, worktree: context.root, status: 'ACTIVE' };
-    const records = upsertOwnership(registry.records, record);
-    writeOwnershipRegistry(context.registryPath, records);
+    updateOwnershipRegistry(context.registryPath, records => upsertOwnership(records, record));
     console.log(JSON.stringify({ result: 'ACTIVE', ownership: sanitizedRecord(record) }));
     return;
   }
 
-  const existing = registry.records.find(record => record.taskId === taskId && record.agentId === agentId && record.status === 'ACTIVE');
-  if (!existing || !findActiveOwnership(registry.records, {
-    ...existing,
-    branch: context.branch,
-    worktree: context.root
-  })) {
-    throw new Error('current task and agent do not own this branch and worktree');
-  }
-  const records = releaseOwnership(registry.records, taskId, agentId);
-  writeOwnershipRegistry(context.registryPath, records);
-  console.log(JSON.stringify({ result: 'RELEASED', ownership: sanitizedRecord({ ...existing, status: 'RELEASED' }) }));
+  let releasedRecord;
+  updateOwnershipRegistry(context.registryPath, records => {
+    const existing = records.find(record => record.taskId === taskId && record.agentId === agentId && record.status === 'ACTIVE');
+    if (!existing || !findActiveOwnership(records, {
+      ...existing,
+      branch: context.branch,
+      worktree: context.root
+    })) {
+      throw new Error('current task and agent do not own this branch and worktree');
+    }
+    releasedRecord = { ...existing, status: 'RELEASED' };
+    return releaseOwnership(records, taskId, agentId);
+  });
+  console.log(JSON.stringify({ result: 'RELEASED', ownership: sanitizedRecord(releasedRecord) }));
 }
 
 try {

@@ -28,7 +28,7 @@ test('requires squash-only PRs, resolved conversations, and current CI/security 
       .map(({ context, integration_id }) => [context, integration_id])
       .sort(([left], [right]) => left.localeCompare(right)),
     [
-      ['CodeQL', 57789],
+      ['CodeQL', 15368],
       ['dependency-review', 15368],
       ['Gitleaks secrets scan', 15368],
       ['mcg', 15368],
@@ -41,4 +41,27 @@ test('blocks branch deletion, force push, and non-linear history', () => {
   assert.ok(rules.has('deletion'));
   assert.ok(rules.has('non_fast_forward'));
   assert.ok(rules.has('required_linear_history'));
+});
+
+test('uses a bounded squash merge queue when real concurrent PR activity exists', () => {
+  assert.deepEqual(rules.get('merge_queue'), {
+    check_response_timeout_minutes: 60,
+    grouping_strategy: 'ALLGREEN',
+    max_entries_to_build: 2,
+    max_entries_to_merge: 1,
+    merge_method: 'SQUASH',
+    min_entries_to_merge: 1,
+    min_entries_to_merge_wait_minutes: 5
+  });
+});
+
+test('required CI, secret, dependency, and CodeQL workflows run for merge queue commits', () => {
+  const workflows = ['ci.yml', 'security-scanning.yml', 'dependency-review.yml', 'codeql.yml'];
+  for (const workflow of workflows) {
+    const source = readFileSync(resolve(repositoryRoot, '.github/workflows', workflow), 'utf8');
+    assert.match(source, /^  merge_group:/m, `${workflow} must handle merge_group`);
+  }
+
+  const security = readFileSync(resolve(repositoryRoot, '.github/workflows/security-scanning.yml'), 'utf8');
+  assert.match(security, /github\.event_name\s*==\s*'merge_group'/, 'merge queue secret scans must use the pinned CLI path');
 });

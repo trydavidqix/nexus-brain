@@ -5,6 +5,8 @@ on:
   push:
     branches: ['**']
   pull_request:
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   contents: read
@@ -72,6 +74,8 @@ jobs:
             node tooling/scripts/check-git-naming.mjs --subject "$commit_subject"
           elif [[ "$NEXUS_EVENT_NAME" == 'workflow_dispatch' && "$NEXUS_BRANCH" == 'main' ]]; then
             echo "Git naming: manual run on main; no new name to validate."
+          elif [[ "$NEXUS_EVENT_NAME" == 'merge_group' ]]; then
+            echo "Git naming was validated on each source pull request before queueing."
           else
             node tooling/scripts/check-git-naming.mjs --branch "$NEXUS_BRANCH"
           fi
