@@ -28,6 +28,7 @@ test('fails closed when ownership or PR inventory is unavailable', () => {
   assert.equal(evaluateBranchRetirement({ ...proven, registryAvailable: false, commitsAhead: 0, merged: true }).classification, 'UNKNOWN');
   assert.equal(evaluateBranchRetirement({ ...proven, pullRequestInventoryComplete: false, commitsAhead: 1, merged: true }).classification, 'UNKNOWN');
   assert.equal(evaluateBranchRetirement({ ...proven, ownerProven: false, commitsAhead: 1, merged: true }).eligible, false);
+  assert.equal(evaluateBranchRetirement({ ...proven, activeOwner: undefined, commitsAhead: 0, merged: true }).classification, 'UNKNOWN');
 });
 
 test('refuses dirty, checked-out, active, open-PR, unmerged, or recovery-protected branches', () => {

@@ -124,7 +124,9 @@ function branchEvidence(branch, context, options) {
   const commitsAhead = aheadValue === undefined ? undefined : Number(aheadValue);
   const ancestry = run('git', ['merge-base', '--is-ancestor', branch, 'origin/main'], context.root);
   const merged = ancestry.status === 0 ? true : ancestry.status === 1 ? false : undefined;
+  const recoveryClearAttested = options.recoveryClear;
   return {
+    branchSha,
     result: evaluateBranchRetirement({
       commitsAhead,
       merged,
@@ -135,11 +137,23 @@ function branchEvidence(branch, context, options) {
       registryAvailable,
       pullRequestInventoryComplete: inventory.complete,
       pullRequestOpen: inventory.branches.has(branch),
-      recoveryProtected: !options.recoveryClear,
+      recoveryProtected: !recoveryClearAttested,
       preservationProven: merged === true,
       redundancyProven: merged === true
     }),
-    matchingWorktrees
+    matchingWorktrees,
+    proof: {
+      ownershipRegistry: registryAvailable ? 'AVAILABLE' : 'UNAVAILABLE',
+      releasedTaskRecord: ownerProven,
+      activeOwner: activeOwner,
+      pullRequestInventory: inventory.complete ? 'COMPLETE' : 'INCOMPLETE',
+      pullRequestOpen: inventory.branches.has(branch),
+      commitsAheadOfMain: commitsAhead,
+      branchMergedToMain: merged === true,
+      worktreeClean: clean === true,
+      checkedOut: matchingWorktrees.length > 0,
+      recoveryClearAttested
+    }
   };
 }
 
@@ -150,18 +164,22 @@ function main(args) {
   if (evidence.registryInvalid) throw new Error('ownership registry is invalid; no retirement proof produced');
   const { classification, eligible } = evidence.result;
   if (!eligible) {
-    console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: false, mutations_performed: 0 }));
+    console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: false, proof: evidence.proof, mutations_performed: 0 }));
     process.exitCode = 2;
     return;
   }
   if (!options.apply) {
-    console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: true, action: 'LOCAL_BRANCH_ONLY', apply_required: true, mutations_performed: 0 }));
+    console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: true, proof: evidence.proof, action: 'LOCAL_BRANCH_ONLY', apply_required: true, mutations_performed: 0 }));
     return;
   }
   if (evidence.matchingWorktrees.length > 0) throw new Error('checked-out branches cannot be retired; worktrees are never removed');
+  const refreshed = branchEvidence(options['--branch'], context, options);
+  if (refreshed.registryInvalid || !refreshed.result.eligible || refreshed.branchSha !== evidence.branchSha) {
+    throw new Error('retirement proof changed before apply; no branch was deleted');
+  }
   const deleted = run('git', ['branch', '-d', options['--branch']], context.root);
   if (deleted.status !== 0) throw new Error('Git refused local branch retirement; no force delete was attempted');
-  console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: true, retired: true, scope: 'LOCAL_BRANCH_ONLY', mutations_performed: 1 }));
+  console.log(JSON.stringify({ branch: options['--branch'], classification, eligible: true, proof: evidence.proof, retired: true, scope: 'LOCAL_BRANCH_ONLY', mutations_performed: 1 }));
 }
 
 try {

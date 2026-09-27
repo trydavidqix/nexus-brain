@@ -1,7 +1,9 @@
 export function evaluateBranchRetirement(evidence) {
   if (!evidence || typeof evidence !== 'object'
     || !Number.isInteger(evidence.commitsAhead) || evidence.commitsAhead < 0
-    || typeof evidence.merged !== 'boolean') return { classification: 'UNKNOWN', eligible: false };
+    || typeof evidence.merged !== 'boolean'
+    || ['recoveryProtected', 'clean', 'activeOwner', 'ownerProven', 'registryAvailable', 'pullRequestInventoryComplete', 'pullRequestOpen', 'checkedOut', 'preservationProven', 'redundancyProven']
+      .some(key => typeof evidence[key] !== 'boolean')) return { classification: 'UNKNOWN', eligible: false };
   if (evidence.recoveryProtected === true) return { classification: 'RECOVERY_PROTECTED', eligible: false };
   if (evidence.clean === false) return { classification: 'DIRTY', eligible: false };
   if (evidence.clean !== true) return { classification: 'UNKNOWN', eligible: false };
