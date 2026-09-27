@@ -106,28 +106,37 @@ function isWithin(root: string, target: string): boolean {
   return rel === "" || (rel !== ".." && !rel.startsWith(`..${separator}`) && !(isWindowsPath(root) ? win32.isAbsolute(rel) : isAbsolute(rel)));
 }
 
-function globToRegExp(glob: string): RegExp {
-  const normalized = glob.replace(/\\/g, "/");
-  let source = "^";
-  for (let index = 0; index < normalized.length; index += 1) {
-    const char = normalized[index]!;
-    if (char === "*" && normalized[index + 1] === "*") {
-      index += 1;
-      if (normalized[index + 1] === "/") {
-        index += 1;
-        source += "(?:[^/]+/)*";
-      } else {
-        source += ".*";
-      }
-    } else if (char === "*") {
-      source += "[^/]*";
-    } else if (char === "?") {
-      source += "[^/]";
-    } else {
-      source += char.replace(/[|\\{}()[\]^$+?.]/g, "\\$&");
+function matchesSegment(glob: string, segment: string): boolean {
+  let previous = Array<boolean>(segment.length + 1).fill(false);
+  previous[0] = true;
+  for (const token of glob.toLowerCase()) {
+    const current = Array<boolean>(segment.length + 1).fill(false);
+    if (token === "*") current[0] = previous[0]!;
+    for (let index = 1; index <= segment.length; index += 1) {
+      current[index] = token === "*"
+        ? previous[index]! || current[index - 1]!
+        : previous[index - 1]! && (token === "?" || token === segment[index - 1]!.toLowerCase());
     }
+    previous = current;
   }
-  return new RegExp(`${source}$`, "i");
+  return previous[segment.length]!;
+}
+
+function matchesGlob(glob: readonly string[], path: string): boolean {
+  const segments = path.split("/");
+  let previous = Array<boolean>(segments.length + 1).fill(false);
+  previous[0] = true;
+  for (const token of glob) {
+    const current = Array<boolean>(segments.length + 1).fill(false);
+    if (token === "**") current[0] = previous[0]!;
+    for (let index = 1; index <= segments.length; index += 1) {
+      current[index] = token === "**"
+        ? previous[index]! || current[index - 1]!
+        : previous[index - 1]! && matchesSegment(token, segments[index - 1]!);
+    }
+    previous = current;
+  }
+  return previous[segments.length]!;
 }
 
 function parsePosition(stdout: string): JournalPosition {
@@ -197,7 +206,7 @@ export class EverythingJournalAdapter {
   private readonly executable: string;
   private readonly instance?: string;
   private readonly roots: readonly string[];
-  private readonly ignores: readonly RegExp[];
+  private readonly ignores: readonly (readonly string[])[];
   private readonly now: () => Date;
   private readonly maxEvents: number;
   private polling = false;
@@ -207,7 +216,8 @@ export class EverythingJournalAdapter {
     this.roots = options.projectRoots.map(normalizedPath);
     this.executable = options.executable ?? "es.exe";
     this.instance = options.instance;
-    this.ignores = [...DEFAULT_IGNORES, ...(options.ignorePatterns ?? [])].map(globToRegExp);
+    this.ignores = [...DEFAULT_IGNORES, ...(options.ignorePatterns ?? [])]
+      .map((glob) => glob.replace(/\\/g, "/").toLowerCase().split("/"));
     this.now = options.now ?? (() => new Date());
     this.maxEvents = Math.max(1, Math.min(Math.trunc(options.maxEventsPerPoll ?? 500), 5000));
     const statePath = resolve(options.statePath);
@@ -312,7 +322,7 @@ export class EverythingJournalAdapter {
     if (!oldPath && !newPath) return null;
     const path = newPath ?? oldPath!;
     const relativeName = relativePath(root, path).replace(/\\/g, "/");
-    if (this.ignores.some((pattern) => pattern.test(relativeName))) return null;
+    if (this.ignores.some((pattern) => matchesGlob(pattern, relativeName))) return null;
     const parsedDate = record.changedAt ? new Date(record.changedAt) : this.now();
     return {
       eventId: `${record.journalId}:${record.changeId}`,
@@ -329,7 +339,7 @@ export class EverythingJournalAdapter {
 
   private isIgnored(candidate: string, root: string): boolean {
     const relativeName = relativePath(root, candidate).replace(/\\/g, "/");
-    return this.ignores.some((pattern) => pattern.test(relativeName));
+    return this.ignores.some((pattern) => matchesGlob(pattern, relativeName));
   }
 
   private async readGitFallback(correlation: RuntimeCorrelation): Promise<GitFallbackSnapshot[]> {

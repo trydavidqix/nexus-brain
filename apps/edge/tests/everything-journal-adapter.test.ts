@@ -56,13 +56,14 @@ describe("EverythingJournalAdapter", () => {
       if (command.args[0] === "-get-everything-version") return result(command, "1.5.0.1423b");
       if (command.args[0] === "-get-journal-pos") {
         positionReads += 1;
-        return result(command, positionReads === 1 ? "17 100" : "17 104");
+        return result(command, positionReads === 1 ? "17 100" : "17 105");
       }
       return result(command, JSON.stringify([
         { "Journal ID": 17, "Change ID": 101, Action: "File Create", "Date Changed": "2026-09-27 10:00:00", Filename: join(paths.root, "src", "main.ts") },
         { "Journal ID": 17, "Change ID": 102, Action: "File Modify", "Date Changed": "2026-09-27 10:00:01", Filename: join(paths.root, "node_modules", "pkg", "index.js") },
         { "Journal ID": 17, "Change ID": 103, Action: "File Delete", "Date Changed": "2026-09-27 10:00:02", Filename: join(paths.base, "outside.txt") },
         { "Journal ID": 17, "Change ID": 104, Action: "File Rename", "Date Changed": "2026-09-27 10:00:03", Filename: join(paths.root, "src", "old.ts"), "New Filename": join(paths.root, "src", "new.ts") },
+        { "Journal ID": 17, "Change ID": 105, Action: "File Modify", "Date Changed": "2026-09-27 10:00:04", Filename: join(paths.root, "src", ...Array<string>(100).fill("nested"), "debug.log") },
       ]));
     });
     const adapter = new EverythingJournalAdapter({ projectRoots: [paths.root], statePath: paths.statePath, commandRunner: runner });
@@ -74,7 +75,7 @@ describe("EverythingJournalAdapter", () => {
     expect(response.events.map(({ action }) => action)).toEqual(["CREATE", "RENAME"]);
     expect(response.events[0]?.path).toContain("main.ts");
     expect(response.events[1]).toMatchObject({ oldPath: expect.stringContaining("old.ts"), newPath: expect.stringContaining("new.ts") });
-    expect(response.position?.changeId).toBe(104);
+    expect(response.position?.changeId).toBe(105);
   });
 
   it("preserves 64-bit Everything journal IDs from JSON without JavaScript rounding", async () => {
