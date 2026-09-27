@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
@@ -34,4 +36,32 @@ test('emits a report-only summary without mutating the repository or exposing wo
   assert.ok('excluded_worktrees' in report.git_hygiene);
   assert.doesNotMatch(result.stdout, /lumenva/i);
   assert.equal(gitStatus(), before);
+});
+
+test('rejects event and summary paths outside the runner temporary directory', () => {
+  const testRoot = mkdtempSync(join(tmpdir(), 'nexus-git-hygiene-'));
+  const runnerTemp = join(testRoot, 'runner');
+  const externalFile = join(testRoot, 'outside-runner.txt');
+  mkdirSync(runnerTemp);
+  writeFileSync(externalFile, 'preserve this file\n', 'utf8');
+
+  try {
+    const result = spawnSync(process.execPath, [reportScript], {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        GITHUB_ACTIONS: 'true',
+        RUNNER_TEMP: runnerTemp,
+        GITHUB_EVENT_PATH: externalFile,
+        GITHUB_STEP_SUMMARY: externalFile
+      }
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).mode, 'REPORT_ONLY');
+    assert.equal(readFileSync(externalFile, 'utf8'), 'preserve this file\n');
+  } finally {
+    rmSync(testRoot, { recursive: true, force: true });
+  }
 });

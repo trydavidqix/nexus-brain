@@ -1,5 +1,5 @@
 import { appendFileSync, lstatSync, readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { classifyBranch, classifyWorktree, GIT_HYGIENE_CLASSIFICATIONS, isInProjectWorktreeScope } from './engineering-gates-core.mjs';
@@ -36,10 +36,25 @@ function validateName(flag, value, cwd) {
 function readEvent() {
   if (process.env.GITHUB_ACTIONS !== 'true' || !process.env.GITHUB_EVENT_PATH) return undefined;
   try {
-    return JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+    const eventPath = resolveRunnerFile(process.env.GITHUB_EVENT_PATH);
+    if (!eventPath) return undefined;
+    return JSON.parse(readFileSync(eventPath, 'utf8'));
   } catch {
     return undefined;
   }
+}
+
+function resolveRunnerFile(candidatePath) {
+  const runnerTemp = process.env.RUNNER_TEMP;
+  if (!runnerTemp || !candidatePath || !isAbsolute(candidatePath)) return undefined;
+
+  const root = resolve(runnerTemp);
+  const candidate = resolve(candidatePath);
+  const relativePath = relative(root, candidate);
+  if (!relativePath || relativePath === '..' || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
+    return undefined;
+  }
+  return candidate;
 }
 
 function parseWorktrees(output) {
@@ -253,7 +268,9 @@ const report = buildReport();
 const summary = writeSummary(report);
 if (process.env.GITHUB_ACTIONS === 'true' && process.env.GITHUB_STEP_SUMMARY) {
   try {
-    appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary, 'utf8');
+    const summaryPath = resolveRunnerFile(process.env.GITHUB_STEP_SUMMARY);
+    if (!summaryPath) throw new Error('GitHub step summary path is outside the runner temporary directory');
+    appendFileSync(summaryPath, summary, 'utf8');
   } catch {
     console.log(JSON.stringify(report));
   }

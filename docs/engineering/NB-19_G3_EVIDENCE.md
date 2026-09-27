@@ -8,6 +8,7 @@
 
 - Added delivery checks for task branch, pull request title, commit subject, and working-tree cleanliness.
 - Added report-only hygiene classifications for worktrees and branches. Unknown ownership remains `UNKNOWN`; merged/clean branches remain `STALE_REVIEW_REQUIRED` until ownership, preservation, and redundancy proofs exist.
+- Constrained GitHub event and step-summary file paths to the runner temporary directory, with a regression test that verifies outside files stay unchanged.
 - Excluded paths outside the Nexus checkout parent and repository-named Nexus siblings before inspecting worktree paths. Symlink candidates are skipped. The report exposes only an excluded-worktree count, never paths or branch names.
 - Kept ownership and safe-retirement proof explicitly `UNAVAILABLE`. The reporter performs zero mutations and never enables cleanup.
 - Added a non-blocking, always-run CI summary step. MCG checkout fetches full history so `origin/main` comparisons can be made in CI.
@@ -17,7 +18,7 @@
 
 | Gate | Result |
 | --- | --- |
-| Engineering-gate tests | Passed, 11/11 |
+| Engineering-gate tests | Passed, 12/12 |
 | Local report-only invocation | Passed; mode `REPORT_ONLY`, blocking false, cleanup false, mutations 0 |
 | Reporter privacy and no-mutation regression | Passed; no `Lumenva` text or worktree paths in output; Git status unchanged |
 | Workspace unit tests | Passed |
