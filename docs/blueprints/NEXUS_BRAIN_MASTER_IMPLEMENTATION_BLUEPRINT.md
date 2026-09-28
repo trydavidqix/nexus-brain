@@ -5,6 +5,8 @@
 **Status:** NB-03, NB-04, NB-10, NB-19, and NB-24–NB-29 are DONE. NB-02 is DONE. Migration Readiness is complete; future implementation packages remain governed by their own gates. DEV is local-first with zero additional monthly cost; no PROD in this phase.
 **Last reconciled:** 2026-09-28
 
+Companion plans: [Nexus Implementation Plan](../plans/NEXUS_IMPLEMENTATION_PLAN.md) describes capability phases; [Engineering Control Plane Implementation Plan](../plans/NEXUS_ENGINEERING_CONTROL_PLANE_IMPLEMENTATION_PLAN.md) gives subsystem detail. Neither duplicates milestone state: this Blueprint owns NB dependency, scope, acceptance and status.
+
 This is the only active cross-project implementation tracker. Nexus Brain itself is one product and one monorepo. The ecosystem it manages is explicitly multi-project: many independent projects, repositories, workspaces, sessions and agents may be registered and governed by Nexus without being moved into the Nexus monorepo. “Maestri”, “Lumenva Brain”, “Context Gateway/MCG”, “Local Runtime”, “Cloud Fabric”, “Command Center” and “Everything Edge” name historical designs or internal modules—not separate products or repositories. CRM, voice, social-business/Meta integrations, tenant business data and unrelated Lumenva code remain out of scope unless a later explicit decision identifies an exact owned path.
 
 ## 1. Mission and completion rule
