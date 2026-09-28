@@ -1,7 +1,10 @@
 # Runtime state stays local.
 state/
+!packages/state/
+!packages/state/**
 .mcg-state/
 .nexus-state/
+.nexus/state.db*
 tasks/
 logs/
 events/inbox/
