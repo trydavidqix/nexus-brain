@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nexus.project.v2",
+  "title": "Nexus Project v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project_id", "repo", "default_branch", "workspace_policy", "lifecycle", "stack", "permissions", "policies", "approvals", "budgets", "memory_namespace", "task_scope", "session_scope", "evidence_scope", "git_bindings", "ci_bindings", "deployment_bindings", "provider_constraints", "workspace_bindings"],
+  "properties": {
+    "project_id": { "type": "string", "minLength": 1 },
+    "repo": { "type": "string", "minLength": 1 },
+    "default_branch": { "type": "string", "minLength": 1 },
+    "workspace_policy": { "type": "object", "additionalProperties": true },
+    "lifecycle": { "type": "string", "minLength": 1 },
+    "stack": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "permissions": { "type": "object", "additionalProperties": true },
+    "policies": { "type": "object", "additionalProperties": true },
+    "approvals": { "type": "object", "additionalProperties": true },
+    "budgets": { "type": "object", "additionalProperties": true },
+    "memory_namespace": { "type": "string", "minLength": 1 },
+    "task_scope": { "type": "string", "minLength": 1 },
+    "session_scope": { "type": "string", "minLength": 1 },
+    "evidence_scope": { "type": "string", "minLength": 1 },
+    "git_bindings": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "ci_bindings": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "deployment_bindings": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "provider_constraints": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "workspace_bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "location"],
+        "properties": {
+          "kind": { "const": "local" },
+          "location": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

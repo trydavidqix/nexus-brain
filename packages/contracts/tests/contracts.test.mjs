@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { contractSchema, contractTypes, normalizeLegacy, validateContract } from '../src/index.mjs';
-assert.equal(contractTypes().length,46);
+assert.equal(contractTypes().length,47);
 assert.equal(contractSchema('trace').$id,'lumenva.trace.v1');
 assert.equal(validateContract('trace',{trace_id:'tr-1',timestamp:new Date().toISOString(),source:'test'}).valid,true);
 const invalid=validateContract('trace',{timestamp:'not-a-date'});assert.equal(invalid.valid,false);assert.ok(invalid.errors.some(error=>error.includes('trace_id')));
@@ -28,6 +28,12 @@ const project = {
   ci_bindings: [],
   deployment_bindings: [],
   provider_constraints: [],
+};
+
+const projectV2 = {
+  ...project,
+  memory_namespace: 'project:project-1',
+  workspace_bindings: [],
 };
 
 const goal = {
@@ -86,6 +92,30 @@ test('Project v1 accepts empty optional collections and rejects empty required s
   for (const field of ['git_bindings', 'ci_bindings', 'deployment_bindings', 'provider_constraints']) {
     assert.equal(validateContract('project', { ...project, [field]: [{}] }).valid, true, `rejected object item in ${field}`);
   }
+});
+
+test('registers Project v2 while preserving the closed Project v1 contract', () => {
+  assert.ok(contractTypes().includes('project-v2'));
+  assert.equal(contractSchema('project-v2').$id, 'nexus.project.v2');
+  assert.equal(validateContract('project', project).valid, true);
+  assert.equal(validateContract('project', { ...project, workspace_bindings: [] }).valid, false);
+
+  const result = validateContract('project-v2', projectV2);
+  assert.equal(result.valid, true, result.errors.join(', '));
+  assert.equal(projectV2.repo, project.repo);
+  assert.equal(projectV2.memory_namespace, `project:${projectV2.project_id}`);
+});
+
+test('Project v2 requires typed local workspace bindings and a project-derived memory namespace', () => {
+  const { workspace_bindings: _omitted, ...missingBindings } = projectV2;
+  assert.equal(validateContract('project-v2', missingBindings).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: null }).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: [{ kind: 'cloud', location: 'opaque-location' }] }).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: [{ kind: 'local', location: '' }] }).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: [{ kind: 'local' }] }).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: [{ kind: 'local', location: 'opaque://local-workspace/path' }] }).valid, true);
+  assert.equal(validateContract('project-v2', { ...projectV2, memory_namespace: 'other-project-memory' }).valid, false);
+  assert.equal(validateContract('project-v2', { ...projectV2, extra: true }).valid, false);
 });
 
 test('Goal v1 requires every field, validates types and rejects unknown top-level fields', () => {

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import Database from 'better-sqlite3';
-import { openSqliteStateStore } from '@nexus-brain/state';
+import { openSqliteStateStore, openStateDatabase } from '@nexus-brain/state';
 
 async function makeTempDirectory(t) {
   const directory = await mkdtemp(join(tmpdir(), 'nexus-state-store-test-'));
@@ -32,6 +32,71 @@ const project = (project_id = 'project-1') => ({
   deployment_bindings: [],
   provider_constraints: [],
 });
+
+const projectV2 = (project_id = 'project-1') => ({
+  ...project(project_id),
+  memory_namespace: `project:${project_id}`,
+  workspace_bindings: [],
+});
+
+const LEGACY_STATE_STORE_V1_SQL = `
+      CREATE TABLE projects (
+        project_id TEXT PRIMARY KEY,
+        snapshot_json TEXT NOT NULL,
+        version INTEGER NOT NULL CHECK (version > 0)
+      );
+
+      CREATE TABLE goals (
+        project_id TEXT NOT NULL,
+        goal_id TEXT NOT NULL,
+        snapshot_json TEXT NOT NULL,
+        version INTEGER NOT NULL CHECK (version = 1),
+        PRIMARY KEY (project_id, goal_id),
+        FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE RESTRICT
+      );
+
+      CREATE TABLE events (
+        event_id TEXT PRIMARY KEY,
+        event_type TEXT NOT NULL CHECK (event_type IN ('PROJECT_CREATED', 'PROJECT_UPDATED', 'GOAL_CREATED')),
+        occurred_at TEXT NOT NULL,
+        aggregate_type TEXT NOT NULL,
+        aggregate_id TEXT NOT NULL,
+        aggregate_version INTEGER NOT NULL CHECK (aggregate_version > 0),
+        project_id TEXT NOT NULL,
+        payload TEXT NOT NULL,
+        FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE RESTRICT
+      );
+
+      CREATE TABLE outbox (
+        event_id TEXT PRIMARY KEY,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE RESTRICT
+      );
+
+      CREATE TRIGGER events_reject_update
+      BEFORE UPDATE ON events
+      BEGIN
+        SELECT RAISE(ABORT, 'events are append-only');
+      END;
+
+      CREATE TRIGGER events_reject_delete
+      BEFORE DELETE ON events
+      BEGIN
+        SELECT RAISE(ABORT, 'events are append-only');
+      END;
+
+      CREATE TRIGGER outbox_reject_update
+      BEFORE UPDATE ON outbox
+      BEGIN
+        SELECT RAISE(ABORT, 'outbox rows are immutable');
+      END;
+
+      CREATE TRIGGER outbox_reject_delete
+      BEFORE DELETE ON outbox
+      BEGIN
+        SELECT RAISE(ABORT, 'outbox rows are immutable');
+      END;
+    `;
 
 const goal = (project_id = 'project-1', goal_id = 'goal-1') => ({
   goal_id,
@@ -203,6 +268,125 @@ test('creates, reads, reopens, and retries an identical Project without duplicat
   const database = inspectDatabase(directory);
   try {
     assert.deepEqual(rowCounts(database), { projects: 1, goals: 0, events: 1, outbox: 1 });
+  } finally {
+    database.close();
+  }
+});
+
+test('registers Project v2 with opaque local workspaces and isolates equal repos by project ID', async (t) => {
+  const directory = await makeTempDirectory(t);
+  const store = openStore(directory);
+  t.after(() => store.close());
+  const sharedRepo = 'opaque repository locator / preserved exactly';
+  const firstProject = {
+    ...projectV2('project-alpha'),
+    repo: sharedRepo,
+    workspace_bindings: [{ kind: 'local', location: 'opaque://workspaces/alpha' }],
+  };
+  const secondProject = {
+    ...projectV2('project-beta'),
+    repo: sharedRepo,
+  };
+
+  const first = await store.registerProject(firstProject);
+  assert.deepEqual(await store.registerProject(firstProject), first);
+  const second = await store.registerProject(secondProject);
+  assert.deepEqual(first, { project: firstProject, version: 1 });
+  assert.deepEqual(second, { project: secondProject, version: 1 });
+  assert.deepEqual(await store.getProject('project-alpha'), first);
+  assert.deepEqual(await store.getProject('project-beta'), second);
+  assert.equal(await store.getProject(sharedRepo), null);
+  assert.notEqual(first.project.memory_namespace, second.project.memory_namespace);
+  assert.equal(first.project.memory_namespace, 'project:project-alpha');
+  assert.equal(second.project.memory_namespace, 'project:project-beta');
+
+  await expectThrows(
+    () => store.registerProject({ ...projectV2('invalid-namespace'), memory_namespace: 'other-project' }),
+    /contract invalid|memory_namespace/i,
+  );
+  const database = inspectDatabase(directory);
+  try {
+    assert.deepEqual(rowCounts(database), { projects: 2, goals: 0, events: 2, outbox: 2 });
+    assert.deepEqual(
+      database.prepare('SELECT project_id, contract_version FROM projects ORDER BY project_id').all(),
+      [{ project_id: 'project-alpha', contract_version: 2 }, { project_id: 'project-beta', contract_version: 2 }],
+    );
+  } finally {
+    database.close();
+  }
+});
+
+test('preserves Project v1 snapshots on reopen and upgrades them only through versioned update', async (t) => {
+  const directory = await makeTempDirectory(t);
+  const legacyProject = project('legacy-project');
+  const path = join(directory, 'nested', 'state.db');
+  const oldDatabase = openStateDatabase({
+    path,
+    migrations: [{ version: 1, name: 'state-store-project-goal-v1', sql: LEGACY_STATE_STORE_V1_SQL }],
+  });
+
+  const legacyEventId = '00000000-0000-4000-8000-000000000001';
+  const legacyOccurredAt = '2026-01-01T00:00:00.000Z';
+  const beforeMigration = new Database(path);
+  try {
+    const legacySnapshotJson = JSON.stringify(legacyProject);
+    beforeMigration.prepare('INSERT INTO projects (project_id, snapshot_json, version) VALUES (?, ?, 1)')
+      .run(legacyProject.project_id, legacySnapshotJson);
+    beforeMigration.prepare(`
+      INSERT INTO events (event_id, event_type, occurred_at, aggregate_type, aggregate_id, aggregate_version, project_id, payload)
+      VALUES (?, 'PROJECT_CREATED', ?, 'project', ?, 1, ?, ?)
+    `).run(legacyEventId, legacyOccurredAt, legacyProject.project_id, legacyProject.project_id, legacySnapshotJson);
+    beforeMigration.prepare('INSERT INTO outbox (event_id, created_at) VALUES (?, ?)').run(legacyEventId, legacyOccurredAt);
+    assert.equal(beforeMigration.prepare('SELECT snapshot_json FROM projects WHERE project_id = ?').get(legacyProject.project_id).snapshot_json, legacySnapshotJson);
+  } finally {
+    beforeMigration.close();
+    oldDatabase.close();
+  }
+
+  const rawSnapshotBeforeMigration = JSON.stringify(legacyProject);
+  let store = openStore(directory);
+  t.after(() => store.close());
+  const legacy = { project: legacyProject, version: 1 };
+  assert.deepEqual(await store.getProject('legacy-project'), legacy);
+  let database = inspectDatabase(directory);
+  try {
+    assert.equal(database.prepare('SELECT contract_version FROM projects WHERE project_id = ?').get('legacy-project').contract_version, 1);
+    assert.equal(database.prepare('SELECT snapshot_json FROM projects WHERE project_id = ?').get('legacy-project').snapshot_json, rawSnapshotBeforeMigration);
+  } finally {
+    database.close();
+  }
+
+  await store.close();
+  store = openStore(directory);
+  assert.deepEqual(await store.getProject('legacy-project'), legacy);
+  database = inspectDatabase(directory);
+  try {
+    assert.equal(database.prepare('SELECT contract_version FROM projects WHERE project_id = ?').get('legacy-project').contract_version, 1);
+    assert.equal(database.prepare('SELECT snapshot_json FROM projects WHERE project_id = ?').get('legacy-project').snapshot_json, rawSnapshotBeforeMigration);
+  } finally {
+    database.close();
+  }
+
+  await expectThrows(
+    () => store.registerProject(projectV2('legacy-project')),
+    /STATE_CONFLICT/,
+  );
+  assert.deepEqual(await store.getProject('legacy-project'), legacy);
+
+  const upgradedProject = { ...projectV2('legacy-project'), repo: legacyProject.repo };
+  const upgraded = await store.updateProject('legacy-project', upgradedProject, { expectedVersion: legacy.version });
+  assert.deepEqual(upgraded, { project: upgradedProject, version: legacy.version + 1 });
+  await expectThrows(
+    () => store.updateProject('legacy-project', legacyProject, { expectedVersion: upgraded.version }),
+    /STATE_CONFLICT|project-v1|downgrade/i,
+  );
+  assert.deepEqual(await store.getProject('legacy-project'), upgraded);
+
+  database = inspectDatabase(directory);
+  try {
+    assert.deepEqual(rowCounts(database), { projects: 1, goals: 0, events: 2, outbox: 2 });
+    assert.equal(database.prepare('SELECT contract_version FROM projects WHERE project_id = ?').get('legacy-project').contract_version, 2);
+    assert.notEqual(database.prepare('SELECT snapshot_json FROM projects WHERE project_id = ?').get('legacy-project').snapshot_json, rawSnapshotBeforeMigration);
   } finally {
     database.close();
   }

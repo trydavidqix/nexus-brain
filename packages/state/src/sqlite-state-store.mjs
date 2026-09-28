@@ -66,6 +66,15 @@ const STATE_STORE_MIGRATIONS = [
       END;
     `,
   },
+  {
+    version: 2,
+    name: 'project-contract-version-v2',
+    sql: `
+      ALTER TABLE projects
+      ADD COLUMN contract_version INTEGER NOT NULL DEFAULT 1
+      CHECK (contract_version IN (1, 2));
+    `,
+  },
 ];
 
 function validateInput(type, value) {
@@ -175,7 +184,7 @@ export function openSqliteStateStore(options = {}) {
     migrations: STATE_STORE_MIGRATIONS,
   });
 
-  const findProject = database.prepare('SELECT snapshot_json, version FROM projects WHERE project_id = ?');
+  const findProject = database.prepare('SELECT snapshot_json, version, contract_version FROM projects WHERE project_id = ?');
   const findGoal = database.prepare('SELECT snapshot_json, version FROM goals WHERE project_id = ? AND goal_id = ?');
 
   const createProject = database.transaction((project) => {
@@ -201,8 +210,35 @@ export function openSqliteStateStore(options = {}) {
     return { project: JSON.parse(json), version: 1 };
   }).immediate;
 
+  const registerProject = database.transaction((project) => {
+    validateInput('project-v2', project);
+    const json = snapshotJson(project);
+    const existing = findProject.get(project.project_id);
+    if (existing) {
+      const previous = JSON.parse(existing.snapshot_json);
+      if (existing.contract_version === 2 && isDeepStrictEqual(previous, JSON.parse(json))) {
+        return { project: previous, version: existing.version };
+      }
+      throw stateConflict(`project_id ${project.project_id} already exists; v2 registration requires a new project ID or a versioned update`);
+    }
+
+    database.prepare(`
+      INSERT INTO projects (project_id, snapshot_json, version, contract_version)
+      VALUES (?, ?, 1, 2)
+    `).run(project.project_id, json);
+    writeEvent(database, {
+      eventType: 'PROJECT_CREATED',
+      aggregateType: 'project',
+      aggregateId: project.project_id,
+      aggregateVersion: 1,
+      projectId: project.project_id,
+      payload: json,
+    });
+    return { project: JSON.parse(json), version: 1 };
+  }).immediate;
+
   const updateProject = database.transaction((projectId, project, { expectedVersion }) => {
-    validateInput('project', project);
+    assertJsonCompatible(project);
     if (project.project_id !== projectId) {
       throw stateConflict(`project_id is immutable; received ${project.project_id} for ${projectId}`);
     }
@@ -215,17 +251,23 @@ export function openSqliteStateStore(options = {}) {
       throw stateConflict(`project_id ${projectId} has a stale expectedVersion`);
     }
 
+    const contractVersion = Object.hasOwn(project, 'workspace_bindings') ? 2 : 1;
+    if (existing.contract_version === 2 && contractVersion === 1) {
+      throw stateConflict(`project_id ${projectId} cannot be downgraded from Project v2`);
+    }
+    validateInput(contractVersion === 2 ? 'project-v2' : 'project', project);
+
     const json = snapshotJson(project);
     const previous = JSON.parse(existing.snapshot_json);
-    if (isDeepStrictEqual(previous, JSON.parse(json))) {
+    if (existing.contract_version === contractVersion && isDeepStrictEqual(previous, JSON.parse(json))) {
       return { project: previous, version: existing.version };
     }
 
     const nextVersion = existing.version + 1;
     const result = database.prepare(`
-      UPDATE projects SET snapshot_json = ?, version = ?
+      UPDATE projects SET snapshot_json = ?, version = ?, contract_version = ?
       WHERE project_id = ? AND version = ?
-    `).run(json, nextVersion, projectId, expectedVersion);
+    `).run(json, nextVersion, contractVersion, projectId, expectedVersion);
     if (result.changes !== 1) {
       throw stateConflict(`project_id ${projectId} changed during update`);
     }
@@ -268,6 +310,7 @@ export function openSqliteStateStore(options = {}) {
 
   return {
     createProject,
+    registerProject,
     getProject(projectId) {
       const row = findProject.get(projectId);
       return row ? readSnapshot(row, 'project') : null;
