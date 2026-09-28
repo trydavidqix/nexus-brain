@@ -86,7 +86,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   assert.equal(indexed.data.direct_source.indexed, false);
   assert.equal(indexed.backend_version, 'codebase-memory-mcp@0.11.0');
   assert.ok(JSON.stringify(indexed.data.code_graph).includes('indexed'));
-  assert.ok(JSON.stringify(indexed.data.architecture).includes('/health'));
+  assert.ok(JSON.stringify(indexed.data.code_graph.architecture).includes('/health'));
 
   const symbol = await engine.searchSymbol({ ...request, name: 'helper' });
   assert.ok(JSON.stringify(symbol.data.code_graph).includes('helper'));
