@@ -1,8 +1,9 @@
 # NB-05 Brain API and MCP progress
 
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Branch:** `codex/nb05-brain-api-mcp-contract`
-**Base:** `main` at `1cbdf841bbe91e333280bf9c4c612f1255064116`
+**Base:** `main` at `587e6061877dc85fd0a370b4cbfbcc924d3d081a`
+**Merged:** PR #81 as `e4ba7bdb622a50fdf9966242a582b685c9763555` on 2026-09-28.
 
 ## Implemented boundary
 
@@ -16,15 +17,15 @@
 - Maestri is the sole trusted Reach budget authority. `resolveReachBudget` returns a task-bound decision with query/provider/result/browser/time limits and an integer USD-micros cost ceiling. Missing, malformed, mismatched, or exceeded budgets fail closed before adapter dispatch; caller-supplied budget fields are removed.
 - Reach adapters receive the verified Maestri budget separately from caller input. No external Reach provider is wired until Maestri budget resolution is integrated and provider enforcement is verified.
 
-## Validation evidence
+## Initial PR validation evidence
 
-- Brain unit: 42 Node tests and 1 Vitest test passed.
+- Brain unit: 45 Node tests and 1 Vitest test passed.
 - Edge unit: 46 tests across 9 files passed.
 - Workspace integration: 26/26 passed.
 - Typecheck: 13 projects passed.
 - Architecture checks: 13 packages passed.
-- Syntax: 153 modules parsed.
-- Sensitive-data scan: 324 files passed.
+- Syntax: 155 modules parsed.
+- Sensitive-data scan: 338 files passed.
 - Targeted review found that task/session candidates could name a different storage partition despite authenticated provenance. Regression tests reproduced both cases before the fix; the API now rejects mismatched task/session partition IDs before calling the memory adapter.
 - Final Codex Security diff review: 0 reportable findings across the reviewed NB-05 change set. The review covered the contract boundary; it does not claim a live gateway deployment or external Reach provider. Those integrations remain gated on their later Blueprint packages.
 
@@ -37,12 +38,11 @@ Provider agents cannot self-assert identity, capabilities, or resource budgets t
 
 ## Current validation evidence (2026-09-28)
 
-- Brain unit: 45 Node tests and 1 Vitest test passed.
-- Edge MCP unit: 46 tests across 9 files passed.
-- Workspace integration: 26/26 passed.
-- Brain and Edge typechecks passed; workspace architecture check passed for 13 packages.
-- Syntax/import smoke: 153 modules parsed. Sensitive-data scan: 324 files passed. `git diff --check` passed.
-- Codex Security diff scan `d1c2adc4-282f-4fe1-9834-ba590885a7f5`: complete coverage of both changed implementation files; 0 findings. The test file received additional assertions after the scan snapshot; those assertions passed in the final local test run. This is not a live gateway or provider integration test.
+- Workspace unit suites passed across 13 of 14 workspace projects; Brain: 46 Node + 1 Vitest, Edge MCP: 46 tests.
+- Workspace integration: 26/26 passed. All 13 workspace typechecks passed; architecture check passed for 13 packages.
+- Syntax/import smoke: 155 modules parsed. Sensitive-data scan: 338 files passed. Git naming: 16/16 passed. `git diff --check` passed.
+- GitHub PR #81 checks all passed, including CodeQL, Gitleaks, fuzzing, OSV, Semgrep, ZAP, dependency review, MCG gates, and OpenTofu. PR merged by squash as `e4ba7bdb622a50fdf9966242a582b685c9763555`.
+- Codex Security diff scan `d1c2adc4-282f-4fe1-9834-ba590885a7f5`: complete coverage of both changed implementation files; 0 findings. Additional assertions were added to the test file after that scan snapshot and passed in the final workspace unit run. No live gateway or provider integration is claimed.
 
 ## Security review scope
 
