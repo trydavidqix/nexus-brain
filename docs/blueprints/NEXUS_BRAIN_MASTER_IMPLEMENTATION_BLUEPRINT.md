@@ -76,12 +76,12 @@ No source capability is discarded merely because it is deferred from V1. Deferre
 
 ## 6. Work packages and dependency order
 
-Statuses: `TODO`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`. Current stage is plan/source reconciliation. Mark a package `DONE` only after its acceptance checks pass and evidence is linked here or in the package’s test/CI artifacts.
+Statuses: `TODO`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`. Current stage includes architecture inventory/migration mapping; source migration has not started. Mark a package `DONE` only after its acceptance checks pass and evidence is linked here or in the package’s test/CI artifacts.
 
 | ID | Work package | Depends on | Acceptance gate | Initial status |
 |---|---|---|---|---|
 | NB-00 | Repository identity, exact source preservation, one canonical tracker | — | GitHub/local name aligned; all source files checksummed and indexed; prior tracker marked historical; no unrelated paths | DONE |
-| NB-01 | Monorepo inventory, ownership map and canonical local path | NB-00 | Branch/path ownership audit; exact included/excluded paths; dependency/import graph; safe folder rename; no CRM/voice migration | BLOCKED |
+| NB-01 | Monorepo inventory, ownership map and canonical local path | NB-00 | Branch/path ownership audit; exact included/excluded paths; dependency/import graph; safe folder rename; migrate active Nexus references from the old folder/project name across scripts, configs, MCPs, hooks, services, Codex workspaces, launchers, env/PATH/tasks and dev tooling; restart/validate consumers; global old-name search has zero active in-scope hits; no CRM/voice migration | BLOCKED |
 | NB-02 | Contracts and threat/scope model | NB-01 | Versioned request, identity, task, memory, evidence and permission schemas; conflicts recorded as unresolved | TODO |
 | NB-03 | Cloud baseline and least-privilege infrastructure | NB-02 | Officially validated Google project/services/IAM/secrets/logging; reproducible IaC; no permanent GitHub cloud key | TODO |
 | NB-04 | Canonical database, temporal memory and provenance | NB-02, NB-03 | Migrations, append-only events, versioned facts, evidence lineage, ACL/scope and restore test | TODO |
@@ -104,17 +104,24 @@ Statuses: `TODO`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`. Current stage 
 | NB-21 | Observability, budgets and operational runbooks | NB-05, NB-09, NB-13 | Health/latency/sync/conflicts/usage/errors and alert reports backed by real measurements | TODO |
 | NB-22 | Cross-provider, offline, security and recovery E2E | NB-05–NB-21 | Cross-write/read, new session/PC, offline recovery, hostile inputs, authorization and disaster restore pass | TODO |
 | NB-23 | Release, source-email cleanup and final synchronization | NB-00–NB-22 | All source/coverage checks pass; final docs committed/pushed; only authorized email messages trashed; local/remote synced | TODO |
+| NB-24 | Canonical monorepo AS-IS→TARGET map and boundary proof | NB-00 | Every tracked source/test/config/doc/workflow has one owner and destination or explicit defer/exclude; duplicate candidates and current relative-import/workspace graph recorded; package dependency DAG is acyclic by design; no source moved before map review | IN_PROGRESS |
+| NB-25 | Shared contracts, schemas, registries and architecture gates | NB-24 | Contracts consolidated by domain without breaking versions; invalid registry source paths corrected from real owners; architecture-boundary tests and import graph gate reject cycles/forbidden imports | TODO |
+| NB-26 | Domain package migration | NB-25 | Brain, control-plane, execution, routing, providers, contracts, evidence and governance moved in dependency order; unit tests adjacent; no duplicate authoritative store/router/memory engine; public/legacy APIs pass compatibility tests | TODO |
+| NB-27 | Executable apps and Windows Edge migration | NB-26 | Existing gateway/dashboard/CLI/local-runtime code placed in apps/packages by runtime ownership; MCP, daemon, hooks, launchers and workspace references updated; no empty apps or second runtime/dashboard | TODO |
+| NB-28 | PNPM, integration tests, evals, docs and GitHub architecture | NB-25, NB-26, NB-27 | Frozen workspace install; imports/typecheck/unit/integration/e2e/security/fuzz/evals pass; architecture docs/ADRs/README/status updated; CODEOWNERS and issue/PR templates have verified owners; CI/security/Dependabot paths work without permanently pending required checks | TODO |
+| NB-29 | Canonical local path cutover and final local/GitHub sync | NB-01, NB-28 | Safely rename checkout to `%USERPROFILE%\.lumenva\nexus-brain`; migrate only verified active references; restart/validate Codex, MCPs, hooks, daemon and launchers; Git/remote/branch/worktrees/CI synchronized; global old-path/name scan has zero active in-scope hits | BLOCKED |
 
 ### Dependency waves
 
 ```text
-Wave 0: NB-00 → NB-01 → NB-02
+Wave 0: NB-00 → NB-01 → NB-02; NB-24 may audit independently of the blocked physical-folder rename
 Wave 1: NB-03 → NB-04 → NB-05
 Wave 2: NB-06 / NB-10 / NB-19 (independent ownership after contracts)
 Wave 3: NB-07 → NB-08 → NB-09; NB-10 → NB-11
 Wave 4: NB-12 → NB-13 → NB-14 → NB-15 / NB-16 / NB-17
 Wave 5: NB-18 / NB-20 / NB-21
-Final:  NB-22 → NB-23
+Architecture migration: NB-24 → NB-25 → NB-26 → NB-27 → NB-28 → NB-29
+Final product gate: NB-22 and NB-28 → NB-23 (NB-29 also required for canonical local/GitHub sync)
 ```
 
 No parallel worker/Jules session is part of the current authorization. When later authorized, every work package must have one owner, disjoint write scope, branch/worktree, TDD tests, acceptance contract and integration gate. Never start dependent tasks together or allow a worker to merge directly to `main`.
@@ -135,13 +142,17 @@ Toolchain inventory covers Windows/global, repository-local, CLI, agents, skills
 
 ## 9. Objective progress
 
-The implementation denominator is the 24 work packages NB-00..NB-23. Only `DONE` counts; `IN_PROGRESS`, `VALIDATING`, `BLOCKED` and `TODO` do not. Component-specific acceptance remains separately labeled (for example, MCG 4/7 = 57% MCG-only); do not average it into the Nexus total.
+The implementation denominator is now 30 work packages NB-00..NB-29. NB-24..NB-29 were added for the user-requested canonical monorepo restructuring; these extend rather than replace the original product blueprint. Only `DONE` counts; `IN_PROGRESS`, `VALIDATING`, `BLOCKED` and `TODO` do not. Component-specific acceptance remains separately labeled (for example, MCG 4/7 = 57% MCG-only); do not average it into the Nexus total.
 
-Current verified tracker state: `DONE 1/24`, `BLOCKED 1/24`, `IN_PROGRESS 3/24`, `TODO 19/24`; **Nexus implementation progress: 4%, remaining: 96%**. Only NB-00 is complete; NB-01 is blocked by active processes/workspace references to the old local path. Dashboard, Token Firewall and GitHub/security work remain partial under their larger Nexus acceptance gates. This is not a claim that existing MCG code is absent.
+Current verified tracker state: `DONE 1/30`, `BLOCKED 2/30`, `IN_PROGRESS 4/30`, `TODO 23/30`; **Nexus implementation progress: 3%, remaining: 97%**. Only NB-00 is complete; NB-01 and NB-29 are blocked by active processes/workspace references to the old local path. NB-24 is in progress; its AS-IS→TARGET map is documented in [`../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md`](../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md), but dependency/ownership verification is not yet finished and no architecture source files have moved. Dashboard, Token Firewall and GitHub/security work remain partial under their larger Nexus acceptance gates. This is not a claim that existing MCG code is absent.
 
 ### NB-01 audit record
 
 The read-only ownership and local-path audit is [`NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md`](NB-01_SOURCE_OWNERSHIP_AND_LOCAL_PATH_AUDIT.md). It records the 53-branch Lumenva source inventory, the one-branch Nexus target, selective Maestri ownership boundaries, current dirty/active source worktrees, path-reference checks, and the live daemon/MCP blockers. No Lumenva branch/worktree or unrelated CRM/voice file was changed. Do not rename the local checkout until the recorded blockers are cleared and the full post-rename validation is possible.
+
+### Canonical architecture migration
+
+The migration audit/map and safe waves are in [`../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md`](../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md). It confirms that no architectural moves have been made yet, documents the code that exists versus target-only packages, identifies duplicate-capability candidates without treating unlike prototypes as interchangeable, and records the dependency-cycle gate. The initial audit is limited to the Nexus checkout and explicitly excludes CRM/voice and other projects. NB-24 cannot be marked `DONE` until each tracked file is accounted for and the actual import/dependency graph has a reviewed acyclic target.
 
 ## 10. Email deletion gate
 

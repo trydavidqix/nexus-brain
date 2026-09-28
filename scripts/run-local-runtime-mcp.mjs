@@ -3,15 +3,12 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const isWindows = process.platform === "win32";
-const command = isWindows ? (process.env.ComSpec ?? "cmd.exe") : "pnpm";
-const args = isWindows
-  ? ["/d", "/s", "/c", "pnpm --filter @maestri/local-runtime mcp:stdio"]
-  : ["--filter", "@maestri/local-runtime", "mcp:stdio"];
-const child = spawn(command, args, {
-  cwd: workspaceRoot,
+const runtimePackageRoot = resolve(workspaceRoot, "packages/local-runtime");
+const child = spawn(process.execPath, ["--import", "tsx", "src/mcp-server.ts"], {
+  cwd: runtimePackageRoot,
   env: { ...process.env, MAESTRI_RUNTIME_WORKSPACE_ROOT: workspaceRoot },
   shell: false,
+  windowsHide: true,
   stdio: "inherit",
 });
 

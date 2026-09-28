@@ -34,12 +34,15 @@ async function connect(root: string): Promise<{ client: Client; transport: Stdio
 
 describe("Local Runtime MCP read-only batch tool", () => {
   it("starts the project-scoped Codex launcher and serves the read-only MCP tool", async () => {
+    const originalComSpec = process.env.ComSpec;
+    process.env.ComSpec = process.execPath;
     const env = Object.fromEntries(Object.entries({
       PATH: process.env.PATH,
       SystemRoot: process.env.SystemRoot,
       WINDIR: process.env.WINDIR,
       TEMP: process.env.TEMP,
       TMP: process.env.TMP,
+      ComSpec: process.execPath,
     }).filter((entry): entry is [string, string] => typeof entry[1] === "string"));
     const transport = new StdioClientTransport({
       command: process.execPath,
@@ -51,8 +54,8 @@ describe("Local Runtime MCP read-only batch tool", () => {
     let stderr = "";
     transport.stderr?.on("data", (chunk: Buffer) => { stderr += chunk.toString(); });
     const client = new Client({ name: "codex-project-launcher-test", version: "1.0.0" });
-    await client.connect(transport);
     try {
+      await client.connect(transport);
       const { tools } = await client.listTools();
       expect(tools.map((tool) => tool.name)).toEqual(["mcg_read_batch"]);
       const result = await client.callTool({
@@ -67,7 +70,9 @@ describe("Local Runtime MCP read-only batch tool", () => {
       expect(payload.results[0]).toMatchObject({ id: "manifest", status: "succeeded" });
       expect(payload.results[0]?.value?.value).toContain("maestri-context-gateway");
     } finally {
-      await client.close();
+      await client.close().catch(() => undefined);
+      if (originalComSpec === undefined) delete process.env.ComSpec;
+      else process.env.ComSpec = originalComSpec;
     }
     expect(stderr).not.toContain("DEP0190");
   }, 30_000);

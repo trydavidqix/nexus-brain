@@ -1,11 +1,22 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { recordTelemetry } from '../src/telemetry.mjs';
 import { REGISTRY_TYPES, refreshRegistries, validateRegistryEntry } from '../src/registry.mjs';
 const root=await mkdtemp(join(tmpdir(),'mcg-registry-'));
+const repositoryRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 try{
+ const staticRegistryRoot=join(repositoryRoot,'config','registries');
+ for(const name of ['agents','mcps','models','plugins','runtimes','tools']){
+  const rows=JSON.parse(await readFile(join(staticRegistryRoot,`${name}.json`),'utf8'));
+  for(const row of rows){
+   assert.ok(typeof row.source==='string'&&row.source.length>0,`${name}:${row.id} needs a source`);
+   if(row.source.startsWith('external://'))continue;
+   await assert.doesNotReject(stat(resolve(repositoryRoot,row.source)),`${name}:${row.id} source must exist: ${row.source}`);
+  }
+ }
  await recordTelemetry(root,{agent:'Codex CTO',runtime:'Codex CLI',tool:'git.status',plugin:'caveman',mcp:'Maestri Wire',model:'observed-model-1',operation:'test',total_tokens:12,input_tokens:10,output_tokens:2,measurement_type:'exact',source:'registry.test'});
  await recordTelemetry(root,{agent:'Codex CTO',runtime:'Codex CLI',tool:'git.status',plugin:'caveman',mcp:'Maestri Wire',model:'observed-model-1',operation:'test',outcome:'success',latency_ms:30,measurement_type:'unavailable',source:'registry.test'});
  await recordTelemetry(root,{agent:'Codex CTO',runtime:'Codex CLI',tool:'git.status',plugin:'caveman',mcp:'Maestri Wire',model:'observed-model-1',operation:'test',outcome:'failure',latency_ms:50,measurement_type:'unavailable',source:'registry.test'});

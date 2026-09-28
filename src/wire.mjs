@@ -107,6 +107,10 @@ function frame(data, opcode = 1) {
 
 export function openWireFeed(config, workspaceId, onMessage) {
   return new Promise((resolve, reject) => {
+    if (!config.securityKeyHex && !isLoopback(config.host)) {
+      reject(new Error('Wire certificate pin required'));
+      return;
+    }
     const key = randomBytes(16).toString('base64');
     const url = buildWireUrl(config, '/api/feed/stream', { ws: workspaceId, token: config.token });
     let closeResolve;
