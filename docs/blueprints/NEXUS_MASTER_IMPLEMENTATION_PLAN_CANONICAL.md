@@ -504,6 +504,30 @@ trace_id
 idempotency_key
 ```
 
+### Goal Contract v1
+
+`Goal` is scoped to exactly one `Project`. Its v1 wire contract is:
+
+```text
+goal_id: non-empty string
+project_id: non-empty string
+objective: non-empty string
+scope: non-empty list of non-empty strings
+out_of_scope: list of non-empty strings
+requirements: list of non-empty strings
+constraints: list of non-empty strings
+assumptions: list of non-empty strings
+acceptance_criteria: non-empty list of non-empty strings
+risk: R0 | R1 | R2 | R3 | R4
+required_gates: list of non-empty strings
+definition_of_done: non-empty list of non-empty strings
+```
+
+All fields above are required. Empty lists are allowed only where the wire contract does not say non-empty. Unknown fields are rejected; extensions require a new schema version.
+The field set formalizes the existing Goal Contract checklist in `NEXUS_ENGINEERING_CONTROL_PLANE_IMPLEMENTATION_PLAN.md`; `project_id` binds Goal to the canonical project identity.
+
+The contract validates shape only. Runtime enforcement must freeze `definition_of_done` when implementation starts. A legitimate change requires a revision request, reason, authorization, and new version. A hidden change is `INTEGRITY_COMPROMISED`.
+
 ## 4.5 Delegation lineage
 
 Preservar:
@@ -632,6 +656,35 @@ provider constraints
 ```
 
 O Nexus registra/governa/orquestra; não absorve o repo externo.
+
+### Project Contract v1
+
+Each Project Registry record uses this required wire shape:
+
+```text
+project_id: non-empty string
+repo: non-empty opaque repository locator
+default_branch: non-empty string
+workspace_policy: JSON object
+lifecycle: non-empty string
+stack: list of non-empty strings
+permissions: JSON object
+policies: JSON object
+approvals: JSON object
+budgets: JSON object
+memory_namespace: non-empty string
+task_scope: non-empty string
+session_scope: non-empty string
+evidence_scope: non-empty string
+git_bindings: list of JSON objects
+ci_bindings: list of JSON objects
+deployment_bindings: list of JSON objects
+provider_constraints: list of JSON objects
+```
+
+All fields are required. Empty lists and JSON objects are valid where no bindings, stack facts, or local configuration exist yet. Repository locator remains opaque; implementations must not rewrite, infer, or normalize it. `lifecycle` remains an opaque non-empty string because this plan defines no lifecycle vocabulary. Nested policy, approval, budget, workspace, binding, and provider-constraint shapes remain owned by their respective contracts; Project v1 validates only their container types. Unknown top-level fields are rejected; extensions require a new schema version.
+
+The Project contract registers and governs an external repository. It does not absorb or mutate that repository. Project Factory must inspect an unknown repository and gather evidence before proposing changes.
 
 ## 4.10 Project Factory
 
