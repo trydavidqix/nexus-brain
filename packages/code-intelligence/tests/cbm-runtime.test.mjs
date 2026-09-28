@@ -50,7 +50,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   await writeFile(join(repoPath, 'src', 'entry.ts'), 'import { helper } from "./helper.js";\nexport function runTask() { return helper(); }\n');
   await writeFile(join(repoPath, 'src', 'routes.ts'), 'import { runTask } from "./entry.js";\nexport function registerRoutes(app: any) { app.get("/health", runTask); }\n');
   await writeFile(join(repoPath, 'src', 'client.ts'), 'export async function checkProvider() { return fetch("http://provider.local/health"); }\n');
-  await writeFile(join(repoPath, 'tests', 'helper.test.ts'), 'import { helper } from "../src/helper.js";\nif (helper() !== 1) throw new Error("helper test failed");\n');
+  await writeFile(join(repoPath, 'tests', 'helper.test.ts'), 'import { helper } from "../src/helper.js";\nexport function helperTest() { return helper(); }\nif (helperTest() !== 1) throw new Error("helper test failed");\n');
   await writeFile(join(providerPath, 'src', 'provider.ts'), 'export function health() { return "ok"; }\nexport function registerProvider(app: any) { app.get("/health", health); }\n');
   await execFileAsync('git', ['init', repoPath], { windowsHide: true });
   await execFileAsync('git', ['-C', repoPath, 'config', 'user.email', 'nexus-ci@example.invalid'], { windowsHide: true });
