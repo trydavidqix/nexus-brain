@@ -108,6 +108,7 @@ test('rejects malformed Dependabot branch names even for the bot', () => {
 
 test('defers Dependabot push validation to the authenticated pull request event', () => {
   const workflow = readFileSync(resolve(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
+  assert.match(workflow, /pull_request:\s+types: \[opened, synchronize, reopened, edited\]/);
   assert.match(
     workflow,
     /elif \[\[ "\$NEXUS_EVENT_NAME" == 'push' && "\$NEXUS_BRANCH" == dependabot\/\* \]\]; then\s+echo "Dependabot branches are validated in pull_request context\."/
