@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-28T06:18:47.3972687+01:00",
+  "repository": "https://github.com/trydavidqix/nexus-brain",
+  "purpose": "Observed file inventory for NB-29 closeout; metadata and SHA-256 only",
+  "historical_417_claim": "unverified; no trusted expected manifest; not a precondition",
+  "scoped_roots": [
+    {
+      "id": "legacy-mcg-state",
+      "location": "%USERPROFILE%/Desktop/Projetos/maestri-context-gateway/.mcg-state",
+      "file_count": 2
+    },
+    {
+      "id": "nexus-state",
+      "location": "nexus-brain/.nexus-state",
+      "file_count": 8
+    }
+  ],
+  "file_count": 10,
+  "files": [
+    {
+      "root": "legacy-mcg-state",
+      "relative_path": "state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl",
+      "bytes": 4591,
+      "last_write_time": "2026-09-25T23:46:18.0524321+01:00",
+      "sha256": "e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa"
+    },
+    {
+      "root": "legacy-mcg-state",
+      "relative_path": "state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt",
+      "bytes": 13980,
+      "last_write_time": "2026-09-25T23:46:18.0524321+01:00",
+      "sha256": "9da3de1409214ef33d0f2d02b1190f087a5c6bbfde59da6596bcf7491f578b47"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl",
+      "bytes": 4591,
+      "last_write_time": "2026-09-25T23:46:18.0524321+01:00",
+      "sha256": "e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt",
+      "bytes": 13980,
+      "last_write_time": "2026-09-25T23:46:18.0524321+01:00",
+      "sha256": "9da3de1409214ef33d0f2d02b1190f087a5c6bbfde59da6596bcf7491f578b47"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/agents.json",
+      "bytes": 2936,
+      "last_write_time": "2026-09-28T01:28:23.8208174+01:00",
+      "sha256": "13992c885d275b71162837f54ba3e7c13b034b7ef92f1cd6e4b62665eed9ab81"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/mcps.json",
+      "bytes": 1015,
+      "last_write_time": "2026-09-28T01:28:23.8326034+01:00",
+      "sha256": "476465438e076331873abe3edc35f78cfdc73a90b79c52cf9e23fadc96cc4258"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/models.json",
+      "bytes": 414,
+      "last_write_time": "2026-09-28T01:28:23.8386037+01:00",
+      "sha256": "1dcdcf9f194550260e53732170d40ba6502db428837cff9cf28010e4f6c80f3f"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/plugins.json",
+      "bytes": 397,
+      "last_write_time": "2026-09-28T01:28:23.8307923+01:00",
+      "sha256": "ad5f00dd314e99aa70d7f2c991a16468b4a1341a91c63b79c62f3ae0c20dc4fe"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/runtimes.json",
+      "bytes": 1674,
+      "last_write_time": "2026-09-28T01:28:23.8365944+01:00",
+      "sha256": "b6736b9766c17ede01459fe199fa3f2c9eb705d26a1b05d4c733b9dcf1cbe508"
+    },
+    {
+      "root": "nexus-state",
+      "relative_path": "state/registry/tools.json",
+      "bytes": 1339,
+      "last_write_time": "2026-09-28T01:28:23.8277972+01:00",
+      "sha256": "faad63ee2f04ccbaace1fefe6e2a321a30217000fb07e2227bfea81423fde4e9"
+    }
+  ]
+}

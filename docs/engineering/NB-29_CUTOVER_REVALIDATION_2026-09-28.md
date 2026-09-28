@@ -2,6 +2,8 @@
 
 **Status:** `DONE` (Owner disposition, 2026-09-28). The 10 actually found files in the scoped legacy and Nexus state roots are inventoried and hashed below. The reported historical count of 417 remains unverified because no trusted expected manifest exists; that count is not an NB-29 precondition and this report does not claim those files were recovered or absent.
 
+Machine-readable observed-state manifest: [`NB-29 observed-state manifest`](NB-29_OBSERVED_STATE_MANIFEST_2026-09-28.json). It records only the 10 files currently found in the two bounded roots, with relative path, size, last-write timestamp, and SHA-256. Manifest file SHA-256: `de7cca69475553488117cc87a6b5b824502b27b10b933fd25d9d7393459fa2a6`. It makes no claim about the unverified historical 417-file set.
+
 ## Verified state
 
 - Canonical checkout: `%USERPROFILE%\Desktop\Projetos\nexus-brain`; remote `https://github.com/trydavidqix/nexus-brain.git`.
