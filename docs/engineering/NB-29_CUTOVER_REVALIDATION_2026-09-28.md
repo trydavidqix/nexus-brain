@@ -77,6 +77,7 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 
 - Reconciliation against canonical `main`: shell-free MCP launching is in `tooling/scripts/run-edge-mcp.mjs`; pinned Wire TLS is in `apps/edge/src/bridge/wire.mjs`; corresponding MCP and Wire regression tests are in `apps/edge/tests/`; registry source containment/existence and telemetry compatibility are covered by `packages/context-gateway/tests/registry-compat.test.mjs`. The worktree's status, NB-01, Master Blueprint, and architecture-map edits are older snapshots superseded by current canonical documents. No unique executable behavior or test invariant was found that needs to be re-applied.
 - A Gitleaks read-only scan of the preserved worktree found no findings in the nine inventoried files. Two findings were reported in unchanged files outside this manifest: `packages/operating-core/src/cloud-fabric/__tests__/tokens-fabric.test.ts` (`generic-api-key`) and `test/fuzz/redaction.fuzz.mjs` (`private-key`). No matching values were printed.
+- PR #93's first MCG check rejected the title verb `reconcile`, which is outside the repository's imperative vocabulary. The title was changed to `docs: record NB-29 preservation evidence`, and the local title validator passed. CI must pass for the updated PR revision before merge.
 - This worktree remains untouched and dirty by user constraint; no branch checkout, staging, commit, push, cleanup, copy, or removal was performed.
 
 ### Gate result
