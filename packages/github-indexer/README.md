@@ -11,6 +11,10 @@ NB-06 local-first primitives for verified GitHub push ingestion and scheduled re
 - `createReconciliationScheduler` runs reconciliation on a fixed interval without overlapping executions.
 - `PostgresGitHubIndexStore` persists delivery receipts, observations, current heads, commit provenance, and branch/commit relationships in the local PostgreSQL/pg0 database. Migration `0004_github_indexer` is additive.
 
+## Migration and rollback
+
+Migration `0004_github_indexer` adds isolated index tables and an idempotent schema-version row; it does not rewrite existing Nexus/Hindsight data. To roll back application use, stop the scheduler and listener and stop calling the indexer. Keep the additive tables and observations for recovery; dropping them is a separate data-retention action and is not automated.
+
 ## Runtime wiring
 
 The host application supplies stable project IDs and repository bindings, loads the webhook secret and optional GitHub token from its secret boundary, creates the PostgreSQL pool, runs `store.migrate()`, and injects the dependencies. Secret values must never be placed in repository files, logs, or command-line arguments. A missing webhook secret causes signature verification to fail closed. The token is optional for public repositories; private repositories need a read-only token supplied by the host.
