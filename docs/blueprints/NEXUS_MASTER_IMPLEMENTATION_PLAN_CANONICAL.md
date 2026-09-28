@@ -589,6 +589,25 @@ Testes podem usar `InMemoryStateStore`, mas produção usa SQLite.
 
 Nenhum pacote de domínio conhece SQL diretamente.
 
+### SQLite Database Bootstrap v1
+
+The low-level database bootstrap is an infrastructure layer inside `packages/state`; it is not yet the domain `StateStore` API.
+
+```text
+openStateDatabase({ path?, migrations? })
+  → getSchemaVersion()
+  → integrityCheck()
+  → close()
+```
+
+The default file is `.nexus/state.db`, relative to the Nexus workspace. Tests may pass a temporary file path or `:memory:`. File-backed databases use WAL, foreign-key enforcement, and a 5-second busy timeout. The opener creates the parent directory when needed.
+
+Migrations have a positive, sequential version, a non-empty name, and SQL text. Apply each migration and its SHA-256 ledger row in one transaction. Reject changed checksums for an applied version. `integrityCheck()` uses SQLite `PRAGMA quick_check` and reports failure without repairing or deleting data. The bootstrap creates only its migration ledger; it does not define domain tables or mutate NB-04 PostgreSQL data.
+
+The Node adapter uses the pinned `better-sqlite3` dependency, not Node's experimental `node:sqlite` API. This preserves the repository's Node 22+ contract while keeping one local SQLite connection and short synchronous transactions. See the [official better-sqlite3 documentation](https://github.com/WiseLibs/better-sqlite3).
+
+Project/Goal repositories, updates, foreign-key behavior, event payloads, and outbox delivery semantics belong to later StateStore decisions. No data write may bypass the plan's atomic state-plus-outbox invariant.
+
 Tabelas/repos iniciais:
 
 ```text
