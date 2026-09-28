@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { JOB_EVENT_TYPES, JOB_STATUSES, type Job } from "@nexus-brain/contracts/job";
 import { RUNTIME_PROTOCOL_VERSION, assertRuntimeCommand, type RuntimeCommand } from "@nexus-brain/contracts/runtime";
-import type { EngineeringPlan, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusIdentity, NexusMemoryEvent, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
+import type { EngineeringPlan, GoalRisk, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusGoal, NexusIdentity, NexusMemoryEvent, NexusProject, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
 
 describe("shared TypeScript contracts", () => {
   it("keeps job and runtime protocol definitions importable from contracts", () => {
@@ -59,6 +59,43 @@ describe("shared TypeScript contracts", () => {
       complexity: "NORMAL",
       acceptance_criteria: ["Contract validates task scope and risk"],
     };
+    const project: NexusProject = {
+      project_id: "project-1",
+      repo: "opaque repository locator",
+      default_branch: "main",
+      workspace_policy: {},
+      lifecycle: "active",
+      stack: [],
+      permissions: {},
+      policies: {},
+      approvals: {},
+      budgets: {},
+      memory_namespace: "memory:project-1",
+      task_scope: "task:project-1",
+      session_scope: "session:project-1",
+      evidence_scope: "evidence:project-1",
+      git_bindings: [],
+      ci_bindings: [],
+      deployment_bindings: [],
+      provider_constraints: [],
+    };
+    const goal: NexusGoal = {
+      goal_id: "goal-1",
+      project_id: project.project_id,
+      objective: "Implement a bounded capability",
+      scope: ["contracts package"],
+      out_of_scope: [],
+      requirements: [],
+      constraints: [],
+      assumptions: [],
+      acceptance_criteria: ["Contract validates"],
+      risk: "R2",
+      required_gates: [],
+      definition_of_done: ["Required checks pass"],
+    };
+    const goalRisk: GoalRisk = "R4";
+    // @ts-expect-error Goal risk is limited to R0–R4.
+    const invalidGoalRisk: GoalRisk = "R5";
     const memory: NexusCanonicalMemoryRecord = {
       memory_id: "memory-1",
       project_id: "nexus-brain",
@@ -124,6 +161,9 @@ describe("shared TypeScript contracts", () => {
     expect(plan.agent_id).toBe("agent-codex-1");
     expect(identity.project_id).toBe("nexus-brain");
     expect(task.task_id).toBe("task-17");
+    expect(goal.project_id).toBe(project.project_id);
+    expect(goal.risk).toBe("R2");
+    expect(goalRisk).toBe("R4");
     expect(memory.temporal.valid_from).toBe("2026-09-27T00:00:00.000Z");
     expect(memoryEvent.event_type).toBe("OBSERVED");
     expect(sighting.run_id).toBe(researchRun.run_id);
