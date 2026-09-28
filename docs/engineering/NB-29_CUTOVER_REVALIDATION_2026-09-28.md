@@ -123,4 +123,20 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 | `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/tools.json` | 1,339 | `2026-09-28T01:28:23.8277972+01:00` | `faad63ee2f04ccbaace1fefe6e2a321a30217000fb07e2227bfea81423fde4e9` |
 
 - Current exact-root counts remain 2 source files and 8 Nexus destination files. Only the two matching eval artifacts can be reconciled against the reported 417-file historical inventory; without its expected paths, the remaining items cannot be classified as present, moved, renamed, absent, or duplicated.
-- NB-29 remains `PENDING_VALIDATION`. Continue only after an elevated read-only USN/VSS query becomes available, or the historical manifest/source is provided. Do not infer that the journal rotated from the access-denied result.
+- NB-29 remains `PENDING_VALIDATION`. The later elevated USN/VSS follow-up below still does not recover the expected 417-path list. Continue only when a historical manifest or an authorized scoped source containing that inventory is available.
+
+### Elevated USN/VSS follow-up — 2026-09-28
+
+- One VSS snapshot was readable with elevation: `\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy3`. The bounded scan covered only the authorized legacy `.mcg-state` and Nexus `.nexus-state` roots; it found 4 path rows representing 2 unique files duplicated across both roots.
+- The JSONL manifest recorded the synthetic eval artifact at 4,591 bytes with SHA-256 `e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa`; this matches both current roots. Its `.stderr.txt` was 13,980 bytes with snapshot SHA-256 `1a3289f8c76452a0cbee1ded28bedabf91d5498f79e720c1baef8da3f3a88ed7`, while both current roots hash to `9da3de1409214ef33d0f2d02b1190f087a5c6bbfde59da6596bcf7491f578b47`. The snapshot and current `.stderr.txt` have the same recorded LastWriteTime and size but different content hashes. Within the snapshot, each file appears once under each root and matching copies have identical hashes.
+- Verifiable snapshot manifest (paths relative to each root; LastWriteTime uses local offset):
+
+| Root | Relative path | Bytes | LastWriteTime | Snapshot SHA-256 |
+|---|---|---:|---|---|
+| `legacy-mcg-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl` | 4,591 | `2026-09-25T23:46:18.0524321+01:00` | `e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa` |
+| `legacy-mcg-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt` | 13,980 | `2026-09-25T23:46:18.0524321+01:00` | `1a3289f8c76452a0cbee1ded28bedabf91d5498f79e720c1baef8da3f3a88ed7` |
+| `nexus-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl` | 4,591 | `2026-09-25T23:46:18.0524321+01:00` | `e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa` |
+| `nexus-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt` | 13,980 | `2026-09-25T23:46:18.0524321+01:00` | `1a3289f8c76452a0cbee1ded28bedabf91d5498f79e720c1baef8da3f3a88ed7` |
+- The elevated manifest reported `snapshot_count=1`, `file_count=4`, and completion at `2026-09-28T04:09:05.9759742+01:00`. This is a bounded metadata/hash result, not a copy or recovery of historical data.
+- The elevated USN read starting at the previously recorded `0x131800000` returned `Erro: A entrada foi excluída do diário.`. Its readback reported current first USN `5133828096`, so the requested older start point is no longer retained. No USN records or file paths were recovered. A subsequent read at the current boundary was stopped before producing a result; it yielded no evidence. No installed MFT parser was found. The available VSS snapshot and preserved manifests were used instead; neither contains the expected 417 paths.
+- The VSS snapshot scan and current root manifests do not supply the expected path list for the historical 417 files. They do establish one historical content difference in the `.stderr.txt` artifact, despite equal size and timestamp. Present, moved, renamed, absent, and duplicate classifications remain unproven beyond these two eval paths. NB-29 remains `PENDING_VALIDATION`; NB-05 remains gated.
