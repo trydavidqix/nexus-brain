@@ -23,6 +23,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@nexus-brain/brain": "workspace:*",
     "@nexus-brain/contracts": "workspace:*",
     "@nexus-brain/context-gateway": "workspace:*",
     "@modelcontextprotocol/server": "2.1.0",
