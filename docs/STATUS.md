@@ -4,11 +4,11 @@ This repository is the canonical home for Nexus Brain (`trydavidqix/nexus-brain`
 
 ## Current authoritative snapshot — 2026-09-28
 
-- Main was clean and synchronized with `origin/main` at revalidation start (`9bfcdc0cb56607efc8933c975945f4e73ee1bd27`). Migration PRs #43, #49, #73–#75, #79–#80, and #82–#83 have merged with required checks passing.
-- NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence. On 2026-09-28, `/health` and one synthetic reflect returned HTTP 200; Hindsight recorded `openai-codex` / `gpt-6-luna` / `success`. No Gemini key, Google billing, or cloud resource changed. Evidence: [`NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md`](engineering/NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md).
+- Main was clean and synchronized with `origin/main` at the start of this revalidation (`0b9369dacdd581f83d420ac7930f4df6a3450af1`). Migration PRs #43, #49, #73–#75, #79–#80, #82–#83, and #86, #88–#90 have merged with required checks passing. PR #87 was superseded by #88.
+- NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence. On 2026-09-28, `/health` and a synthetic reflect returned HTTP 200; the response matched `REFLECT_CODEX_PASS`, and Hindsight recorded `openai-codex` / `gpt-6-luna` / `success`. No Gemini key, Google billing, or cloud resource changed. Evidence: [`NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md`](engineering/NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md) and PR #90.
 - NB-04 is merged and accepted. Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. Evidence: [`NB-04_PREPARATION.md`](engineering/NB-04_PREPARATION.md).
 - NB-19 G0–G10 is merged and accepted; the active protected-main ruleset and required checks were revalidated. Migration Readiness NB-24–NB-28 remains complete; NB-29 is `PENDING_VALIDATION` because historical MCG-state inventory and a preserved, user-protected worktree cannot be fully reconciled without crossing the no-Lumenva boundary. See [`NB-29 cutover revalidation`](engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md).
-- Do not start NB-05 or later Blueprint implementation until NB-29's preservation gates are resolved. PR #81 remains an open draft and was not changed.
+- Do not start NB-05 or later Blueprint implementation until NB-29's preservation gates are resolved. PR #81 remains an open draft; its current checks pass, but it remains gated. Open Dependabot PRs #61 and #62 have MCG failures in the Git naming contract because their bot branch names violate the repository naming policy; these are outside Migration Readiness and were not changed. PRs #50 and #78 remain outside this closeout.
 - DEV remains zero-additional-cost and local-first. No PROD, paid cloud provisioning, billing changes, Gemini API key, or paid provider fallback is authorized.
 
 ## Historical migration snapshot — 2026-09-26
