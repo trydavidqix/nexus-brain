@@ -1,6 +1,6 @@
 # Nexus Branch and Worktree Audit — 2026-09-28
 
-**Status:** Complete pre-cleanup recovery snapshot. No branch, worktree or remote-tracking ref was deleted during this audit.
+**Status:** Pre-cleanup recovery snapshot with cleanup outcome recorded below. The original snapshot remains unchanged as the recovery source.
 
 ## Snapshot
 
@@ -40,5 +40,13 @@ Merged-PR refs, plan branches and stale remote-tracking refs are classified indi
 
 - Local JSON parse and `git diff --check` passed; Gitleaks reported no findings in the recovery files.
 - PR #104 required CodeQL, Gitleaks, OSV, Semgrep, ZAP, dependency-review, MCG and tofu checks passed.
-- NB-29 is complete against the actual scoped inventory and preserved Nexus worktree. The historical 417-file count remains unverified and is not a precondition; see [`NB-29 cutover revalidation`](NB-29_CUTOVER_REVALIDATION_2026-09-28.md).
-- No cleanup has started. Preserve this snapshot before deleting any candidate branch.
+- NB-29 is complete against the observed inventory of 10 files. The historical 417-file count remains unverified and is not a precondition; see [`NB-29 cutover revalidation`](NB-29_CUTOVER_REVALIDATION_2026-09-28.md).
+
+## Cleanup execution — 2026-09-28
+
+- Cleanup used this snapshot plus live branch-head and merged-PR checks. It removed 49 local branch refs, 51 remote branch heads, and 9 stale remote-tracking refs. It did not force-push or alter `main` history.
+- Final state at capture: 4 local branch heads, 8 remote branch heads including `main`, and zero stale remote-tracking refs. `main` was clean and synchronized at `3e9b6bfaf90350fdd230d90df55a6a0802b75366`.
+- Remaining refs have concrete retention reasons: canonical `main`, MCG recovery backup, NB-05 draft work, open PRs, a review branch, and the standing no-touch exclusion. See the machine-readable ledger for exact names and hashes.
+- The merged NB-04 worktree was archived with a recoverable snapshot after its branch was verified. The MCG and NB-05 worktrees remain. Two unregistered Nexus-named directories remain preserved; neither was recursively inspected or removed.
+- PR #72 was neither queried nor modified. Lumenva project data were not accessed or modified during cleanup.
+- Exact deleted refs, retained heads, and counts: [`NEXUS branch cleanup ledger`](NEXUS_BRANCH_CLEANUP_2026-09-28.json).
