@@ -12,6 +12,7 @@ packages:
   - packages/providers
   - packages/routing
   - packages/governance
+  - packages/github-indexer
 
 catalog:
   '@types/node': ^26.2.0
