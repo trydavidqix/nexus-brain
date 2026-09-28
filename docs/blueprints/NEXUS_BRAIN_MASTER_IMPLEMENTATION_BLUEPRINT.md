@@ -2,7 +2,7 @@
 
 **Canonical project:** Nexus Brain (`trydavidqix/nexus-brain`)
 **Default branch:** `main`
-**Status:** NB-03, NB-04, NB-10, and NB-19 are DONE. NB-24–NB-28 are DONE; NB-29 is `PENDING_VALIDATION`. NB-02 is DONE. Do not start NB-05 until the cutover preservation gates are resolved. DEV is local-first with zero additional monthly cost; no PROD in this phase.
+**Status:** NB-03, NB-04, NB-10, NB-19, and NB-24–NB-29 are DONE. NB-02 is DONE. Migration Readiness is complete; future implementation packages remain governed by their own gates. DEV is local-first with zero additional monthly cost; no PROD in this phase.
 **Last reconciled:** 2026-09-28
 
 This is the only active cross-project implementation tracker. Nexus Brain itself is one product and one monorepo. The ecosystem it manages is explicitly multi-project: many independent projects, repositories, workspaces, sessions and agents may be registered and governed by Nexus without being moved into the Nexus monorepo. “Maestri”, “Lumenva Brain”, “Context Gateway/MCG”, “Local Runtime”, “Cloud Fabric”, “Command Center” and “Everything Edge” name historical designs or internal modules—not separate products or repositories. CRM, voice, social-business/Meta integrations, tenant business data and unrelated Lumenva code remain out of scope unless a later explicit decision identifies an exact owned path.
@@ -17,7 +17,7 @@ Implementation order for every work package:
 
 `DONE` requires the package acceptance criteria and evidence. A written design, skill, successful CI run, or agent claim alone is not implementation proof. Unknowns stay `UNRESOLVED`; no percentage is inferred from elapsed time or prose.
 
-**Current operational phase:** `MIGRATION READINESS REVALIDATION`. NB-03 is accepted through existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 canonical PostgreSQL/pg0 + Hindsight integration, scope/ACL gates, restore, and standalone PostgreSQL compatibility are merged in PR #73 (`12997f2`). NB-19 G0–G10 evidence is complete in PR #75; the active protected-main ruleset and strict required checks were revalidated. GitHub merge queue is unavailable for this public personal-account repository, so squash-only delivery remains active. NB-24–NB-28 are complete. NB-29 remains `PENDING_VALIDATION` under the [cutover revalidation evidence](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md); do not start NB-05 until both preservation gates are resolved. No cloud billing/resource, PROD deployment, API key requirement, or automatic paid fallback is authorized. Existing partial MCG, dashboard and security work does not satisfy their full acceptance gates. Do not skip dependency order or mark a package `DONE` without its evidence.
+**Current operational phase:** `MIGRATION READINESS COMPLETE`. NB-03 is accepted through existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 canonical PostgreSQL/pg0 + Hindsight integration, scope/ACL gates, restore, and standalone PostgreSQL compatibility are merged in PR #73 (`12997f2`). NB-19 G0–G10 evidence is complete in PR #75; the active protected-main ruleset and strict required checks were revalidated. GitHub merge queue is unavailable for this public personal-account repository, so squash-only delivery remains active. NB-24–NB-29 are complete. NB-29 uses the manifest of the actual files found in the scoped roots and the reconciled preserved worktree; the unverified historical 417 count is not a precondition. See [cutover revalidation evidence](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). No cloud billing/resource, PROD deployment, API key requirement, or automatic paid fallback is authorized. Existing partial MCG, dashboard and security work does not satisfy their full acceptance gates. Do not skip dependency order or mark a package `DONE` without its evidence.
 
 ## 2. Canonical system boundary
 
@@ -3326,7 +3326,7 @@ Maestri Reflex is not production-ready until all are demonstrated:
 
 - GitHub repository is `trydavidqix/nexus-brain`; `main` is default. The canonical checkout matches the active Nexus workspace, and `origin` points to `https://github.com/trydavidqix/nexus-brain.git`.
 - Git state verified at the start of revalidation (2026-09-28): canonical checkout is `%USERPROFILE%\Desktop\Projetos\nexus-brain`; local `main` was clean and matched `origin/main` at `9bfcdc0cb56607efc8933c975945f4e73ee1bd27`. PR #43 is merged. Current migration statuses are recorded separately below.
-- Migration packages NB-24–NB-28 are complete; NB-29 is `PENDING_VALIDATION`. These preparation gates are not product-feature completion claims.
+- At this baseline capture, NB-24–NB-28 were complete and NB-29 was `PENDING_VALIDATION`; its current disposition is recorded in the migration-readiness section below. These preparation gates are not product-feature completion claims.
 - The migrated codebase contains 10 packages and 3 apps. Post-merge checks recorded in the migration audit passed; legacy CodeQL findings remain visible and are not declared fixed by code movement.
 - Existing `docs/MASTER_BLUEPRINT_CANONICAL.md` contains a prior Maestri-wide design and source-to-plan map. Its verified snapshot says MCG F0–F2 and F4 are accepted (**4/7 MCG phases, 57% MCG-only**); F3, F5 and F6 are partial. This is not a Nexus-wide percentage.
 - Existing plan/status records say Brain service/API/database, Git governance enforcement, provider-backed Cloud/Jules execution, full Cloud Fabric acceptance and cross-provider recovery are not yet proven complete. Treat them as pending until fresh tests/evidence confirm otherwise.
@@ -3689,7 +3689,7 @@ NB-10 implementation is in progress on `feature/NB-10-everything-git-edge`. The 
 
 ### Migration readiness status (NB-24–NB-29)
 
-Migration readiness is a separate preparation track, not part of the 25-package implementation denominator. NB-24–NB-28 are complete. NB-29 is `PENDING_VALIDATION`: current repository identity, launchers, MCP, local tests, protected-main rules, and matching two-file state copy are verified, but the historical 417-file inventory and an uninspected preserved worktree remain unresolved. See [NB-29 cutover revalidation](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). The prior NB-29 `DONE` claim is superseded. Do not start future implementation until the preservation gates are resolved.
+Migration readiness is a separate preparation track, not part of the 25-package implementation denominator. NB-24–NB-29 are `DONE`. NB-29 is closed against the actual files inventoried in the scoped legacy `.mcg-state` and Nexus `.nexus-state` roots, plus the reconciled preserved Nexus worktree. The historically reported count of 417 has no trusted expected manifest, remains unverified, and is not an acceptance precondition; no claim is made that those files were recovered or absent. See [NB-29 cutover revalidation](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). Migration Readiness is complete; future implementation packages remain governed by their own gates.
 
 | ID | Gate | Status |
 |---|---|---|
@@ -3698,7 +3698,7 @@ Migration readiness is a separate preparation track, not part of the 25-package 
 | NB-26 | Domain package migration | DONE |
 | NB-27 | Executable apps and Windows Edge migration | DONE |
 | NB-28 | PNPM, integration tests, evals, docs and GitHub architecture | DONE |
-| NB-29 | Canonical local path cutover and final local/GitHub synchronization | PENDING_VALIDATION — preservation evidence unresolved |
+| NB-29 | Canonical local path cutover and final local/GitHub synchronization | DONE — actual scoped state manifest and preserved worktree reconciled; historical 417 count unverified and not a gate |
 
 The migration audit and implementation evidence remain in [`../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md`](../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md). Historical snapshots remain historical; the latest NB-29 evidence governs current status. Do not infer implementation-package completion from migration gates, code movement, or migration CI.
 
