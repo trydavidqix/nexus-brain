@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { JOB_EVENT_TYPES, JOB_STATUSES, type Job } from "@nexus-brain/contracts/job";
 import { RUNTIME_PROTOCOL_VERSION, assertRuntimeCommand, type RuntimeCommand } from "@nexus-brain/contracts/runtime";
-import type { EngineeringPlan, GoalRisk, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusGoal, NexusIdentity, NexusMemoryEvent, NexusProject, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
+import type { EngineeringPlan, GoalRisk, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusGoal, NexusIdentity, NexusMemoryEvent, NexusProject, NexusProjectV2, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
 
 describe("shared TypeScript contracts", () => {
   it("keeps job and runtime protocol definitions importable from contracts", () => {
@@ -79,6 +79,13 @@ describe("shared TypeScript contracts", () => {
       deployment_bindings: [],
       provider_constraints: [],
     };
+    const projectV2: NexusProjectV2 = {
+      ...project,
+      memory_namespace: `project:${project.project_id}`,
+      workspace_bindings: [{ kind: "local", location: "opaque://local-workspace/path" }],
+    };
+    // @ts-expect-error Workspace bindings v2 currently support local locations only.
+    const invalidWorkspaceBinding: NexusProjectV2["workspace_bindings"][number] = { kind: "cloud", location: "opaque" };
     const goal: NexusGoal = {
       goal_id: "goal-1",
       project_id: project.project_id,
@@ -161,6 +168,8 @@ describe("shared TypeScript contracts", () => {
     expect(plan.agent_id).toBe("agent-codex-1");
     expect(identity.project_id).toBe("nexus-brain");
     expect(task.task_id).toBe("task-17");
+    expect(projectV2.workspace_bindings[0].location).toBe("opaque://local-workspace/path");
+    expect(projectV2.memory_namespace).toBe("project:project-1");
     expect(goal.project_id).toBe(project.project_id);
     expect(goal.risk).toBe("R2");
     expect(goalRisk).toBe("R4");

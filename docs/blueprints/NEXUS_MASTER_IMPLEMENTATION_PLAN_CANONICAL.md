@@ -620,15 +620,17 @@ createGoal(goal) → { goal, version: 1 }
 getGoal(project_id, goal_id) → { goal, version } | null
 ```
 
+NB-06A adds `registerProject(projectV2) → { project, version }` as the registry entry point. It accepts only Project v2; `getProject(project_id)` remains the only project lookup. There is no lookup, deduplication, or automatic identity resolution by `repo`.
+
 Project creation validates the complete Project v1 contract. Repeating an identical create for an existing `project_id` returns the existing record without another event; using that ID with different contents raises `STATE_CONFLICT`. Project updates replace the complete validated snapshot and require the target `project_id` separately plus the current `expectedVersion`; the snapshot's `project_id` must equal the target ID, and stale versions or mismatched IDs raise `STATE_CONFLICT`. This keeps `project_id` immutable. `repo` remains an opaque value and is stored exactly as provided; an intentional repository rebind is permitted only through the versioned update operation and emits an event. No Project delete operation exists in v1.
 
 Before storage, snapshots must be strictly JSON-compatible. Reject JavaScript-only values or structures that `JSON.stringify` would omit or transform (including `undefined`, functions, symbols, `BigInt`, `Date`/class instances, cycles, sparse arrays, accessors, and non-finite numbers); never silently persist a lossy normalized snapshot.
 
 Goal creation validates the complete Goal v1 contract and requires an existing parent Project. Identical create retries return the existing record without another event; different contents under the same `(project_id, goal_id)` raise `STATE_CONFLICT`. Goal reads require both IDs. Goal records are immutable in v1: there is no generic update/delete operation. A future DoD revision flow must implement the plan's revision-request, reason, authorization, and new-version requirements before permitting a change.
 
-The initial SQLite migration adds `projects`, `goals`, `events`, and `outbox`. Project identity is the primary key; Goal identity is the composite `(project_id, goal_id)` with `ON DELETE RESTRICT`. Each record stores its complete validated v1 JSON snapshot and monotonically increasing version. Each successful first create or changed Project update commits the domain snapshot, an append-only event, and an outbox row in one SQLite transaction. A no-op update and an identical create retry produce no event. Failed writes leave no partial snapshot, event, or outbox row.
+The initial SQLite migration adds `projects`, `goals`, `events`, and `outbox`. Project identity is the primary key; Goal identity is the composite `(project_id, goal_id)` with `ON DELETE RESTRICT`. Each record stores its complete validated Project v1 or v2 JSON snapshot, its contract version, and a separate monotonically increasing record revision. The NB-06A additive migration labels existing Project snapshots as contract v1 without rewriting `snapshot_json`. An explicit versioned update may upgrade v1 to v2; v2-to-v1 downgrade is rejected so workspace bindings cannot be dropped. Each successful first create or changed Project update commits the domain snapshot, an append-only event, and an outbox row in one SQLite transaction. A no-op update and an identical create retry produce no event. Failed writes leave no partial snapshot, event, or outbox row.
 
-The event envelope is `{ event_id, event_type, occurred_at, aggregate_type, aggregate_id, aggregate_version, project_id, payload }`. `event_id` is a generated UUID; `occurred_at` is an ISO-8601 UTC timestamp; event types are `PROJECT_CREATED`, `PROJECT_UPDATED`, and `GOAL_CREATED`; `payload` is the full post-write Project or Goal v1 snapshot. Event rows are append-only and reject update/delete. The outbox contains one immutable `{ event_id, created_at }` reference per event. Dispatch, delivery status, retries, retention, and deletion are explicitly outside this v1 slice; no worker may claim successful delivery from row existence alone.
+The event envelope is `{ event_id, event_type, occurred_at, aggregate_type, aggregate_id, aggregate_version, project_id, payload }`. `event_id` is a generated UUID; `occurred_at` is an ISO-8601 UTC timestamp; event types are `PROJECT_CREATED`, `PROJECT_UPDATED`, and `GOAL_CREATED`; `payload` is the full post-write Project v1 or v2 snapshot, or Goal v1 snapshot. Event rows are append-only and reject update/delete. The outbox contains one immutable `{ event_id, created_at }` reference per event. Dispatch, delivery status, retries, retention, and deletion are explicitly outside this v1 slice; no worker may claim successful delivery from row existence alone.
 
 No domain write may bypass the transaction that stores both state and its event/outbox record. These operations are the initial StateStore surface; the remaining entity repositories are added only when their contracts and events are specified.
 
@@ -726,6 +728,24 @@ provider_constraints: list of JSON objects
 ```
 
 All fields are required. Empty lists and JSON objects are valid where no bindings, stack facts, or local configuration exist yet. Repository locator remains opaque; implementations must not rewrite, infer, or normalize it. `lifecycle` remains an opaque non-empty string because this plan defines no lifecycle vocabulary. Nested policy, approval, budget, workspace, binding, and provider-constraint shapes remain owned by their respective contracts; Project v1 validates only their container types. Unknown top-level fields are rejected; extensions require a new schema version.
+
+Repository locators are not unique across projects. Multiple distinct `project_id` values may refer to the same exact `repo` string. Registration and lookup use `project_id`; the Registry never normalizes, deduplicates, or automatically resolves by repository locator.
+
+### Project Contract v2 — NB-06A
+
+Project v2 preserves every Project v1 field and rule, and adds this required field:
+
+```text
+workspace_bindings: list of typed local WorkspaceBinding objects
+```
+
+An empty list means no workspace is bound. Each entry is `{ kind: "local", location: <non-empty string> }`; multiple entries are allowed. `location` is stored as an opaque value: the Registry does not normalize it, inspect the filesystem, create a workspace, or move/copy repository data. Unknown fields inside the binding are rejected. Cloud workspace provisioning and cloud bindings are not part of the zero-cost DEV milestone.
+
+For Project v2, `memory_namespace` must equal `project:<project_id>`. This is the logical Nexus namespace. The existing Hindsight adapter continues to derive its physical bank ID from `project_id` and apply NB-04 scope tags; the registry does not store or override a physical bank identifier.
+
+Project v1 remains readable and writable through the generic StateStore compatibility API. New Project Registry registration uses v2. The record's contract version is separate from its optimistic record revision. Existing v1 snapshots are never silently upgraded or rewritten.
+
+NB-06A persists the existing Project v1 policy, permission, budget, memory, Git, CI, deployment, and provider-constraint fields unchanged. It does not add new code-index, research, source, or provider-binding shapes; those are specified by their owning milestones. No resolver may identify a project from `repo` alone.
 
 The Project contract registers and governs an external repository. It does not absorb or mutate that repository. Project Factory must inspect an unknown repository and gather evidence before proposing changes.
 

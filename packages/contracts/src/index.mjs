@@ -2,10 +2,10 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','memory-record','memory-event','memory-sighting','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','research-run','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan','maestri-decision-input','maestri-decision-result','project','goal'];
+const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','memory-record','memory-event','memory-sighting','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','research-run','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan','maestri-decision-input','maestri-decision-result','project','project-v2','goal'];
 const SET=new Set(TYPES);
 const DIR=join(dirname(fileURLToPath(import.meta.url)),'..','schemas');
-const SCHEMAS=Object.fromEntries(TYPES.map(type=>[type,JSON.parse(readFileSync(join(DIR,type,`${type}.v1.schema.json`),'utf8'))]));
+const SCHEMAS=Object.fromEntries(TYPES.map(type=>[type,JSON.parse(readFileSync(type==='project-v2'?join(DIR,'project','project.v2.schema.json'):join(DIR,type,`${type}.v1.schema.json`),'utf8'))]));
 
 function matches(value,type){
   if(type==='null') return value===null;
@@ -58,6 +58,9 @@ export function validateContract(type,value){
     const started=Date.parse(value.started_at);
     const completed=Date.parse(value.completed_at);
     if(Number.isFinite(started)&&Number.isFinite(completed)&&completed<started) errors.push('$.completed_at: must not precede started_at');
+  }
+  if(type==='project-v2'&&typeof value.project_id==='string'&&value.memory_namespace!==`project:${value.project_id}`){
+    errors.push('$.memory_namespace: must equal project:<project_id>');
   }
   return {valid:errors.length===0,errors,schema_id:SCHEMAS[type].$id};
 }

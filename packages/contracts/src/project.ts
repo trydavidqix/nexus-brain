@@ -18,3 +18,12 @@ export interface NexusProject {
   deployment_bindings: Record<string, unknown>[];
   provider_constraints: Record<string, unknown>[];
 }
+
+export interface NexusLocalWorkspaceBinding {
+  kind: 'local';
+  location: string;
+}
+
+export interface NexusProjectV2 extends NexusProject {
+  workspace_bindings: NexusLocalWorkspaceBinding[];
+}

@@ -22,6 +22,20 @@ test('project retrieval ignores caller task and agent tags', async () => {
  const body = JSON.parse(requests[1].options.body);
  assert.deepEqual(body.tags, ['nexus', 'scope:project', 'project:nexus-brain']);
 });
+test('derives stable isolated Hindsight banks from project IDs', async () => {
+ const { fetchImpl, requests } = fakeFetch(); const adapter = createHindsightAdapter({ fetchImpl });
+ for (const project_id of ['project-alpha', 'project-beta', 'project-alpha']) {
+  await adapter.recall({ project_id, scope: 'PROJECT', query: 'synthetic project fact', data_classification: 'SYNTHETIC' });
+ }
+ const bankIds = requests.filter(request => request.options.method === 'PUT').map(request => {
+  const match = request.url.match(/\/v1\/default\/banks\/([^/]+)/);
+  assert.ok(match, 'expected adapter to address a physical Hindsight bank');
+  return decodeURIComponent(match[1]);
+ });
+ assert.equal(bankIds.length, 3);
+ assert.equal(bankIds[0], bankIds[2]);
+ assert.notEqual(bankIds[0], bankIds[1]);
+});
 test('task retrieval requires agent identity', async () => {
  const { fetchImpl, requests } = fakeFetch();
  await assert.rejects(createHindsightAdapter({ fetchImpl }).recall({ project_id: 'nexus-brain', task_id: 'task-9', scope: 'TASK', query: 'synthetic', data_classification: 'SYNTHETIC' }), /agent_id/);
