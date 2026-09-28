@@ -84,3 +84,13 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 
 - The worktree preservation gate is reconciled: its exact dirty state is inventoried, its committed history is in `main`, and all identified executable behavior/test invariants are present in canonical paths. The dirty worktree remains as a preserved local artifact and was not changed.
 - The historical 417-file inventory gate remains unresolved. Keep NB-29 `PENDING_VALIDATION` and do not start NB-05 until that historical state is located and reconciled, or the Owner records an explicit decision that changes the requirement.
+
+### Post-merge GitHub and worktree revalidation — 2026-09-28
+
+- PR #93, `docs: record NB-29 preservation evidence`, merged by squash as `b02336586d0c55b100f3463f5703e1d2fbcee31e` at 2026-09-28 02:16:14Z. All 13 recorded check runs are `SUCCESS`, including `mcg`, `tofu`, CodeQL, Gitleaks, dependency review, Semgrep, OSV, and ZAP. The remote topic branch was retained.
+- Current readback of migration PRs #43, #49, #73–#75, #79–#80, #82–#83, and #90–#93 shows every PR `MERGED` and every recorded check conclusion `SUCCESS`.
+- Local `main` is clean and synchronized at `b02336586d0c55b100f3463f5703e1d2fbcee31e`, equal to `origin/main`.
+- Active ruleset `Nexus protected main` (ID `24075255`) targets only `main`, is enforced, has no bypass actor, requires PR-only squash and linear history, and requires `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review` with strict checks. Force-push and branch deletion are blocked.
+- The clean NB-04 worktree is synchronized with its branch remote (0 ahead/0 behind). The clean NB-05 draft worktree is also synchronized (0/0); PR #81 remains open, `isDraft=true`, all 14 recorded check runs pass, and GitHub reports `mergeStateStatus=DIRTY`. It is gated future work and was not changed.
+- The Everything CLI query for possible 417-file inventory/manifest names under the Codex metadata root did not return within 20 seconds; it was interrupted. Everything was not installed, started, or reconfigured. No broader fallback scan was run.
+- The only remaining Migration Readiness gate is the source location or verifiable manifest for the historical 417-file state. No access to Lumenva-owned project data was made.
