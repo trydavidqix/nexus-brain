@@ -1,5 +1,9 @@
 # Nexus Brain — mapa de migração da arquitetura canônica
 
+## Estado de revalidação — 2026-09-28
+
+NB-24–NB-28 permanecem concluídos. NB-29 está `PENDING_VALIDATION`, não concluído: a revalidação atual confirmou o checkout canônico, sincronização Git, MCP, launchers e correspondência hash dos dois artefatos locais, mas não reconciliou a contagem histórica de 417 arquivos nem o worktree preservado sob o escopo protegido pelo usuário. Consulte [`NB-29 cutover revalidation`](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). Os snapshots abaixo são históricos; não mova o checkout para um caminho Lumenva nem toque em worktrees Lumenva.
+
 **Estado autoritativo em 2026-09-26:** PR #44 foi integrado na `main` pelo merge `e5f3b14f6a2cb36a4830d5b9d8e9767557713bed`; `main` local está fast-forward e limpa no mesmo SHA. Jobs pós-merge MCG, CodeQL analysis, Security Scanning e Fuzz passaram. Dois MCPs antigos foram encerrados; autostart foi arquivado/removido e MCG_ROOT obsoleto limpo. Resta a renomeação física do checkout, bloqueada pelo processo do task Codex ativo que ainda usa o path antigo como working directory. O alerta agregado do CodeQL no PR foi preservado sem dismiss; ele apontou findings legados em caminhos migrados, enquanto a execução pós-merge de CodeQL na `main` passou.
 **Origem Git:** `trydavidqix/nexus-brain`, branch `main` em `e5f3b14f6a2cb36a4830d5b9d8e9767557713bed`.
 **Checkout desta atualização:** worktree isolado `codex/finalize-migration-readiness`; a implementação arquitetural está integrada em `main`.

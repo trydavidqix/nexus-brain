@@ -2,11 +2,13 @@
 
 This repository is the canonical home for Nexus Brain (`trydavidqix/nexus-brain`). Maestri Context Gateway (MCG), extracted from Lumenva on 2026-09-23, is one internal module. This repository contains its current source, contracts, configuration templates, registries, tests, evaluation datasets, and CI; other Nexus modules remain tracked in the active blueprint until transferred and verified.
 
-## Current authoritative snapshot — 2026-09-27
+## Current authoritative snapshot — 2026-09-28
 
-- Main: PR #73 merged as `12997f220dff5a5540411d1c7af5ae03de5fbbde`; local `main` synchronized. NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence; no Google billing or cloud resource changed.
+- Main was clean and synchronized with `origin/main` at revalidation start (`9bfcdc0cb56607efc8933c975945f4e73ee1bd27`). Migration PRs #43, #49, #73–#75, #79–#80, and #82–#83 have merged with required checks passing.
+- NB-03 is accepted with local Hindsight/pg0 and verified Codex OAuth evidence. On 2026-09-28, `/health` and one synthetic reflect returned HTTP 200; Hindsight recorded `openai-codex` / `gpt-6-luna` / `success`. No Gemini key, Google billing, or cloud resource changed. Evidence: [`NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md`](engineering/NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md).
 - NB-04 is merged and accepted. Local unit, integration, typecheck, architecture, syntax, sensitive-data, live Hindsight/pg0, append-only, ACL/scope, and restore checks passed. Evidence: [`NB-04_PREPARATION.md`](engineering/NB-04_PREPARATION.md).
-- Migration Readiness NB-24–NB-29 is complete. PR #75 closes NB-19 G10 policy/evidence; NB-05 is next after PR #75 merges.
+- NB-19 G0–G10 is merged and accepted; the active protected-main ruleset and required checks were revalidated. Migration Readiness NB-24–NB-28 remains complete; NB-29 is `PENDING_VALIDATION` because historical MCG-state inventory and a preserved, user-protected worktree cannot be fully reconciled without crossing the no-Lumenva boundary. See [`NB-29 cutover revalidation`](engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md).
+- Do not start NB-05 or later Blueprint implementation until NB-29's preservation gates are resolved. PR #81 remains an open draft and was not changed.
 - DEV remains zero-additional-cost and local-first. No PROD, paid cloud provisioning, billing changes, Gemini API key, or paid provider fallback is authorized.
 
 ## Historical migration snapshot — 2026-09-26
