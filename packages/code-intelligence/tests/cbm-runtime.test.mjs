@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { execFile } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -10,6 +10,38 @@ import { CodebaseMemoryAdapter, createCodeIntelligenceEngine } from '../src/inde
 
 const execFileAsync = promisify(execFile);
 const runtimeBinary = process.env.CBM_BINARY;
+
+function safeQueryFailure(stdout, stderr, code, paths) {
+  let structuredError = null;
+  try {
+    const response = JSON.parse(stdout);
+    if (typeof response?.structuredContent?.error === 'string') structuredError = response.structuredContent.error;
+    else if (typeof response?.error === 'string') structuredError = response.error;
+    else if (typeof response?.error?.message === 'string') structuredError = response.error.message;
+  } catch { /* failed commands can emit non-JSON diagnostics */ }
+  if (structuredError) {
+    let message = structuredError;
+    for (const path of paths) {
+      if (!path) continue;
+      message = message.split(path).join('<fixture-path>');
+      message = message.split(path.replace(/\\/g, '/')).join('<fixture-path>');
+    }
+    message = message
+      .replace(/AIza[\w-]{30,}/g, '<redacted-key>')
+      .replace(/(?:sk-[\w-]{20,}|gh[pousr]_[\w]{20,})/gi, '<redacted-token>')
+      .replace(/(api[-_ ]?key|secret|password|token)([\s"':=]+)[^\s,"'}]+/gi, '$1$2<redacted>')
+      .replace(/[A-Za-z]:\\[^\r\n"',}]+/g, '<path>')
+      .replace(/\/(?:home|Users|runner|tmp|var)\/[^\s"',}]+/g, '<path>')
+      .slice(0, 300);
+    return { exit_code: code, error: message };
+  }
+  return {
+    exit_code: code,
+    stdout_bytes: Buffer.byteLength(stdout),
+    stderr_bytes: Buffer.byteLength(stderr),
+    stderr_has_error_marker: /error|failed|invalid|unsupported/i.test(stderr),
+  };
+}
 
 const project = {
   project_id: 'nb07-ci-fixture',
@@ -72,7 +104,21 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   };
   const projects = new Map([[project.project_id, project], [providerProject.project_id, providerProject]]);
   const providerAlias = `nexus-${createHash('sha256').update(providerProject.project_id).update('\0').update(providerProject.workspace_bindings[0].location).digest('hex')}`;
-  const cbm = new CodebaseMemoryAdapter();
+  const cbm = new CodebaseMemoryAdapter({
+    spawnImpl: (...args) => {
+      const child = spawn(...args);
+      if (args[1]?.[2] === 'query_graph') {
+        let stdout = '';
+        let stderr = '';
+        child.stdout.on('data', chunk => { stdout = `${stdout}${chunk}`.slice(-65_536); });
+        child.stderr.on('data', chunk => { stderr = `${stderr}${chunk}`.slice(-65_536); });
+        child.on('close', code => {
+          if (code !== 0) queryGraphDiagnostics.push(safeQueryFailure(stdout, stderr, code, [repoPath, providerPath, cachePath]));
+        });
+      }
+      return child;
+    },
+  });
   const queryGraphDiagnostics = [];
   const adapter = {
     index: (...args) => cbm.index(...args),
