@@ -20,7 +20,7 @@
 ## Preservation gates
 
 1. A historical audit reported 417 files in an MCG state root. The current source/destination pair contains two matching files; the earlier 417-file inventory has no reproducible manifest or verified copy. This report does not claim those 417 files were recovered or never existed.
-2. **Reconciled:** the preserved Nexus worktree `codex/mcg-finalization` is located at `C:\Users\David\.lumenva\worktrees\mcg-finalization`. It was inspected read-only after the Owner explicitly authorized that exact Nexus worktree. Its dirty content is inventoried below; it remains untouched under the no-clean/no-delete guard. No unique executable behavior or test invariant absent from canonical `main` was identified.
+2. **Reconciled:** the preserved Nexus worktree `codex/mcg-finalization` is located at `%USERPROFILE%\.lumenva\worktrees\mcg-finalization`. It was inspected read-only after the Owner explicitly authorized that exact Nexus worktree. Its dirty content is inventoried below; it remains untouched under the no-clean/no-delete guard. No unique executable behavior or test invariant absent from canonical `main` was identified.
 
 The worktree gate was later reconciled in the supplemental audit below. Until the historical 417-file state has a verifiable inventory or the Owner records a decision that changes this requirement, keep NB-29 `PENDING_VALIDATION`; do not start NB-05 or later Blueprint implementation.
 
@@ -58,7 +58,7 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 
 ### `codex/mcg-finalization` worktree
 
-- Exact repository root: `C:\Users\David\.lumenva\worktrees\mcg-finalization`; `origin` is `https://github.com/trydavidqix/nexus-brain.git`.
+- Exact repository root: `%USERPROFILE%\.lumenva\worktrees\mcg-finalization`; `origin` is `https://github.com/trydavidqix/nexus-brain.git`.
 - Branch `codex/mcg-finalization`, HEAD `5d78258893cf25ce4c6038999a82e1e2be97e8a7`, upstream `origin/main`; 0 commits ahead and 50 behind `origin/main` by local refs. The commit is already an ancestor of current `main` (`81d41ff89beb33be87f71a3c537dfc1e3d206b9d`), and `origin` has no branch named `codex/mcg-finalization`.
 - Git porcelain v2: 7 tracked modified files, 0 staged files, 2 untracked files, and 4 ignored-artifact status entries. Ignored entries were not manually reviewed; the read-only Gitleaks scan covered the worktree and returned only the two findings listed below. `git diff --check` passed.
 - The exact nine-file working-tree manifest has SHA-256 `5bbf470f62a08b9bf73a885da58d994bf83d1c6e26d645d7647214ed6dc2bf13`. Each row records lowercase SHA-256 of the relative path's UTF-8 bytes, decimal file size, lowercase file-content SHA-256, and the relative path. Rows sort by path hash; the aggregate digest covers path hash, size, and content hash with TAB separators, UTF-8 without BOM, and LF line endings. Tracked diff SHA-256 (binary `git diff --binary --no-ext-diff HEAD`): `b3685668f8b5127ff2ba34b7a828df921fd7cc1ce41fe925ded9500f093cf5c5`.
