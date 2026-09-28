@@ -47,3 +47,10 @@ NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariant
 - Recall returned the exact synthetic candidate after canonical project/scope/ACL filtering. Reflect returned an unpersisted `CANDIDATE`; `NB04_REFLECT_CODEX_PASS` was checked in memory. Response content was not printed or saved.
 - Hindsight `llm_requests` recorded the reflect operation as `openai-codex` / `gpt-6-luna` / `success`; three successful `reflect_tool_call` entries were recorded at 01:48:37, 01:48:39, and 01:48:42 Europe/Lisbon.
 - The canonical synthetic test record had a ten-minute validity window. No Gemini key/request, Google project or billing setting, cloud resource, or production data changed.
+
+## Fresh integrated E2E — 2026-09-28
+
+- One local run passed Hindsight and pg0 health, synthetic canonical retain, project recall of that exact record with the explicit `read:nexus-brain` ACL, and reflect.
+- Reflect returned the expected synthetic token `NB04_REFLECT_CODEX_PASS`; the response body stayed in memory and was not printed or saved. The reflect result remained an unpersisted `CANDIDATE`.
+- The Hindsight `llm_requests` registry recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, `operation=reflect`, and `scope=reflect_tool_call`.
+- The retained test record is synthetic, task-scoped, and expires for retrieval after ten minutes. No Gemini credential/request, Google project or billing setting, cloud resource, or production data was involved.
