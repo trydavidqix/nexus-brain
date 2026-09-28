@@ -420,7 +420,7 @@ export class CodeIntelligenceEngine {
       }
       let architecture = null;
       let indexStatus = null;
-      try { architecture = await this.adapter.invoke('get_architecture', { project: scope.alias }); } catch { /* architecture is advisory */ }
+      try { architecture = await this.adapter.invoke('get_architecture', { project: scope.alias, aspects: ['routes'] }); } catch { /* architecture is advisory */ }
       try { indexStatus = await this.adapter.invoke('index_status', { project: scope.alias }); } catch { /* index status is advisory */ }
       return {
         data: {

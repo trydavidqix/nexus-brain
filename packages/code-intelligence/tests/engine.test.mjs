@@ -160,6 +160,8 @@ test('indexes only explicitly selected registered cross-repository targets and r
   const crossIndexPosition = adapter.calls.findIndex(([name, input]) => name === 'index' && input.mode === 'cross-repo-intelligence');
   const graphQueryPosition = adapter.calls.findIndex(([name]) => name === 'query_graph');
   const targetStatusPosition = adapter.calls.findIndex(([name, params]) => name === 'index_status' && params.project === indexCalls[1][1].projectAlias);
+  const architectureCall = adapter.calls.find(([name]) => name === 'get_architecture');
+  assert.deepEqual(architectureCall[1].aspects, ['routes']);
   assert.ok(crossIndexPosition < graphQueryPosition && graphQueryPosition < targetStatusPosition);
   assert.equal(adapter.calls[graphQueryPosition][1].query.endsWith('LIMIT 200'), true);
   assert.ok(result.related_targets[0].warnings.some(warning => warning.code === 'TARGET_INDEX_PROVENANCE_UNVERIFIED'));
