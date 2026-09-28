@@ -40,3 +40,10 @@ The pg0 database uses PostgreSQL's logical dump/restore format. DEV migration to
 ## Final gate
 
 NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariants, security scans, restore/import evidence, and passing required GitHub checks. PR #73 is merged. NB-05 remains gated on the active PR #75 closeout of NB-19 G10.
+
+## Supplemental live E2E revalidation — 2026-09-28 01:48 Europe/Lisbon
+
+- `createLocalHindsightMemoryEngine()` connected to the local pg0 store and Hindsight API; health, synthetic canonical retain, permission-scoped recall, and reflect all passed.
+- Recall returned the exact synthetic candidate after canonical project/scope/ACL filtering. Reflect returned an unpersisted `CANDIDATE`; `NB04_REFLECT_CODEX_PASS` was checked in memory. Response content was not printed or saved.
+- Hindsight `llm_requests` recorded the reflect operation as `openai-codex` / `gpt-6-luna` / `success`; three successful `reflect_tool_call` entries were recorded at 01:48:37, 01:48:39, and 01:48:42 Europe/Lisbon.
+- The canonical synthetic test record had a ten-minute validity window. No Gemini key/request, Google project or billing setting, cloud resource, or production data changed.
