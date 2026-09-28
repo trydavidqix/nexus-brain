@@ -5,6 +5,11 @@ import { createBrainApi } from '../src/brain-api.mjs';
 const identity = { project_id: 'project-a', task_id: 'task-a', agent_id: 'agent-a' };
 const request = (operation, input = {}) => ({ request_id: 'request-1', ...identity, operation, input });
 const principal = (capabilities = ['brain.search']) => ({ identity, capabilities });
+const reachBudget = (capability = 'research') => ({
+  source: 'maestri', decision_id: 'decision-1', identity, capability,
+  limits: { max_queries: 3, max_providers: 2, max_results_per_provider: 5, max_browser_escalations: 1, max_wall_time_seconds: 30 },
+  max_cost_microusd: 0,
+});
 
 test('denies requests when the trusted caller cannot authenticate', async () => {
   const api = createBrainApi({ authenticate: async () => null });
@@ -154,9 +159,20 @@ test('routes only bounded research and web capabilities through the reach facade
   const seen = [];
   const api = createBrainApi({
     authenticate: async () => principal(['research', 'web.search', 'reach:admin']),
-    reach: { research: async input => { seen.push(input.capability); return { status: 'OK', provider: 'local-research', output: { evidence_ids: ['e-1'] }, evidence_ids: ['e-1'] }; }, web: async input => { seen.push(input.capability); return { status: 'EMPTY', provider: 'no-provider', output: {}, evidence_ids: [] }; } },
+    resolveReachBudget: async ({ capability }) => reachBudget(capability),
+    reach: {
+      research: async input => {
+        seen.push(input.capability);
+        assert.equal(input.policy.reach_budget.source, 'maestri');
+        assert.equal('limits' in input.input, false);
+        assert.equal('budget' in input.input, false);
+        assert.equal('source_budget' in input.input, false);
+        return { status: 'OK', provider: 'local-research', output: { evidence_ids: ['e-1'] }, evidence_ids: ['e-1'] };
+      },
+      web: async input => { seen.push(input.capability); assert.equal(input.policy.reach_budget.max_cost_microusd, 0); return { status: 'EMPTY', provider: 'no-provider', output: {}, evidence_ids: [] }; },
+    },
   });
-  const research = await api.handleReach({ ...identity, capability: 'research', input: { query: 'synthetic', limits: { max_queries: 2 } }, policy: { data_classification: 'SYNTHETIC' } });
+  const research = await api.handleReach({ ...identity, capability: 'research', input: { query: 'synthetic', limits: { max_queries: 2 }, budget: { max_cost_microusd: 9_999_999 }, source_budget: { providers: ['caller-selected'] } }, policy: { data_classification: 'SYNTHETIC', max_cost_microusd: 9_999_999 } });
   const web = await api.handleReach({ ...identity, capability: 'web.search', input: { query: 'synthetic' }, policy: { data_classification: 'NON_SENSITIVE' } });
   const unknown = await api.handleReach({ ...identity, capability: 'admin', input: {}, policy: { data_classification: 'SYNTHETIC' } });
   assert.deepEqual(seen, ['research', 'web.search']);
@@ -164,6 +180,41 @@ test('routes only bounded research and web capabilities through the reach facade
   assert.equal(research.coverage, 'FULL');
   assert.equal(web.status, 'EMPTY');
   assert.equal(unknown.status, 'BLOCKED');
+});
+
+test('does not dispatch Reach without a trusted Maestri budget', async () => {
+  let calls = 0;
+  const api = createBrainApi({ authenticate: async () => principal(['research']), reach: { research: async () => { calls += 1; } } });
+  const response = await api.handleReach({ ...identity, capability: 'research', input: { query: 'synthetic' }, policy: { data_classification: 'SYNTHETIC' } });
+  assert.equal(response.status, 'POLICY_DENIED');
+  assert.equal(response.data.error_code, 'reach_budget_unavailable');
+  assert.equal(calls, 0);
+});
+
+test('rejects a caller request that exceeds Maestri Reach limits before adapter dispatch', async () => {
+  let calls = 0;
+  const api = createBrainApi({
+    authenticate: async () => principal(['research']),
+    resolveReachBudget: async () => reachBudget(),
+    reach: { research: async () => { calls += 1; } },
+  });
+  const response = await api.handleReach({ ...identity, capability: 'research', input: { query: 'synthetic', limits: { max_queries: 4 } }, policy: { data_classification: 'SYNTHETIC' } });
+  assert.equal(response.status, 'POLICY_DENIED');
+  assert.equal(response.data.error_code, 'reach_budget_exceeded');
+  assert.equal(calls, 0);
+});
+
+test('rejects a Maestri Reach budget bound to another task', async () => {
+  let calls = 0;
+  const api = createBrainApi({
+    authenticate: async () => principal(['research']),
+    resolveReachBudget: async () => ({ ...reachBudget(), identity: { ...identity, task_id: 'other-task' } }),
+    reach: { research: async () => { calls += 1; } },
+  });
+  const response = await api.handleReach({ ...identity, capability: 'research', input: { query: 'synthetic' }, policy: { data_classification: 'SYNTHETIC' } });
+  assert.equal(response.status, 'POLICY_DENIED');
+  assert.equal(response.data.error_code, 'reach_budget_invalid');
+  assert.equal(calls, 0);
 });
 
 test('blocks research without safe data classification before provider dispatch', async () => {

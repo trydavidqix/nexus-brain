@@ -5,6 +5,13 @@ const MAX_OUTPUT_BYTES = 65_536;
 const MAX_QUERY_LENGTH = 4_000;
 const MAX_TOP_K = 20;
 const REACH_CAPABILITIES = new Set(['research', 'web.search']);
+const REACH_LIMIT_FIELDS = Object.freeze([
+  'max_queries',
+  'max_providers',
+  'max_results_per_provider',
+  'max_browser_escalations',
+  'max_wall_time_seconds',
+]);
 const BRAIN_CAPABILITIES = Object.freeze({
   brain_context: 'brain.context',
   brain_search: 'brain.search',
@@ -66,7 +73,18 @@ function authResult(request, principal, capability) {
   return null;
 }
 
-export function createBrainApi({ authenticate, memoryEngine, context, localSearch, reach } = {}) {
+function validReachBudget(budget, identity, capability) {
+  return budget?.source === 'maestri'
+    && typeof budget.decision_id === 'string'
+    && budget.decision_id.length > 0
+    && budget.capability === capability
+    && sameIdentity(identity, budget.identity)
+    && REACH_LIMIT_FIELDS.every(field => Number.isSafeInteger(budget.limits?.[field]) && budget.limits[field] >= (field === 'max_wall_time_seconds' ? 1 : 0))
+    && Number.isSafeInteger(budget.max_cost_microusd)
+    && budget.max_cost_microusd >= 0;
+}
+
+export function createBrainApi({ authenticate, resolveReachBudget, memoryEngine, context, localSearch, reach } = {}) {
   if (typeof authenticate !== 'function') throw new Error('Brain API requires a trusted authenticator; requests fail closed.');
 
   async function handle(request, transportContext = {}) {
@@ -155,10 +173,37 @@ export function createBrainApi({ authenticate, memoryEngine, context, localSearc
     const denied = authResult(request, principal, request.capability);
     if (denied) return denied;
 
+    if (typeof resolveReachBudget !== 'function') return response(request, 'POLICY_DENIED', { error_code: 'reach_budget_unavailable' });
+    let reachBudget;
+    try {
+      reachBudget = await resolveReachBudget({
+        identity: principal.identity,
+        capability: request.capability,
+        request: { input: request.input, data_classification: request.policy.data_classification },
+      });
+    } catch {
+      return response(request, 'POLICY_DENIED', { error_code: 'reach_budget_unavailable' });
+    }
+    if (!validReachBudget(reachBudget, principal.identity, request.capability)) {
+      return response(request, 'POLICY_DENIED', { error_code: 'reach_budget_invalid' });
+    }
+    for (const field of REACH_LIMIT_FIELDS) {
+      const requested = request.input.limits?.[field];
+      if (requested !== undefined && (!Number.isSafeInteger(requested) || requested < (field === 'max_wall_time_seconds' ? 1 : 0) || requested > reachBudget.limits[field])) {
+        return response(request, 'POLICY_DENIED', { error_code: 'reach_budget_exceeded' });
+      }
+    }
+
     const adapter = request.capability === 'research' ? reach?.research : reach?.web;
     if (typeof adapter !== 'function') return response(request, 'PROVIDER_DOWN', { error_code: 'reach_unavailable' });
     try {
-      const result = await adapter({ ...request, identity: { project_id: request.project_id, task_id: request.task_id, agent_id: request.agent_id } });
+      const { limits: _callerLimits, budget: _callerBudget, source_budget: _callerSourceBudget, ...safeInput } = request.input;
+      const result = await adapter({
+        ...request,
+        input: safeInput,
+        policy: { data_classification: request.policy.data_classification, reach_budget: reachBudget },
+        identity: { project_id: request.project_id, task_id: request.task_id, agent_id: request.agent_id },
+      });
       const status = statusOf(result);
       return response(request, status, result ?? {}, { source: result?.provider ?? request.capability, trust_level: 'UNTRUSTED', coverage: coverageOf(status), provenance: result?.provenance ?? { capability: request.capability } });
     } catch {
