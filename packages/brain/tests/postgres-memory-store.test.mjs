@@ -28,6 +28,27 @@ test('persist rejects a task record with mismatched task scope before connecting
   assert.equal(connected, false);
 });
 
+test('persisted task lifecycle event carries originating agent binding', async () => {
+  const statements = [];
+  const client = {
+    query: async (sql, values) => {
+      statements.push({ sql, values });
+      if (sql.startsWith('INSERT INTO nexus_memory_records')) return { rowCount: 1, rows: [{ memory_id: 'memory-task-1', version: 1, content_hash: 'sha256:test' }] };
+      return { rowCount: 1, rows: [] };
+    },
+    release() {}
+  };
+  const store = new PostgresMemoryStore({ connect: async () => client, query: async () => ({ rows: [] }) });
+  const stamp = '2026-09-27T00:00:00.000Z';
+  const record = { memory_id: 'memory-task-1', project_id: 'nexus-brain', scope: 'TASK', scope_id: 'task-1', task_id: 'task-1', status: 'CANDIDATE', content: 'Synthetic task memory.', content_hash: 'sha256:test', data_classification: 'SYNTHETIC', evidence_ids: [], provenance: { source_type: 'test', source_id: 'task-1', actor_id: 'agent-1' }, temporal: { observed_at: stamp, recorded_at: stamp, valid_from: stamp }, acl: { policy_id: 'project-read-grant', read_permission_ids: ['read:nexus-brain'], write_permission_ids: [] }, version: 1 };
+
+  await store.persistRecord(record);
+
+  const eventInsert = statements.find(statement => statement.sql.startsWith('INSERT INTO nexus_memory_events'));
+  assert.ok(eventInsert);
+  assert.equal(eventInsert.values[10], 'agent-1');
+});
+
 test('research run, raw evidence, and sightings use separate typed canonical stores', async () => {
   const statements = [];
   const pool = { connect: async () => ({ release() {} }), query: async (sql, values) => { statements.push({ sql, values }); return { rowCount: 1, rows: [] }; } };

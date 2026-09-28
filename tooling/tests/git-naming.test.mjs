@@ -62,6 +62,49 @@ test('accepts the Codex branch prefix with a compact task ID', () => {
   assert.equal(result.status, 0, result.stderr);
 });
 
+test('accepts a Dependabot branch only for the bot on the same repository', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test('rejects a Dependabot branch for any other pull request author', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'attacker',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
+test('rejects a Dependabot branch from a different repository', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'external/fork',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
+test('rejects malformed Dependabot branch names even for the bot', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/unknown/surprise',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
 test('rejects branches without a task ID and descriptive slug', () => {
   const result = runValidator('--branch', 'feature/nexus-refactor');
   assert.equal(result.status, 1);

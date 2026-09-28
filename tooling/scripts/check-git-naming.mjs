@@ -47,13 +47,21 @@ function validateBranch(value) {
   return undefined;
 }
 
+function isVerifiedDependabotBranch(branch, context) {
+  return context?.author === 'dependabot[bot]'
+    && Boolean(context.repository)
+    && context.headRepository === context.repository
+    && /^dependabot\/(?:github_actions|npm_and_yarn)\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(branch);
+}
+
 function main(args) {
   const values = new Map();
   for (let index = 0; index < args.length; index += 2) {
     const flag = args[index];
     const value = args[index + 1];
-    if (!['--subject', '--pr-title', '--branch'].includes(flag) || value === undefined || value.startsWith('--')) {
-      console.error('git naming: usage error; pass --subject, --pr-title, or --branch with a value');
+    if (!['--subject', '--pr-title', '--branch', '--pr-author', '--pr-head-repo', '--repository'].includes(flag)
+      || value === undefined || value.startsWith('--')) {
+      console.error('git naming: usage error; pass a supported naming option with a value');
       process.exitCode = 2;
       return;
     }
@@ -66,7 +74,15 @@ function main(args) {
   }
 
   if (values.size === 0) {
-    console.error('git naming: usage error; pass --subject, --pr-title, or --branch with a value');
+    console.error('git naming: usage error; pass a supported naming option with a value');
+    process.exitCode = 2;
+    return;
+  }
+
+  const contextFlags = ['--pr-author', '--pr-head-repo', '--repository'];
+  const suppliedContextFlags = contextFlags.filter(flag => values.has(flag));
+  if (suppliedContextFlags.length > 0 && suppliedContextFlags.length !== contextFlags.length) {
+    console.error('git naming: usage error; pass all pull request identity context fields together');
     process.exitCode = 2;
     return;
   }
@@ -79,7 +95,15 @@ function main(args) {
     }
   }
   if (values.has('--branch')) {
-    const error = validateBranch(values.get('--branch'));
+    const branch = values.get('--branch');
+    const context = suppliedContextFlags.length === contextFlags.length
+      ? {
+        author: values.get('--pr-author'),
+        headRepository: values.get('--pr-head-repo'),
+        repository: values.get('--repository')
+      }
+      : undefined;
+    const error = isVerifiedDependabotBranch(branch, context) ? undefined : validateBranch(branch);
     if (error) errors.push(error);
   }
 
