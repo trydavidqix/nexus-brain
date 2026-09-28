@@ -606,7 +606,31 @@ Migrations have a positive, sequential version, a non-empty name, and SQL text. 
 
 The Node adapter uses the pinned `better-sqlite3` dependency, not Node's experimental `node:sqlite` API. This preserves the repository's Node 22+ contract while keeping one local SQLite connection and short synchronous transactions. See the [official better-sqlite3 documentation](https://github.com/WiseLibs/better-sqlite3).
 
-Project/Goal repositories, updates, foreign-key behavior, event payloads, and outbox delivery semantics belong to later StateStore decisions. No data write may bypass the plan's atomic state-plus-outbox invariant.
+### StateStore Project/Goal v1
+
+`SQLiteStateStore` is the sole authority for Nexus operational records, including Project Registry records. Hindsight may retain private data in its embedded pg0/PostgreSQL database for memory-engine operation; that database is not an operational-record store or authority. The StateStore adapter lives in `packages/state`, validates Project/Goal inputs using `@nexus-brain/contracts`, and keeps SQL inside that package.
+
+The v1 public operations are:
+
+```text
+createProject(project) → { project, version }
+getProject(project_id) → { project, version } | null
+updateProject(project_id, project, { expectedVersion }) → { project, version }
+createGoal(goal) → { goal, version: 1 }
+getGoal(project_id, goal_id) → { goal, version } | null
+```
+
+Project creation validates the complete Project v1 contract. Repeating an identical create for an existing `project_id` returns the existing record without another event; using that ID with different contents raises `STATE_CONFLICT`. Project updates replace the complete validated snapshot and require the target `project_id` separately plus the current `expectedVersion`; the snapshot's `project_id` must equal the target ID, and stale versions or mismatched IDs raise `STATE_CONFLICT`. This keeps `project_id` immutable. `repo` remains an opaque value and is stored exactly as provided; an intentional repository rebind is permitted only through the versioned update operation and emits an event. No Project delete operation exists in v1.
+
+Before storage, snapshots must be strictly JSON-compatible. Reject JavaScript-only values or structures that `JSON.stringify` would omit or transform (including `undefined`, functions, symbols, `BigInt`, `Date`/class instances, cycles, sparse arrays, accessors, and non-finite numbers); never silently persist a lossy normalized snapshot.
+
+Goal creation validates the complete Goal v1 contract and requires an existing parent Project. Identical create retries return the existing record without another event; different contents under the same `(project_id, goal_id)` raise `STATE_CONFLICT`. Goal reads require both IDs. Goal records are immutable in v1: there is no generic update/delete operation. A future DoD revision flow must implement the plan's revision-request, reason, authorization, and new-version requirements before permitting a change.
+
+The initial SQLite migration adds `projects`, `goals`, `events`, and `outbox`. Project identity is the primary key; Goal identity is the composite `(project_id, goal_id)` with `ON DELETE RESTRICT`. Each record stores its complete validated v1 JSON snapshot and monotonically increasing version. Each successful first create or changed Project update commits the domain snapshot, an append-only event, and an outbox row in one SQLite transaction. A no-op update and an identical create retry produce no event. Failed writes leave no partial snapshot, event, or outbox row.
+
+The event envelope is `{ event_id, event_type, occurred_at, aggregate_type, aggregate_id, aggregate_version, project_id, payload }`. `event_id` is a generated UUID; `occurred_at` is an ISO-8601 UTC timestamp; event types are `PROJECT_CREATED`, `PROJECT_UPDATED`, and `GOAL_CREATED`; `payload` is the full post-write Project or Goal v1 snapshot. Event rows are append-only and reject update/delete. The outbox contains one immutable `{ event_id, created_at }` reference per event. Dispatch, delivery status, retries, retention, and deletion are explicitly outside this v1 slice; no worker may claim successful delivery from row existence alone.
+
+No domain write may bypass the transaction that stores both state and its event/outbox record. These operations are the initial StateStore surface; the remaining entity repositories are added only when their contracts and events are specified.
 
 Tabelas/repos iniciais:
 

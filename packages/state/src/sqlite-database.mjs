@@ -98,7 +98,7 @@ function applyMigrations(database, migrations) {
   return currentVersion;
 }
 
-export function openStateDatabase(options = {}) {
+export function openStateDatabaseConnection(options = {}) {
   const { path = DEFAULT_DATABASE_PATH, migrations = [] } = options;
   if (typeof path !== 'string' || path.length === 0) {
     throw new TypeError('path must be a non-empty string');
@@ -122,6 +122,11 @@ export function openStateDatabase(options = {}) {
     throw error;
   }
 
+  return database;
+}
+
+export function openStateDatabase(options = {}) {
+  const database = openStateDatabaseConnection(options);
   return {
     getSchemaVersion() {
       const row = database.prepare(`SELECT MAX(version) AS version FROM ${MIGRATION_TABLE}`).get();

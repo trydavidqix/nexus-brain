@@ -1,3 +1,5 @@
+import type { NexusGoal, NexusProject } from '@nexus-brain/contracts';
+
 export interface StateDatabaseMigration {
   version: number;
   name: string;
@@ -21,3 +23,28 @@ export interface StateDatabase {
 }
 
 export function openStateDatabase(options?: StateDatabaseOptions): StateDatabase;
+
+export interface VersionedProject {
+  project: NexusProject;
+  version: number;
+}
+
+export interface VersionedGoal {
+  goal: NexusGoal;
+  version: number;
+}
+
+export interface SqliteStateStoreOptions {
+  path?: string;
+}
+
+export interface SqliteStateStore {
+  createProject(project: NexusProject): VersionedProject;
+  getProject(project_id: string): VersionedProject | null;
+  updateProject(project_id: string, project: NexusProject, options: { expectedVersion: number }): VersionedProject;
+  createGoal(goal: NexusGoal): VersionedGoal;
+  getGoal(project_id: string, goal_id: string): VersionedGoal | null;
+  close(): void;
+}
+
+export function openSqliteStateStore(options?: SqliteStateStoreOptions): SqliteStateStore;

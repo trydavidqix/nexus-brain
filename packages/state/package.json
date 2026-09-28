@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@nexus-brain/contracts": "workspace:*",
     "better-sqlite3": "13.0.0"
   },
   "devDependencies": {
