@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -60,6 +61,60 @@ test('accepts task branches with an allowed kind, task ID, and kebab-case slug',
 test('accepts the Codex branch prefix with a compact task ID', () => {
   const result = runValidator('--branch', 'codex/nb19-g1-naming-contracts');
   assert.equal(result.status, 0, result.stderr);
+});
+
+test('accepts a Dependabot branch only for the bot on the same repository', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test('rejects a Dependabot branch for any other pull request author', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'attacker',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
+test('rejects a Dependabot branch from a different repository', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/npm_and_yarn/production-dependencies-39d93a22fb',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'external/fork',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
+test('rejects malformed Dependabot branch names even for the bot', () => {
+  const result = runValidator(
+    '--branch', 'dependabot/unknown/surprise',
+    '--pr-author', 'dependabot[bot]',
+    '--pr-head-repo', 'trydavidqix/nexus-brain',
+    '--repository', 'trydavidqix/nexus-brain'
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /branch format/);
+});
+
+test('defers Dependabot push validation to the authenticated pull request event', () => {
+  const workflow = readFileSync(resolve(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
+  assert.match(workflow, /pull_request:\s+types: \[opened, synchronize, reopened, edited\]/);
+  assert.match(
+    workflow,
+    /elif \[\[ "\$NEXUS_EVENT_NAME" == 'push' && "\$NEXUS_BRANCH" == dependabot\/\* \]\]; then\s+echo "Dependabot branches are validated in pull_request context\."/
+  );
+  assert.match(workflow, /--pr-author "\$NEXUS_PR_AUTHOR"/);
+  assert.match(workflow, /--pr-head-repo "\$NEXUS_PR_HEAD_REPO"/);
 });
 
 test('rejects branches without a task ID and descriptive slug', () => {

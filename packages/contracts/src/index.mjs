@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan','maestri-decision-input','maestri-decision-result'];
+const TYPES=['task','event','trace','telemetry','agent','runtime','tool','plugin','mcp','alert','eval','artifact','engineering-plan','identity','nexus-task','memory','memory-record','memory-event','memory-sighting','evidence','permission','browser-plan','browser-task','browser-session','browser-observation','browser-action','browser-backend','browser-host','browser-profile','browser-recipe','brain-request','brain-response','research-request','research-result','research-run','reach-request','reach-outcome','skill-registry-entry','task-skill-set','skill-event','project-factory-request','project-factory-plan','maestri-decision-input','maestri-decision-result'];
 const SET=new Set(TYPES);
 const DIR=join(dirname(fileURLToPath(import.meta.url)),'..','schemas');
 const SCHEMAS=Object.fromEntries(TYPES.map(type=>[type,JSON.parse(readFileSync(join(DIR,type,`${type}.v1.schema.json`),'utf8'))]));
@@ -52,7 +52,36 @@ export function validateContract(type,value){
   if(!SET.has(type)) return {valid:false,errors:[`unknown contract type: ${type}`],schema_id:null};
   if(!value||typeof value!=='object'||Array.isArray(value)) return {valid:false,errors:['$: expected object'],schema_id:SCHEMAS[type].$id};
   const errors=[];check(SCHEMAS[type],value,'$',errors);
+  if(type==='memory-record') validateMemoryRecordInvariants(value,errors);
+  if(type==='memory-event') validateMemoryEventInvariants(value,errors);
+  if(type==='research-run'){
+    const started=Date.parse(value.started_at);
+    const completed=Date.parse(value.completed_at);
+    if(Number.isFinite(started)&&Number.isFinite(completed)&&completed<started) errors.push('$.completed_at: must not precede started_at');
+  }
   return {valid:errors.length===0,errors,schema_id:SCHEMAS[type].$id};
+}
+
+function validateMemoryScope(value,errors){
+  if(value.scope==='GLOBAL'&&(value.project_id!==undefined||value.scope_id!=='global')) errors.push('$.scope: GLOBAL memory must omit project_id and use global scope_id');
+  if(value.scope!=='GLOBAL'&&(typeof value.project_id!=='string'||value.project_id.length===0)) errors.push('$.project_id: non-global memory requires project_id');
+  if(value.scope==='PROJECT'&&value.scope_id!==value.project_id) errors.push('$.scope_id: PROJECT scope_id must match project_id');
+}
+
+function validateMemoryRecordInvariants(value,errors){
+  validateMemoryScope(value,errors);
+  const from=Date.parse(value.temporal?.valid_from);
+  const until=value.temporal?.valid_until===undefined?null:Date.parse(value.temporal?.valid_until);
+  if(until!==null&&Number.isFinite(from)&&Number.isFinite(until)&&until<=from) errors.push('$.temporal.valid_until: must be later than valid_from');
+  if(['VERIFIED','CANONICAL'].includes(value.status)&&Array.isArray(value.evidence_ids)&&value.evidence_ids.length===0) errors.push('$.evidence_ids: VERIFIED/CANONICAL records require evidence');
+}
+
+function validateMemoryEventInvariants(value,errors){
+  validateMemoryScope(value,errors);
+  if(['RECALLED','SELECTED','INJECTED','USED','VALIDATED','CONTRIBUTED'].includes(value.event_type)){
+    if(typeof value.task_id!=='string'||value.task_id.length===0) errors.push('$.task_id: memory-use events require task_id');
+    if(typeof value.agent_id!=='string'||value.agent_id.length===0) errors.push('$.agent_id: memory-use events require agent_id');
+  }
 }
 export function assertContract(type,value){const result=validateContract(type,value);if(!result.valid) throw new Error(`${type} contract invalid (${result.schema_id}): ${result.errors.join(', ')}`);return value;}
 export function normalizeLegacy(value,type){

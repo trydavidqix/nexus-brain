@@ -43,7 +43,7 @@ The measured initial cloud-fabric import scan identified these future-boundary c
 - Import-boundary tests must fail on forbidden dependencies and cycles in CI.
 - The first deliverable is a contracts/registry foundation; domain files move in dependency-topological waves, with tests and adapters in the same change.
 - The mapping and implementation status stay in the single Master Blueprint; this ADR records stable boundary decisions only.
-- The physical checkout rename to `%USERPROFILE%\.lumenva\nexus-brain` remains a separate gated cutover because active daemon/MCP/Codex consumers still depend on the old path.
+- **Superseded cutover note (2026-09-28):** the canonical Nexus checkout is `%USERPROFILE%\Desktop\Projetos\nexus-brain`; its launchers and project MCP are verified at that path. Do not rename it into a Lumenva path. NB-29 still gates final readiness on the unresolved historical MCG state inventory and preservation evidence for a protected worktree; see [`NB-29 cutover revalidation`](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md).
 
 ## Alternatives rejected
 

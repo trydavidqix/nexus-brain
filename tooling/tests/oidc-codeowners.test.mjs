@@ -6,7 +6,7 @@ import test from 'node:test';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const codeowners = readFileSync(resolve(repositoryRoot, '.github/CODEOWNERS'), 'utf8');
-const oidcAction = readFileSync(resolve(repositoryRoot, '.github/actions/google-cloud-oidc/action.yml'), 'utf8');
+const oidcAction = readFileSync(resolve(repositoryRoot, '.github/actions/google-cloud-oidc/action.yml'), 'utf8').replace(/\r\n/g, '\n');
 const gitignore = readFileSync(resolve(repositoryRoot, '.gitignore'), 'utf8');
 
 test('assigns repository owner to sensitive paths without a global wildcard', () => {

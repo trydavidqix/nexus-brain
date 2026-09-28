@@ -1,35 +1,34 @@
 # NB-19 G10: Ownership and Merge-Queue Concurrency
 
-**Status:** In progress. Local ownership serialization, merge-group workflow support, and the CodeQL setup transition are validated. PR integration and a real merge-queue run remain outstanding; the live queue is not enabled yet.
+**Status:** Complete on 2026-09-27. Ownership updates are serialized, required checks pass through the advanced CodeQL workflow, and the active protected-main ruleset remains strict. GitHub merge queue is unavailable for the repository's current account ownership and was not enabled.
 
 ## Observed concurrent delivery
 
 - GitHub recorded six PR merges in a 105-minute window on 2026-09-27 (PRs #67–#72).
-- PR #73 was `BEHIND` immediately after PR #72 merged while the protected-main ruleset required strict up-to-date status checks.
-- This activity justified preparing a conservative queue: two concurrent builds, one squash merge at a time, `ALLGREEN`, and a five-minute minimum-group wait.
-- The repository is public. No cloud resource or billing setting is involved.
+- PR #73 became `BEHIND` after PR #72 merged while the protected-main ruleset required strict up-to-date status checks.
+- The volume justified a merge-queue evaluation. The ruleset API rejected adding `merge_queue` with HTTP 422, `Invalid rule 'merge_queue'`.
+- The repository is public and its owner type is `User`. [GitHub documents merge queues for public repositories owned by organizations, or private repositories owned by organizations with Enterprise Cloud](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).
+- No queue rule was added to either the active ruleset or the versioned policy. Strict status checks and squash-only delivery remain active.
 
 ## Ownership registry serialization
 
-Concurrent registration/release operations now acquire an exclusive sibling lock before reading, validating, and atomically replacing the ownership registry. Writers wait up to 10 seconds; the lock is created with exclusive-create semantics, synced before use, and removed only when its token still matches. A writer that cannot obtain the lock fails closed. Stale locks are never deleted automatically because the lock owner may still be active; inspect the recorded process before any manual recovery.
+Concurrent registration/release operations acquire an exclusive sibling lock before reading, validating, and atomically replacing the ownership registry. Writers wait up to 10 seconds; the lock is created with exclusive-create semantics, synced before use, and removed only when its token still matches. A writer that cannot obtain the lock fails closed. Stale locks are never deleted automatically because the lock owner may still be active; inspect the recorded process before any manual recovery.
 
 The test starts two independent Node processes at the same time and proves both distinct owner records survive. A separate test proves a pre-existing lock is preserved and the update fails closed.
 
-## Merge-group gate preparation
+## Required checks and dormant merge-group support
 
-- MCG/OpenTofu, Dependency Review, Gitleaks, and CodeQL workflows accept `merge_group` checks.
-- Gitleaks uses its pinned action for pull requests and a SHA-256-pinned official CLI archive for the queue commit range because the action does not emit a merge-group check.
-- Dependency Review receives the base and head SHA from the merge-group event.
-- The queue uses squash, matching the repository's only allowed merge method.
-- CodeQL advanced setup is checked in so the required `CodeQL` Actions status can run on merge-group commits. PR #74 confirmed that managed default setup rejects advanced uploads (`CodeQL analyses from advanced configurations cannot be processed when the default setup is enabled`). The repository setting is now `not-configured`, and the advanced workflow rerun passed. Keep the queue disabled until a real queued PR reports all required checks.
+- MCG/OpenTofu, Dependency Review, Gitleaks, and CodeQL workflows accept `merge_group` checks in preparation for a future supported owner type.
+- Gitleaks uses its pinned action on pull requests and a SHA-256-pinned official CLI archive on merge-group commits.
+- Dependency Review receives base and head SHA values from the merge-group event.
+- CodeQL uses the committed advanced workflow because the default managed setup blocks advanced result uploads. The active `CodeQL` check is bound to GitHub Actions integration `15368`.
+- Until GitHub supports queues for the current owner type, the merge-group trigger path is dormant. No queue events were generated or claimed.
 
-### CodeQL and required-check transition
+## Active protected-main evidence
 
-- The first advanced CodeQL run on PR #74 failed with the managed-setup conflict above; the managed `Analyze (javascript-typescript)` scan itself passed.
-- The repository's default CodeQL setup was changed to `not-configured` using GitHub's repository configuration API. No Actions permissions or required check were removed.
-- Rerunning the advanced CodeQL workflow on PR #74 succeeded and uploaded results.
-- The active protected-main ruleset now binds `CodeQL` to the GitHub Actions integration (`15368`), preserving all five required contexts and all other rules.
-- On PR #74 head `f9d4e2e610922a2a6c8c47e18d88a9e15928f041`, `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review` all passed. The merge queue remains disabled pending merge-group proof.
+The active ruleset `24075255` is `active`, has no bypass actors, requires strict status checks, squash-only PRs, linear history, and blocks force pushes and branch deletion. Its five required checks all use GitHub Actions integration `15368`: `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`. The active ruleset readback contains no `merge_queue` rule and matches the versioned policy.
+
+On PR #74 head `50cdec0bf3e61a8888156e27bbdbf05ac3478406`, all five required checks passed. The first advanced CodeQL run failed because managed default setup was still enabled; after changing the default setup to `not-configured`, the advanced CodeQL rerun succeeded and uploaded results. No required gate was removed.
 
 ## Local validation
 
@@ -43,11 +42,4 @@ The test starts two independent Node processes at the same time and proves both 
 - `node tooling/scripts/scan-sensitive.mjs`: 295 files scanned.
 - `actionlint` passed for all five workflow files; `git diff --check` passed.
 
-## Remaining acceptance evidence
-
-1. Integrate the tested workflow and lock changes through a pull request.
-2. Apply the versioned merge-queue policy to the active ruleset.
-3. Queue an existing eligible PR and confirm all five required contexts (`mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review`) succeed on its merge-group commit.
-4. Confirm the main ruleset readback matches `.github/rulesets/main.json` and the repository has no `BEHIND` merge condition caused by strict status checks.
-
-Until those steps pass, NB-19 remains `IN_PROGRESS`.
+If repository ownership later changes to an organization, re-evaluate merge-queue eligibility, enable the queue only after all five checks pass on a real merge-group commit, and update the active and versioned rulesets together.
