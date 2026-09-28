@@ -95,7 +95,20 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   const callees = await engine.getCallees({ ...request, function_name: 'runTask' });
   assert.ok(JSON.stringify(callees.data.code_graph).includes('helper'));
   const tests = await engine.getTests({ ...request, function_name: 'helper' });
-  assert.ok(JSON.stringify(tests.data.code_graph).includes('helper.test.ts'));
+  const hasMarkedHelperTest = Object.values(tests.data.code_graph.callers || {}).some(leg => {
+    const testIndex = Array.isArray(leg.cols) ? leg.cols.indexOf('test') : -1;
+    const nameIndex = Array.isArray(leg.cols) ? leg.cols.indexOf('name') : -1;
+    if (testIndex < 0 || nameIndex < 0 || !Array.isArray(leg.groups)) return false;
+    return leg.groups.some(group => (group.rows || []).some(row => {
+      if (!Array.isArray(row) || row[testIndex] !== true || typeof row[nameIndex] !== 'string') return false;
+      const qualifiedName = [group.qn_prefix, row[nameIndex]].filter(Boolean).join('.').replace(/\.+/g, '.');
+      return qualifiedName.endsWith('.helperTest');
+    }));
+  });
+  assert.equal(hasMarkedHelperTest, true);
+  const directTestFile = tests.data.direct_source.matches.find(match => match.file_path === 'tests/helper.test.ts');
+  assert.ok(directTestFile);
+  assert.equal(directTestFile.relation, 'unclassified-text-match');
 
   const alias = `nexus-${createHash('sha256').update(project.project_id).update('\0').update(project.workspace_bindings[0].location).digest('hex')}`;
   const context = await engine.getContext({ ...request, qualified_name: `${alias}.src.helper.helper` });
