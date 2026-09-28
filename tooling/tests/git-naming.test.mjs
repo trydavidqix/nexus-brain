@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -103,6 +104,16 @@ test('rejects malformed Dependabot branch names even for the bot', () => {
   );
   assert.equal(result.status, 1);
   assert.match(result.stderr, /branch format/);
+});
+
+test('defers Dependabot push validation to the authenticated pull request event', () => {
+  const workflow = readFileSync(resolve(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
+  assert.match(
+    workflow,
+    /elif \[\[ "\$NEXUS_EVENT_NAME" == 'push' && "\$NEXUS_BRANCH" == dependabot\/\* \]\]; then\s+echo "Dependabot branches are validated in pull_request context\."/
+  );
+  assert.match(workflow, /--pr-author "\$NEXUS_PR_AUTHOR"/);
+  assert.match(workflow, /--pr-head-repo "\$NEXUS_PR_HEAD_REPO"/);
 });
 
 test('rejects branches without a task ID and descriptive slug', () => {
