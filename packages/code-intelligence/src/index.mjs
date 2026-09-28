@@ -142,7 +142,8 @@ function backendIndexCommit(...results) {
 
 function backendGeneration(result) {
   const payload = result?.data ?? result;
-  const generation = payload?.coverage?.metadata?.generation;
+  const generation = payload?.metadata?.generation
+    ?? payload?.coverage?.metadata?.generation;
   if (typeof generation === 'string' && generation.length > 0) return generation;
   return typeof payload?.index_version === 'string' && payload.index_version.length > 0 ? payload.index_version : null;
 }

@@ -71,7 +71,7 @@ function fakeAdapter({ fail = false, onIndex, indexStatusOverride } = {}) {
     async invoke(tool, params) {
       calls.push([tool, params]);
       if (fail) throw new Error('expected failure');
-      if (tool === 'index_status') return { data: { coverage: { metadata: { generation: crossPassComplete ? 'post-cross-generation-8' : 'pre-cross-generation-7' } }, ...(indexStatusOverride?.(params) || {}) }, backend_version: 'fake@1' };
+      if (tool === 'index_status') return { data: { metadata: { generation: crossPassComplete ? 'post-cross-generation-8' : 'pre-cross-generation-7' }, ...(indexStatusOverride?.(params) || {}) }, backend_version: 'fake@1' };
       if (tool === 'query_graph') {
         const rows = [...workspacePaths.entries()]
           .filter(([alias]) => alias !== params.project)
