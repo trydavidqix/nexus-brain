@@ -52,12 +52,12 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   await writeFile(join(repoPath, 'src', 'client.ts'), 'export async function checkProvider() { return fetch("http://provider.local/health"); }\n');
   await writeFile(join(repoPath, 'tests', 'helper.test.ts'), 'import { helper } from "../src/helper.js";\nexport function helperTest() { return helper(); }\nif (helperTest() !== 1) throw new Error("helper test failed");\n');
   await writeFile(join(providerPath, 'src', 'provider.ts'), 'export function health() { return "ok"; }\nexport function registerProvider(app: any) { app.get("/health", health); }\n');
-  await execFileAsync('git', ['init', repoPath], { windowsHide: true });
+  await execFileAsync('git', ['init', '-b', 'main', repoPath], { windowsHide: true });
   await execFileAsync('git', ['-C', repoPath, 'config', 'user.email', 'nexus-ci@example.invalid'], { windowsHide: true });
   await execFileAsync('git', ['-C', repoPath, 'config', 'user.name', 'Nexus CI'], { windowsHide: true });
   await execFileAsync('git', ['-C', repoPath, 'add', '.'], { windowsHide: true });
   await execFileAsync('git', ['-C', repoPath, 'commit', '-m', 'fixture'], { windowsHide: true });
-  await execFileAsync('git', ['init', providerPath], { windowsHide: true });
+  await execFileAsync('git', ['init', '-b', 'main', providerPath], { windowsHide: true });
   await execFileAsync('git', ['-C', providerPath, 'config', 'user.email', 'nexus-ci@example.invalid'], { windowsHide: true });
   await execFileAsync('git', ['-C', providerPath, 'config', 'user.name', 'Nexus CI'], { windowsHide: true });
   await execFileAsync('git', ['-C', providerPath, 'add', '.'], { windowsHide: true });
@@ -116,6 +116,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   await writeFile(join(repoPath, 'src', 'helper.ts'), 'export function helper() { return 2; }\n');
   const changes = await engine.getChanges(request);
   assert.ok(JSON.stringify(changes.data.code_graph).includes('helper.ts'));
+  assert.ok(changes.data.direct_source.changed_paths.includes('src/helper.ts'));
   const impact = await engine.analyzeImpact(request);
   assert.ok(JSON.stringify(impact.data.code_graph).includes('helper'));
 
