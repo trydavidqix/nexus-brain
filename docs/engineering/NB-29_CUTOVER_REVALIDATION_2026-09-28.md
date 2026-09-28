@@ -94,3 +94,10 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 - The clean NB-04 worktree is synchronized with its branch remote (0 ahead/0 behind). The clean NB-05 draft worktree is also synchronized (0/0); PR #81 remains open, `isDraft=true`, all 14 recorded check runs pass, and GitHub reports `mergeStateStatus=DIRTY`. It is gated future work and was not changed.
 - The Everything CLI query for possible 417-file inventory/manifest names under the Codex metadata root did not return within 20 seconds; it was interrupted. Everything was not installed, started, or reconfigured. No broader fallback scan was run.
 - The only remaining Migration Readiness gate is the source location or verifiable manifest for the historical 417-file state. No access to Lumenva-owned project data was made.
+
+### Ignored-path name audit — 2026-09-28
+
+- Read-only Git porcelain v2 status with ignored and untracked paths enabled was run in the authorized Nexus worktree `%USERPROFILE%\.lumenva\worktrees\mcg-finalization`. It reported 23,975 ignored entries: 22,162 under `node_modules`, 1,806 under `packages`, and 7 under `state`.
+- The seven `state` paths were `state/dashboard/snapshot.json` and six `state/registry/*.json` files (`agents`, `mcps`, `models`, `plugins`, `runtimes`, `tools`). Their contents were not read.
+- No ignored path name in that worktree matched `.mcg-state`, `.nexus-state`, a manifest/inventory/SHA file, or `417`. This is a filename-only check within that exact worktree; it does not prove the historical files never existed or rule out another source location.
+- The worktree and its Git state remain unchanged. No Lumenva project data was inspected.
