@@ -69,6 +69,19 @@ test('rejects migrations with a version gap', async (t) => {
   );
 });
 
+test('rejects migrations with an empty name or SQL text', () => {
+  const invalidMigrations = [
+    migration(1, 'SELECT 1;', ''),
+    migration(1, 'SELECT 1;', '   '),
+    migration(1, ''),
+    migration(1, ' \n\t '),
+  ];
+
+  for (const invalidMigration of invalidMigrations) {
+    assert.throws(() => openStateDatabase({ path: ':memory:', migrations: [invalidMigration] }));
+  }
+});
+
 test('rejects a changed checksum for an already applied migration', async (t) => {
   const directory = await makeTempDirectory(t);
   const path = join(directory, 'state.db');
