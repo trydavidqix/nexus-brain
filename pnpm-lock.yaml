@@ -287,6 +287,9 @@ importers:
 
   packages/state:
     dependencies:
+      '@nexus-brain/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       better-sqlite3:
         specifier: 13.0.0
         version: 13.0.0
