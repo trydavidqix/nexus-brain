@@ -63,6 +63,18 @@ function rowCounts(database) {
   ]));
 }
 
+function persistedWriteRows(directory) {
+  const database = inspectDatabase(directory);
+  try {
+    return Object.fromEntries(['projects', 'goals', 'events', 'outbox'].map((table) => [
+      table,
+      database.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all(),
+    ]));
+  } finally {
+    database.close();
+  }
+}
+
 async function expectThrows(action, pattern) {
   let result;
   try {
@@ -96,6 +108,81 @@ test('validates Project and Goal contracts before writing state, events, or outb
   }
 });
 
+test('rejects non-JSON Project values and preserves snapshot, version, event, and outbox state', async (t) => {
+  const directory = await makeTempDirectory(t);
+  const store = openStore(directory);
+  t.after(() => store.close());
+
+  await expectThrows(
+    () => store.createProject({ ...project('date-project'), workspace_policy: { created_at: new Date('2026-01-01T00:00:00.000Z') } }),
+    /JSON.*serializable/i,
+  );
+  assert.deepEqual(persistedWriteRows(directory), { projects: [], goals: [], events: [], outbox: [] });
+
+  await store.createProject(project());
+  const beforeProject = await store.getProject('project-1');
+  const beforeRows = persistedWriteRows(directory);
+  await expectThrows(
+    () => store.updateProject('project-1', { ...beforeProject.project, workspace_policy: { some_key: undefined } }, { expectedVersion: beforeProject.version }),
+    /JSON.*serializable/i,
+  );
+
+  assert.deepEqual(await store.getProject('project-1'), beforeProject);
+  assert.deepEqual(persistedWriteRows(directory), beforeRows);
+});
+
+test('rejects an array with a custom toJSON prototype without changing persisted state', async (t) => {
+  const directory = await makeTempDirectory(t);
+  const store = openStore(directory);
+  t.after(() => store.close());
+  await store.createProject(project());
+  await store.createGoal(goal());
+
+  const beforeProject = await store.getProject('project-1');
+  const beforeGoal = await store.getGoal('project-1', 'goal-1');
+  const beforeRows = persistedWriteRows(directory);
+  const customArray = ['original-stack-entry'];
+  const customArrayPrototype = Object.create(Array.prototype);
+  customArrayPrototype.toJSON = () => ['rewritten-stack-entry'];
+  Object.setPrototypeOf(customArray, customArrayPrototype);
+
+  assert.deepEqual(JSON.parse(JSON.stringify(customArray)), ['rewritten-stack-entry']);
+  await expectThrows(
+    () => store.updateProject('project-1', { ...beforeProject.project, stack: customArray }, { expectedVersion: beforeProject.version }),
+    /JSON.*serializable|prototype/i,
+  );
+
+  assert.deepEqual(await store.getProject('project-1'), beforeProject);
+  assert.deepEqual(await store.getGoal('project-1', 'goal-1'), beforeGoal);
+  assert.deepEqual(persistedWriteRows(directory), beforeRows);
+});
+
+test('rejects negative zero in a Project snapshot without changing persisted state', async (t) => {
+  const directory = await makeTempDirectory(t);
+  const store = openStore(directory);
+  t.after(() => store.close());
+  await store.createProject(project());
+  await store.createGoal(goal());
+
+  const beforeProject = await store.getProject('project-1');
+  const beforeGoal = await store.getGoal('project-1', 'goal-1');
+  const beforeRows = persistedWriteRows(directory);
+  const negativeZeroProject = {
+    ...beforeProject.project,
+    workspace_policy: { numeric_setting: -0 },
+  };
+  assert.equal(JSON.stringify(negativeZeroProject.workspace_policy), '{"numeric_setting":0}');
+
+  await expectThrows(
+    () => store.updateProject('project-1', negativeZeroProject, { expectedVersion: beforeProject.version }),
+    /JSON.*serializable|snapshot.*JSON/i,
+  );
+
+  assert.deepEqual(await store.getProject('project-1'), beforeProject);
+  assert.deepEqual(await store.getGoal('project-1', 'goal-1'), beforeGoal);
+  assert.deepEqual(persistedWriteRows(directory), beforeRows);
+});
+
 test('creates, reads, reopens, and retries an identical Project without duplicate events', async (t) => {
   const directory = await makeTempDirectory(t);
   let store = openStore(directory);
@@ -126,20 +213,29 @@ test('updates complete Project snapshots with expectedVersion, skips no-ops, and
   const store = openStore(directory);
   t.after(() => store.close());
   await store.createProject(project());
+  await store.createProject(project('project-2'));
+
+  await expectThrows(
+    () => store.updateProject('project-1', project('project-2'), { expectedVersion: 1 }),
+    /STATE_CONFLICT/,
+  );
+  assert.deepEqual(await store.getProject('project-1'), { project: project('project-1'), version: 1 });
+  assert.deepEqual(await store.getProject('project-2'), { project: project('project-2'), version: 1 });
 
   const rebound = { ...project(), repo: 'new-opaque-repository-locator' };
-  const updated = await store.updateProject(rebound, { expectedVersion: 1 });
+  const updated = await store.updateProject('project-1', rebound, { expectedVersion: 1 });
   assert.deepEqual(updated, { project: rebound, version: 2 });
-  assert.deepEqual(await store.updateProject(rebound, { expectedVersion: 2 }), updated);
+  assert.deepEqual(await store.updateProject('project-1', rebound, { expectedVersion: 2 }), updated);
   await expectThrows(
-    () => store.updateProject({ ...rebound, lifecycle: 'paused' }, { expectedVersion: 1 }),
+    () => store.updateProject('project-1', { ...rebound, lifecycle: 'paused' }, { expectedVersion: 1 }),
     /STATE_CONFLICT/,
   );
   assert.deepEqual(await store.getProject('project-1'), updated);
+  assert.deepEqual(await store.getProject('project-2'), { project: project('project-2'), version: 1 });
 
   const database = inspectDatabase(directory);
   try {
-    assert.deepEqual(rowCounts(database), { projects: 1, goals: 0, events: 2, outbox: 2 });
+    assert.deepEqual(rowCounts(database), { projects: 2, goals: 0, events: 3, outbox: 3 });
   } finally {
     database.close();
   }

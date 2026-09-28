@@ -615,12 +615,14 @@ The v1 public operations are:
 ```text
 createProject(project) → { project, version }
 getProject(project_id) → { project, version } | null
-updateProject(project, { expectedVersion }) → { project, version }
+updateProject(project_id, project, { expectedVersion }) → { project, version }
 createGoal(goal) → { goal, version: 1 }
 getGoal(project_id, goal_id) → { goal, version } | null
 ```
 
-Project creation validates the complete Project v1 contract. Repeating an identical create for an existing `project_id` returns the existing record without another event; using that ID with different contents raises `STATE_CONFLICT`. Project updates replace the complete validated snapshot and require the current `expectedVersion`; stale versions raise `STATE_CONFLICT`. `project_id` is immutable. `repo` remains an opaque value and is stored exactly as provided; an intentional repository rebind is permitted only through the versioned update operation and emits an event. No Project delete operation exists in v1.
+Project creation validates the complete Project v1 contract. Repeating an identical create for an existing `project_id` returns the existing record without another event; using that ID with different contents raises `STATE_CONFLICT`. Project updates replace the complete validated snapshot and require the target `project_id` separately plus the current `expectedVersion`; the snapshot's `project_id` must equal the target ID, and stale versions or mismatched IDs raise `STATE_CONFLICT`. This keeps `project_id` immutable. `repo` remains an opaque value and is stored exactly as provided; an intentional repository rebind is permitted only through the versioned update operation and emits an event. No Project delete operation exists in v1.
+
+Before storage, snapshots must be strictly JSON-compatible. Reject JavaScript-only values or structures that `JSON.stringify` would omit or transform (including `undefined`, functions, symbols, `BigInt`, `Date`/class instances, cycles, sparse arrays, accessors, and non-finite numbers); never silently persist a lossy normalized snapshot.
 
 Goal creation validates the complete Goal v1 contract and requires an existing parent Project. Identical create retries return the existing record without another event; different contents under the same `(project_id, goal_id)` raise `STATE_CONFLICT`. Goal reads require both IDs. Goal records are immutable in v1: there is no generic update/delete operation. A future DoD revision flow must implement the plan's revision-request, reason, authorization, and new-version requirements before permitting a change.
 
