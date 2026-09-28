@@ -2392,15 +2392,15 @@ After the BrowserMesh MVP gate, extract a dedicated `packages/browsermesh` only 
 These are **sub-milestones inside existing Nexus work packages**, not new top-level WPs.
 
 ```text
-B0  Legacy/source harvest: BrowserMesh repo + Maestri Wave 4 + Playwright skill + migrations/tests
+B0  Legacy/source harvest: BrowserMesh repo + Maestri Wave 4 + Playwright skill + selective jev-ultrafast pattern harvest + migrations/tests
 B1  Browser contracts + BrowserPlan + typed action/result/error vocabulary
 B2  Policy/trust/origin/side-effect/secret/file contracts before real interaction
 B3  Backend + Host + Capability registries
 B4  Session/lease/profile isolation core
-B5  Playwright deterministic backend
-B6  Observation Engine + browser-aware Context Compiler budget
+B5  Playwright deterministic backend with persistent-session/CDP reuse where safe
+B6  Indexed Observation Engine + compact DOM/ARIA projection + freshness/occlusion metadata + browser-aware Context Compiler budget
 B7  Scrapling Web Retrieval/Crawl backend
-B8  BrowserMesh MVP: Maestri → BrowserPlan → Playwright/Scrapling → Evidence → Verify
+B8  BrowserMesh MVP: Maestri → BrowserPlan → Indexed Observation → Dynamic Action Space → operation+target selection → guarded Playwright/Scrapling → independent OutcomeVerifier → Evidence
 B9  Stagehand SemanticResolver, only after measured selector/DOM failures
 B10 VisualResolver/computer-use adapters, only for cases B9 cannot solve
 B11 Trace/artifact/evidence pipeline using native Playwright traces where possible
@@ -2417,6 +2417,21 @@ B20 Production hardening + release gate
 
 **First production-useful BrowserMesh gate: B8.** B9/B10/B17 are not prerequisites for useful browser automation and must not be built merely because they are architecturally attractive.
 
+#### Jev-ultrafast pattern harvest
+
+`browser-use/jev-ultrafast` is a **reference/pattern source, not a control plane or required runtime dependency**. Nexus may selectively adapt only parts that improve measured BrowserMesh performance or reliability behind existing contracts:
+
+- indexed compact DOM/ARIA observations instead of shipping a full DOM or screenshot by default;
+- dynamic action space generation from the current observation;
+- one decision that binds operation and target together;
+- target freshness, visibility and occlusion checks immediately before interaction;
+- persistent browser/CDP session reuse where isolation and policy permit it;
+- screenshots/visual reasoning only when structured observation is insufficient;
+- never blindly replay a mutating/non-idempotent action after an ambiguous failure;
+- agent `DONE` is not proof: outcome verification is independent and evidence-backed.
+
+This does **not** replace Playwright, Scrapling, Stagehand escalation, Nexus PolicyEngine, BrowserPlan, session/lease/profile isolation, Evidence or Maestri authority. Any adoption must beat the current BrowserMesh baseline in Nexus evals before becoming default.
+
 #### BrowserMesh evaluation and release gates
 
 Measure at minimum:
@@ -2429,6 +2444,11 @@ recipe_success_rate
 actions_per_task
 llm_turns_per_task
 tokens_per_task
+observation_bytes_per_step
+protocol_calls_per_task
+screenshot_rate
+stale_target_rate
+mutation_retry_rate
 browser_seconds
 latency
 cost
@@ -2448,7 +2468,7 @@ cross_task_leakage
 secret_exposure
 ```
 
-Production acceptance requires contract/unit/integration tests plus parallel isolation, hostile-content/prompt-injection, approval, wrong-origin redirect, upload/download, secret-boundary, recipe replay, recovery, lease expiry, host failover where supported, evidence/observability and cost-budget gates.
+Production acceptance requires contract/unit/integration tests plus parallel isolation, hostile-content/prompt-injection, approval, wrong-origin redirect, upload/download, secret-boundary, recipe replay, recovery, lease expiry, host failover where supported, evidence/observability and cost-budget gates. The B8 gate additionally requires compact indexed observations, operation+target binding, pre-action freshness/occlusion checks, no blind replay of ambiguous mutating actions, and independent outcome verification.
 
 Target invariants for security/isolation failures are zero observed violations in the acceptance corpus:
 
