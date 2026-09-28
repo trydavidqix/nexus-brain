@@ -2,7 +2,7 @@
 
 **Status:** DONE. Merged by PR #120 on 2026-09-28 as `1a8973ec49ea47082182f63911e866120e4c9ae7`.
 **Implementation commit:** `0f06b947f451bf8f00e46f7abd41d7f997ff1de7` on `codex/nb06-a-project-registry`.
-**Next eligible milestone:** NB-07, subject to its documented CBM adapter validation gate.
+**Next eligible milestone at NB-06A completion:** NB-07, subject to its documented CBM adapter validation gate. NB-07 has since started on PR #123; see the [current progress record](NB-07_CODE_INTELLIGENCE_PROGRESS.md).
 **Owner decision date:** 2026-09-28.
 **Validation:** independent static review passed; required GitHub Actions passed on PR #120 before squash merge. No local tests or typechecks were run on this PC.
 
