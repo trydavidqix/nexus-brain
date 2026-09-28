@@ -21,6 +21,7 @@ Manifest SHA-256: `79d472a5adbb76a4e3e5c94c00b7b57861897561414025d0f913db48ac115
 - `origin/docs/plan2-nexus-engineering-control-plane-v2`: all 104 headings and all 2,487 source lines are present in `docs/plans/NEXUS_ENGINEERING_CONTROL_PLANE_IMPLEMENTATION_PLAN.md` (2,491 lines); no source content is missing.
 - PR #102 merged BrowserMesh fast-path acceptance into the Master Blueprint. PR #50 closed after its criteria were verified in B0/B5/B6/B8 and production gates.
 - PR #104 merged this recovery inventory at `cf95999393477bcf483cc3462ac68520d8a40ab9`. PR #103 was closed after branch-name validation failed; its same commit was carried through PR #104.
+- The final ref snapshot is delivered through PR #105 with title `docs: record final Nexus ref snapshot`; the local Git naming validator passed for its title and branch.
 
 ## Preserve before cleanup
 
