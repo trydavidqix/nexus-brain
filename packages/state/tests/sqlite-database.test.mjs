@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 import Database from 'better-sqlite3';
-import { openStateDatabase } from '../src/sqlite-database.mjs';
+import { openStateDatabase } from '@nexus-brain/state';
 
 async function makeTempDirectory(t) {
   const directory = await mkdtemp(join(tmpdir(), 'nexus-state-test-'));
