@@ -1,9 +1,21 @@
 {
-  "snapshot": "2026-09-28",
+  "snapshot_kind": "complete pre-cleanup branch and worktree recovery snapshot",
+  "captured_at": "2026-09-28T06:08:16+01:00",
+  "repository": "trydavidqix/nexus-brain",
   "origin": "https://github.com/trydavidqix/nexus-brain.git",
-  "main_head": "854f9628a0a2914093db1a138c215654e931cc1a",
-  "current_branch": "main",
-  "all_refs": [
+  "main_head": "cf95999393477bcf483cc3462ac68520d8a40ab9",
+  "current_branch": "docs/NB-19-final-ref-snapshot-20260928",
+  "counts": {
+    "local_branch_refs": 51,
+    "remote_tracking_branch_refs": 65,
+    "github_branch_heads": 56,
+    "unique_branch_names": 68,
+    "stale_remote_tracking_refs": 9,
+    "all_git_refs": 121,
+    "registered_worktrees": 4,
+    "pull_requests": 104
+  },
+  "refs": [
     {
       "ref": "refs/codex/turn-diffs/captures/1790569956815/b3610af4-37ae-446e-b887-553274ebb95c/base",
       "sha": "b9d759af2259562c094c6efa8d8f78832e4508d8",
@@ -209,6 +221,18 @@
       "subject": "docs: record NB-04 live memory E2E revalidation"
     },
     {
+      "ref": "refs/heads/docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "type": "commit",
+      "subject": "docs: record Nexus branch recovery audit"
+    },
+    {
+      "ref": "refs/heads/docs/NB-19-final-ref-snapshot-20260928",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
+      "type": "commit",
+      "subject": "docs: record Nexus branch recovery audit (#104)"
+    },
+    {
       "ref": "refs/heads/docs/NB-29-browsermesh-fast-path",
       "sha": "870301e24f76a2296c01790eccd39ba3852647be",
       "type": "commit",
@@ -252,9 +276,9 @@
     },
     {
       "ref": "refs/heads/docs/NEXUS-branch-worktree-recovery-20260928",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
       "type": "commit",
-      "subject": "docs: record BrowserMesh fast-path acceptance gates (#102)"
+      "subject": "docs: record Nexus branch recovery audit"
     },
     {
       "ref": "refs/heads/docs/PR-87-lossless-eacp-control-plane",
@@ -318,15 +342,15 @@
     },
     {
       "ref": "refs/heads/main",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
       "type": "commit",
-      "subject": "docs: record BrowserMesh fast-path acceptance gates (#102)"
+      "subject": "docs: record Nexus branch recovery audit (#104)"
     },
     {
       "ref": "refs/remotes/origin/HEAD",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
       "type": "commit",
-      "subject": "docs: record BrowserMesh fast-path acceptance gates (#102)"
+      "subject": "docs: record Nexus branch recovery audit (#104)"
     },
     {
       "ref": "refs/remotes/origin/codex/mcg-finalization",
@@ -539,6 +563,12 @@
       "subject": "docs: record NB-04 live memory E2E revalidation"
     },
     {
+      "ref": "refs/remotes/origin/docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "type": "commit",
+      "subject": "docs: record Nexus branch recovery audit"
+    },
+    {
       "ref": "refs/remotes/origin/docs/NB-29-browsermesh-fast-path",
       "sha": "870301e24f76a2296c01790eccd39ba3852647be",
       "type": "commit",
@@ -591,6 +621,12 @@
       "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
       "type": "commit",
       "subject": "docs: record NB-29 snapshot evidence"
+    },
+    {
+      "ref": "refs/remotes/origin/docs/NEXUS-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "type": "commit",
+      "subject": "docs: record Nexus branch recovery audit"
     },
     {
       "ref": "refs/remotes/origin/docs/PR-87-lossless-eacp-control-plane",
@@ -696,9 +732,9 @@
     },
     {
       "ref": "refs/remotes/origin/main",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
       "type": "commit",
-      "subject": "docs: record BrowserMesh fast-path acceptance gates (#102)"
+      "subject": "docs: record Nexus branch recovery audit (#104)"
     },
     {
       "ref": "refs/remotes/origin/pr/87",
@@ -713,17 +749,20 @@
       "name": "codex/mcg-finalization",
       "sha": "0f972b504c5089044e0594f67595ebf4896b3295",
       "upstream": "origin/codex/mcg-finalization",
-      "ahead": 1,
-      "behind": 60,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 61,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "0f972b504c5089044e0594f67595ebf4896b3295"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0f972b504c5089044e0594f67595ebf4896b3295",
           "subject": "recovery: preserve audited worktree state"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -764,24 +803,27 @@
       ],
       "pull_request_numbers": [],
       "disposition": "PRESERVE_BACKUP",
-      "disposition_evidence": "Unique recovery snapshot commit 0f972b504c5089044e0594f67595ebf4896b3295 was pushed; do not merge stale documents or delete the preserved backup."
+      "evidence": "Nine-file worktree snapshot is committed and pushed; old docs remain unmerged."
     },
     {
       "scope": "local",
       "name": "codex/nb03-codex-oauth-revalidation-2026-09-28",
       "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
       "upstream": "origin/codex/nb03-codex-oauth-revalidation-2026-09-28",
-      "ahead": 1,
-      "behind": 21,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 22,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
           "subject": "docs: record NB-03 Codex OAuth revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -792,17 +834,22 @@
         80
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb03-codex-oauth-revalidation-20260928",
       "sha": "faa5cb6e7ecd1cd25edda7364613373bd542e02e",
       "upstream": "origin/codex/nb03-codex-oauth-revalidation-20260928",
-      "ahead": 3,
-      "behind": 16,
-      "remote_exists": null,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 17,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "9665f8a6971516d5a6738e0b82ead06dd2120472",
+        "99a51577bc256f492d3379a6abb149f644434216",
+        "faa5cb6e7ecd1cd25edda7364613373bd542e02e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "9665f8a6971516d5a6738e0b82ead06dd2120472",
           "subject": "docs(nb-03): record codex reflect revalidation"
@@ -816,8 +863,8 @@
           "subject": "docs(nb-03): remove trailing evidence whitespace"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -828,17 +875,26 @@
         86
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb04-temporal-provenance-prep",
       "sha": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
       "upstream": "origin/codex/nb04-temporal-provenance-prep",
-      "ahead": 7,
-      "behind": 23,
-      "remote_exists": null,
+      "ahead_vs_main": 7,
+      "behind_vs_main": 24,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8c46fa2af15759d6e4de8e1a85257c9e1833373d",
+        "8aab246ddc1966d1dc2c8a5f45a52d4c0520b7fc",
+        "9d99bcafddb6a032ea1c816b79b4aa9be9228194",
+        "c4b07ba57d048e6a96eae0bb84839354d642a9da",
+        "9eeffdee83fe805b96ef6b1c12547ace3768f11f",
+        "dd7a1e75aa70bc053ea42d8b53c43c4273fe7ab4",
+        "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8c46fa2af15759d6e4de8e1a85257c9e1833373d",
           "subject": "memory: Add temporal provenance contracts"
@@ -868,8 +924,8 @@
           "subject": "fix(brain): restore store file newline"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 4,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 4,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1008,17 +1064,21 @@
         73
       ],
       "disposition": "INTEGRATED_KEEP_WORKTREE",
-      "disposition_evidence": "PR #73 merged; worktree is clean and remains attached as a managed recovery artifact pending final archive/cleanup decision."
+      "evidence": "PR #73 merged; clean managed worktree remains attached."
     },
     {
       "scope": "local",
       "name": "codex/nb05-brain-api-mcp-contract",
       "sha": "377ad2857bf129487714050e8bbb73b88243674e",
       "upstream": "origin/codex/nb05-brain-api-mcp-contract",
-      "ahead": 2,
-      "behind": 20,
-      "remote_exists": null,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 21,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "e15e78cbf6b5ef4510b08e3b3e6db5373808d61a",
+        "377ad2857bf129487714050e8bbb73b88243674e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e15e78cbf6b5ef4510b08e3b3e6db5373808d61a",
           "subject": "feat: add NB-05 Brain API and MCP contract"
@@ -1028,8 +1088,8 @@
           "subject": "docs: tidy NB-05 progress evidence"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1080,40 +1140,44 @@
         81
       ],
       "disposition": "PRESERVE_OPEN_PR",
-      "disposition_evidence": "PR #81 is an open draft with unique NB-05 implementation; keep branch and worktree."
+      "evidence": "Unique NB-05 code belongs to open draft PR #81."
     },
     {
       "scope": "local",
       "name": "codex/nb06-github-project-indexer",
       "sha": "1cbdf841bbe91e333280bf9c4c612f1255064116",
       "upstream": "",
-      "ahead": 0,
-      "behind": 20,
-      "remote_exists": null,
+      "ahead_vs_main": 0,
+      "behind_vs_main": 21,
+      "remote_exists_on_github": null,
       "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [],
       "pull_request_numbers": [],
       "disposition": "INTEGRATED_BY_ANCESTRY",
-      "disposition_evidence": "Branch tip is reachable from main; no branch-only commits."
+      "evidence": "Branch tip is reachable from main; no exclusive commits."
     },
     {
       "scope": "local",
       "name": "codex/nb10-closeout",
       "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
       "upstream": "origin/codex/nb10-closeout",
-      "ahead": 1,
-      "behind": 45,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 46,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "e3e911d1209df8a1b3e22fff4837ce1e2a46d710"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
           "subject": "docs: record NB-10 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1124,24 +1188,27 @@
         52
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g0-github-baseline",
       "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
       "upstream": "origin/codex/nb19-g0-github-baseline",
-      "ahead": 1,
-      "behind": 44,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 45,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "5b5df1019017083ed628a1f23b37d087370f181f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
           "subject": "github: Record repository security baseline"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1156,24 +1223,27 @@
         53
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g1-naming-contracts",
       "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
       "upstream": "origin/codex/nb19-g1-naming-contracts",
-      "ahead": 1,
-      "behind": 43,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 44,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "d10fb19b77ebb20c0062f503a64a07cae2dac40c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
           "subject": "github: Add Git naming validator"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1204,17 +1274,21 @@
         54
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g10-closeout",
       "sha": "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088",
       "upstream": "origin/codex/nb19-g10-closeout",
-      "ahead": 2,
-      "behind": 22,
-      "remote_exists": null,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 23,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8f70d6f50916f4a45edb04da01e3a05b7cf25ea2",
+        "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8f70d6f50916f4a45edb04da01e3a05b7cf25ea2",
           "subject": "github: Complete NB-19 concurrency validation"
@@ -1224,8 +1298,8 @@
           "subject": "Merge main after NB-04 acceptance"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1260,17 +1334,22 @@
         75
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g10-concurrency-validation",
       "sha": "50cdec0bf3e61a8888156e27bbdbf05ac3478406",
       "upstream": "origin/codex/nb19-g10-concurrency-validation",
-      "ahead": 3,
-      "behind": 26,
-      "remote_exists": null,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 27,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "15d7d6a93e9545749fc0434a5daddac20480f85c",
+        "f9d4e2e610922a2a6c8c47e18d88a9e15928f041",
+        "50cdec0bf3e61a8888156e27bbdbf05ac3478406"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "15d7d6a93e9545749fc0434a5daddac20480f85c",
           "subject": "engineering: Prevent concurrent ownership registry losses"
@@ -1284,8 +1363,8 @@
           "subject": "github: Record validated CodeQL queue transition"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1340,24 +1419,27 @@
         74
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g2-actions-policy",
       "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
       "upstream": "origin/codex/nb19-g2-actions-policy",
-      "ahead": 1,
-      "behind": 41,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 42,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8c987d39e2ba1ad3fe994fd3978c93d0037fa325"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
           "subject": "github: Record required Action pinning"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1372,24 +1454,27 @@
         56
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g2-ci-security",
       "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
       "upstream": "origin/codex/nb19-g2-ci-security",
-      "ahead": 1,
-      "behind": 42,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 43,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "d916beed8a3bce8e9280593ac3e004dec34a3f36"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
           "subject": "github: Harden Actions workflow permissions"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1420,24 +1505,27 @@
         55
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g3-ci-tests",
       "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
       "upstream": "origin/codex/nb19-g3-ci-tests",
-      "ahead": 1,
-      "behind": 39,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 40,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "a5d09a47c6348f7e14613471c555db19d5d297e7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
           "subject": "github: run engineering gate tests in CI"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1452,17 +1540,21 @@
         58
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g3-delivery-git-hygiene",
       "sha": "fe471c080108f9f327bac8a6fc6a22167778105c",
       "upstream": "origin/codex/nb19-g3-delivery-git-hygiene",
-      "ahead": 2,
-      "behind": 40,
-      "remote_exists": null,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 41,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "bb8d805c515968db70dbe0675857e4d98b1dd60e",
+        "fe471c080108f9f327bac8a6fc6a22167778105c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "bb8d805c515968db70dbe0675857e4d98b1dd60e",
           "subject": "engineering: add report-only git hygiene gate"
@@ -1472,8 +1564,8 @@
           "subject": "engineering: secure report output paths"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1512,17 +1604,23 @@
         57
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g4-main-ruleset",
       "sha": "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f",
       "upstream": "origin/codex/nb19-g4-main-ruleset",
-      "ahead": 4,
-      "behind": 38,
-      "remote_exists": null,
+      "ahead_vs_main": 4,
+      "behind_vs_main": 39,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "57ea61a7ae0e27ff223474ab7e9fc51e43779cc6",
+        "017d5210a84b4e8fdb2bc4d2cac5102ff22d619c",
+        "9be44834683bf9cfbf72b15b11003c4f1561ac64",
+        "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "57ea61a7ae0e27ff223474ab7e9fc51e43779cc6",
           "subject": "github: document protected main policy"
@@ -1540,8 +1638,8 @@
           "subject": "github: record active protected main policy"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -1572,24 +1670,27 @@
         59
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g5-closeout",
       "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
       "upstream": "origin/codex/nb19-g5-closeout",
-      "ahead": 1,
-      "behind": 36,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 37,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "4dba1d1d6d104d4787a4a638f1120c98c69eb74c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
           "subject": "docs: record NB-19 G5 gate evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1604,24 +1705,27 @@
         63
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g5-complete",
       "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
       "upstream": "origin/codex/nb19-g5-complete",
-      "ahead": 1,
-      "behind": 35,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 36,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8ee5e33a2742e4a7ccf56bda47b385850ece91fa"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
           "subject": "docs: complete NB-19 G5 evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1636,24 +1740,27 @@
         64
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g5-security-gates",
       "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
       "upstream": "origin/codex/nb19-g5-security-gates",
-      "ahead": 1,
-      "behind": 37,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 38,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "60351eb8c112e135940e3ade993d88eb6dcfebbc"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
           "subject": "security: enforce secret and dependency review gates"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1692,17 +1799,22 @@
         60
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g6-codeowners-oidc",
       "sha": "fb8bd07b5231747c9506b0b256ae814e5d915179",
       "upstream": "origin/codex/nb19-g6-codeowners-oidc",
-      "ahead": 3,
-      "behind": 34,
-      "remote_exists": null,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 35,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "09935197a8c94b9f2ad96a3b22cebca560421c14",
+        "2cddc1ab6f59a3d8da36c71a12569736be475cd4",
+        "fb8bd07b5231747c9506b0b256ae814e5d915179"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "09935197a8c94b9f2ad96a3b22cebca560421c14",
           "subject": "security: secure sensitive paths and cloud OIDC"
@@ -1716,8 +1828,8 @@
           "subject": "security: keep code-owner review advisory"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1756,24 +1868,27 @@
         65
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g6-evidence-closeout",
       "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
       "upstream": "origin/codex/nb19-g6-evidence-closeout",
-      "ahead": 1,
-      "behind": 33,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 34,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "f0f6e99c1323293789883c6173b4e46fb1a0b235"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
           "subject": "docs: record NB-19 G6 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1788,24 +1903,27 @@
         66
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g7-evidence-closeout",
       "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
       "upstream": "origin/codex/nb19-g7-evidence-closeout",
-      "ahead": 1,
-      "behind": 31,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 32,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "6d84757d3b06c3e2630da3551734346d74bc783e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
           "subject": "docs: record NB-19 G7 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1820,24 +1938,27 @@
         68
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g7-maestri-evidence",
       "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
       "upstream": "origin/codex/nb19-g7-maestri-evidence",
-      "ahead": 1,
-      "behind": 29,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 30,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
           "subject": "docs: record NB-19 G7 ownership correction evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1852,24 +1973,27 @@
         70
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g7-maestri-split",
       "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
       "upstream": "origin/codex/nb19-g7-maestri-split",
-      "ahead": 1,
-      "behind": 30,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 31,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "5a7fcc5df0d45989e67c77063bd39dd2f486eb17"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
           "subject": "security: enforce Maestri task ownership splits"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1896,24 +2020,27 @@
         69
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g7-ownership-registry",
       "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
       "upstream": "origin/codex/nb19-g7-ownership-registry",
-      "ahead": 1,
-      "behind": 32,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 33,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "cf4980b52dfffdb442d4d23880fbcf343a18d42b"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
           "subject": "security: register task worktree ownership"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -1964,24 +2091,27 @@
         67
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g8-orphan-detection",
       "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
       "upstream": "origin/codex/nb19-g8-orphan-detection",
-      "ahead": 1,
-      "behind": 28,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 29,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "124ab0516ba47795544d041b0a1f65f08220bb06"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
           "subject": "engineering: Detect orphaned and duplicate Git work"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2020,17 +2150,24 @@
         71
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nb19-g9-safe-retirement",
       "sha": "3a6776218c74b72c0d8b3960bb156d2a8e79187d",
       "upstream": "origin/codex/nb19-g9-safe-retirement",
-      "ahead": 5,
-      "behind": 27,
-      "remote_exists": null,
+      "ahead_vs_main": 5,
+      "behind_vs_main": 28,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "1f4cbc7a3c9fb18b98b1bf7e64f63f84db0bada5",
+        "9b9fa183c6da3e44fb788a5482b6fec5aefc5e00",
+        "c8aaa2a63d94b308ac6e8278c4b56da3cc77b1a2",
+        "cfc051bd6b59872664f2e2b05df8929b990500ad",
+        "3a6776218c74b72c0d8b3960bb156d2a8e79187d"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1f4cbc7a3c9fb18b98b1bf7e64f63f84db0bada5",
           "subject": "engineering: Require proof for local branch retirement"
@@ -2052,8 +2189,8 @@
           "subject": "docs: Record safe retirement proof"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 5,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 5,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2088,42 +2225,46 @@
         72
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "codex/nexus-canonical-architecture",
       "sha": "816fed950651ad4d981fb8ed22a9ec25ef00b0f6",
       "upstream": "origin/codex/nexus-canonical-architecture",
-      "ahead": 0,
-      "behind": 53,
-      "remote_exists": null,
+      "ahead_vs_main": 0,
+      "behind_vs_main": 54,
+      "remote_exists_on_github": null,
       "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [],
       "pull_request_numbers": [
         44
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-03-codex-oauth-revalidation",
       "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
       "upstream": "origin/docs/NB-03-codex-oauth-revalidation",
-      "ahead": 1,
-      "behind": 24,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 25,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "6a423b61f6ca6160c4db1f1282f9f6608e727839"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
           "subject": "docs: Record NB-03 Codex OAuth revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2138,24 +2279,27 @@
         79
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-04-memory-e2e-revalidation",
       "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
       "upstream": "origin/docs/NB-04-memory-e2e-revalidation",
-      "ahead": 1,
-      "behind": 14,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 15,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
           "subject": "docs: record NB-04 live memory E2E revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2166,24 +2310,79 @@
         89
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
+    },
+    {
+      "scope": "local",
+      "name": "docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "upstream": "origin/docs/NB-19-branch-worktree-recovery-20260928",
+      "ahead_vs_main": 1,
+      "behind_vs_main": 1,
+      "remote_exists_on_github": null,
+      "exclusive_commits": [
+        "d03b589224cec04909edf5af4b373c592ef09232"
+      ],
+      "exclusive_commit_subjects": [
+        {
+          "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+          "subject": "docs: record Nexus branch recovery audit"
+        }
+      ],
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
+      "branch_files_vs_merge_base": [
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json"
+        ],
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md"
+        ]
+      ],
+      "pull_request_numbers": [
+        104
+      ],
+      "disposition": "INTEGRATED_DOCS",
+      "evidence": "Recovery audit commit is in main; safe candidate after snapshot."
+    },
+    {
+      "scope": "local",
+      "name": "docs/NB-19-final-ref-snapshot-20260928",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
+      "upstream": "",
+      "ahead_vs_main": 0,
+      "behind_vs_main": 0,
+      "remote_exists_on_github": null,
+      "exclusive_commits": [],
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
+      "branch_files_vs_merge_base": [],
+      "pull_request_numbers": [],
+      "disposition": "INTEGRATED_DOCS",
+      "evidence": "Recovery audit commit is in main; safe candidate after snapshot."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-browsermesh-fast-path",
       "sha": "870301e24f76a2296c01790eccd39ba3852647be",
       "upstream": "origin/docs/NB-29-browsermesh-fast-path",
-      "ahead": 1,
-      "behind": 1,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 2,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "870301e24f76a2296c01790eccd39ba3852647be"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "870301e24f76a2296c01790eccd39ba3852647be",
           "subject": "docs: record BrowserMesh fast-path acceptance gates"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2194,24 +2393,27 @@
         102
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-canonical-plan-sync",
       "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
       "upstream": "origin/docs/NB-29-canonical-plan-sync",
-      "ahead": 1,
-      "behind": 2,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 3,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "18a1e1d899b2867bb3e62c7b1d83e883ba277823"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
           "subject": "docs: add canonical Nexus implementation plans"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2230,24 +2432,27 @@
         101
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-forensic-revalidation-20260928",
       "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
       "upstream": "origin/docs/NB-29-forensic-revalidation-20260928",
-      "ahead": 1,
-      "behind": 7,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 8,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "7362b9b6c8e70c975c0348547712af88b2bb9eca"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
           "subject": "docs: verify migration readiness evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2266,24 +2471,27 @@
         96
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-observed-state-manifest",
       "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
       "upstream": "origin/docs/NB-29-observed-state-manifest",
-      "ahead": 1,
-      "behind": 3,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 4,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "1544098c9441d8d59e5b60d7db37c6e20e9282d7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
           "subject": "docs: close NB-29 using observed state inventory"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2302,24 +2510,27 @@
         100
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-postmerge-snapshot",
       "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
       "upstream": "origin/docs/NB-29-postmerge-snapshot",
-      "ahead": 1,
-      "behind": 6,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 7,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "e1a950c21559f1efaa3c0ad0702d5907925e204d"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
           "subject": "docs: record PR 96 merge state"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2330,17 +2541,22 @@
         97
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-preservation-audit",
       "sha": "bf8fd45dffd029d0e34f05c09868561975a2a0f9",
       "upstream": "origin/docs/NB-29-preservation-audit",
-      "ahead": 3,
-      "behind": 10,
-      "remote_exists": null,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 11,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "ffee677caadc7aa99b11a681ad2d38a3807ec8b6",
+        "0a297c75af0786eff78efc078f54ba9cb920a8dc",
+        "bf8fd45dffd029d0e34f05c09868561975a2a0f9"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "ffee677caadc7aa99b11a681ad2d38a3807ec8b6",
           "subject": "docs(nb-29): reconcile preservation gates"
@@ -2354,8 +2570,8 @@
           "subject": "docs(nb-29): record PR title validation"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2374,24 +2590,27 @@
         93
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/NB-29-vss-snapshot-evidence",
       "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
       "upstream": "origin/docs/NB-29-vss-snapshot-evidence",
-      "ahead": 1,
-      "behind": 5,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 6,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
           "subject": "docs: record NB-29 snapshot evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2402,17 +2621,56 @@
         98
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
+    },
+    {
+      "scope": "local",
+      "name": "docs/NEXUS-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "upstream": "origin/docs/NEXUS-branch-worktree-recovery-20260928",
+      "ahead_vs_main": 1,
+      "behind_vs_main": 1,
+      "remote_exists_on_github": null,
+      "exclusive_commits": [
+        "d03b589224cec04909edf5af4b373c592ef09232"
+      ],
+      "exclusive_commit_subjects": [
+        {
+          "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+          "subject": "docs: record Nexus branch recovery audit"
+        }
+      ],
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
+      "branch_files_vs_merge_base": [
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json"
+        ],
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md"
+        ]
+      ],
+      "pull_request_numbers": [
+        103
+      ],
+      "disposition": "CLOSED_CARRIER",
+      "evidence": "PR #103 closed after naming gate; same commit carried by merged PR #104."
     },
     {
       "scope": "local",
       "name": "docs/PR-87-lossless-eacp-control-plane",
       "sha": "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f",
       "upstream": "origin/docs/PR-87-lossless-eacp-control-plane",
-      "ahead": 2,
-      "behind": 15,
-      "remote_exists": null,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 16,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
+        "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
           "subject": "docs: merge lossless engineering agent control plane plan"
@@ -2422,8 +2680,8 @@
           "subject": "Merge remote-tracking branch 'origin/main' into docs/PR-87-lossless-eacp-control-plane"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2434,24 +2692,27 @@
         88
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/nb29-ignored-state-audit",
       "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
       "upstream": "origin/docs/nb29-ignored-state-audit",
-      "ahead": 1,
-      "behind": 8,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 9,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "471bd8039c105a7e58eb242bbd33c97b817de945"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
           "subject": "docs: record NB-29 ignored-path audit"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2462,24 +2723,27 @@
         95
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/nb29-postmerge-audit",
       "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
       "upstream": "origin/docs/nb29-postmerge-audit",
-      "ahead": 1,
-      "behind": 9,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 10,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "161fd2b82a50795bd15b72e8b6b6422051d7f986"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
           "subject": "docs: record NB-29 post-merge validation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2494,17 +2758,34 @@
         94
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "docs/provider-native-directory-boundary",
       "sha": "9cc19936ef0e9b5683aaf280dedaacfaf51453a2",
       "upstream": "origin/pr-43",
-      "ahead": 15,
-      "behind": 50,
-      "remote_exists": null,
+      "ahead_vs_main": 15,
+      "behind_vs_main": 51,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "4a855ad04e62eb90da98c91fdf50db5cbb34e64b",
+        "01a2cb803f2085606b70c1a27a34ba6ad2690c30",
+        "3efcc1803db727ffc02f46f91cf1c9240a72d14d",
+        "6da9fda1056baacbf2799ad9486a24906fab5b1f",
+        "9deb0b32e518e587dbf18c1b714266d64c76b673",
+        "6ae33d1814a8b7ce9099cf95c9aeda8f85fae71a",
+        "f4253b7dcd3da671c2fd3be338cf3c7cef653a22",
+        "ab8710843a1e0c24c367bb026b5cc6fd875555fc",
+        "738b7031dd3a9e6e6a703d696fbf67ec631f8b9f",
+        "f9efd4b1ceaf536d246964164ba95cf570ea9ac7",
+        "864b58b4efba8b6728cf097c195229983faf7f22",
+        "5beb1e41e7aa12f6ba074fb42458726359827721",
+        "1d7c5567601c5fe288aa4c59e4f9c576d82e8588",
+        "ad46384f9ed6c09df0fa4ede128757dc7f3e7ddc",
+        "9cc19936ef0e9b5683aaf280dedaacfaf51453a2"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4a855ad04e62eb90da98c91fdf50db5cbb34e64b",
           "subject": "docs: preserve provider-native directories"
@@ -2566,8 +2847,8 @@
           "subject": "blueprint: Remove local path from canonical baseline"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 14,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 14,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2578,24 +2859,27 @@
         43
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "feature/NB-02-contracts-threat-scope",
       "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
       "upstream": "origin/feature/NB-02-contracts-threat-scope",
-      "ahead": 1,
-      "behind": 49,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 50,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "63c5d3411f50994b5163e0c80f2d210307c0c0f8"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
           "subject": "feat(contracts): add scoped Nexus contracts"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -2798,24 +3082,27 @@
         46
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "feature/NB-03-cloud-baseline",
       "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
       "upstream": "origin/feature/NB-03-cloud-baseline",
-      "ahead": 1,
-      "behind": 48,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 49,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
           "subject": "docs(blueprint): record NB-03 cloud blocker"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2826,24 +3113,27 @@
         47
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "feature/NB-03-cloud-iac",
       "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
       "upstream": "origin/feature/NB-03-cloud-iac",
-      "ahead": 1,
-      "behind": 47,
-      "remote_exists": null,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 48,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
           "subject": "feat(infra): prepare NB-03 cloud baseline"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -2898,17 +3188,28 @@
         48
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "feature/NB-03-zero-cost-local",
       "sha": "5c1d662858d1a5eba3993db0497559f97a03402b",
       "upstream": "origin/feature/NB-03-zero-cost-local",
-      "ahead": 9,
-      "behind": 25,
-      "remote_exists": null,
+      "ahead_vs_main": 9,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "d095fb6f751c96d5e9941016b2953827bd9a3b4e",
+        "9fe25fa209ae1514fa818568c46aea5cb8d36f9d",
+        "dc6a5a3eb7e9f52f052b82871ef4933535686172",
+        "e1d5aad023f01f66a3dc2c8d483e42bdf5677326",
+        "be9f26e805e96b770f41e760ce3f982513176d58",
+        "e1633a4155b1a3a553cc82c5531a48a0490e2ecb",
+        "4e8d37c0617db275935c35abdf50e43e7a9193a4",
+        "e392b29134efebce936fdc9dde711d1a22b3dfab",
+        "5c1d662858d1a5eba3993db0497559f97a03402b"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d095fb6f751c96d5e9941016b2953827bd9a3b4e",
           "subject": "infra: Adopt zero-cost local Hindsight runtime"
@@ -2946,8 +3247,8 @@
           "subject": "fix(nb-03): use existing Codex OAuth runtime"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 8,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 8,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3030,17 +3331,25 @@
         49
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "feature/NB-10-everything-git-edge",
       "sha": "e819f5b234a0a4de171e8cb68a059bf7253033ff",
       "upstream": "origin/feature/NB-10-everything-git-edge",
-      "ahead": 6,
-      "behind": 46,
-      "remote_exists": null,
+      "ahead_vs_main": 6,
+      "behind_vs_main": 47,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "0aa10889903e91e264e6cda7e95e26c6a849a579",
+        "74970e19973f937ed0516ec58ce9feb1986e1505",
+        "86143bdd714e77a71d2d77a2ec75123842867de6",
+        "e5c57a6d7be57f8b8ba5685fabbf3f466e3e8eae",
+        "12284ce1f9062d17e81715f7167bcb997163c625",
+        "e819f5b234a0a4de171e8cb68a059bf7253033ff"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0aa10889903e91e264e6cda7e95e26c6a849a579",
           "subject": "edge: add scoped Everything journal adapter"
@@ -3066,8 +3375,8 @@
           "subject": "docs: organize NB-10 acceptance evidence"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 6,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 6,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3110,17 +3419,21 @@
         51
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "fix/NB-04-task-retain-agent-binding",
       "sha": "d23540dd01b8ad75aa9a460878d5fb7c194568e7",
       "upstream": "origin/fix/NB-04-task-retain-agent-binding",
-      "ahead": 2,
-      "behind": 4,
-      "remote_exists": null,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 5,
+      "remote_exists_on_github": null,
       "exclusive_commits": [
+        "0ae98256b1cb812ecc6a09d733ada6bdd24497fb",
+        "d23540dd01b8ad75aa9a460878d5fb7c194568e7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0ae98256b1cb812ecc6a09d733ada6bdd24497fb",
           "subject": "fix: record originating agent in TASK lifecycle event"
@@ -3130,8 +3443,8 @@
           "subject": "docs: name TASK agent binding regression test"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3154,40 +3467,44 @@
         99
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "local",
       "name": "main",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
       "upstream": "origin/main",
-      "ahead": 0,
-      "behind": 0,
-      "remote_exists": null,
+      "ahead_vs_main": 0,
+      "behind_vs_main": 0,
+      "remote_exists_on_github": null,
       "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [],
       "pull_request_numbers": [],
       "disposition": "CANONICAL",
-      "disposition_evidence": "Canonical branch; clean and synchronized at captured head."
+      "evidence": "Canonical branch."
     },
     {
       "scope": "remote",
       "name": "origin/codex/mcg-finalization",
       "sha": "0f972b504c5089044e0594f67595ebf4896b3295",
       "upstream": "",
-      "ahead": 1,
-      "behind": 60,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 61,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "0f972b504c5089044e0594f67595ebf4896b3295"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0f972b504c5089044e0594f67595ebf4896b3295",
           "subject": "recovery: preserve audited worktree state"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3228,24 +3545,27 @@
       ],
       "pull_request_numbers": [],
       "disposition": "PRESERVE_BACKUP",
-      "disposition_evidence": "Unique recovery snapshot commit 0f972b504c5089044e0594f67595ebf4896b3295 was pushed; do not merge stale documents or delete the preserved backup."
+      "evidence": "Nine-file worktree snapshot is committed and pushed; old docs remain unmerged."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb03-codex-oauth-revalidation-2026-09-28",
       "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
       "upstream": "",
-      "ahead": 1,
-      "behind": 21,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 22,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
           "subject": "docs: record NB-03 Codex OAuth revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3256,17 +3576,22 @@
         80
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb03-codex-oauth-revalidation-20260928",
       "sha": "faa5cb6e7ecd1cd25edda7364613373bd542e02e",
       "upstream": "",
-      "ahead": 3,
-      "behind": 16,
-      "remote_exists": true,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 17,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "9665f8a6971516d5a6738e0b82ead06dd2120472",
+        "99a51577bc256f492d3379a6abb149f644434216",
+        "faa5cb6e7ecd1cd25edda7364613373bd542e02e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "9665f8a6971516d5a6738e0b82ead06dd2120472",
           "subject": "docs(nb-03): record codex reflect revalidation"
@@ -3280,8 +3605,8 @@
           "subject": "docs(nb-03): remove trailing evidence whitespace"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3292,24 +3617,27 @@
         86
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb03-codex-reflect-revalidation-20260928",
       "sha": "4ca676cfc90a91167c4d33f7ff094d6e27fb3e5f",
       "upstream": "",
-      "ahead": 1,
-      "behind": 20,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 21,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "4ca676cfc90a91167c4d33f7ff094d6e27fb3e5f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4ca676cfc90a91167c4d33f7ff094d6e27fb3e5f",
           "subject": "docs: record NB-03 Codex reflect revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3320,17 +3648,26 @@
         82
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb04-temporal-provenance-prep",
       "sha": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
       "upstream": "",
-      "ahead": 7,
-      "behind": 23,
-      "remote_exists": true,
+      "ahead_vs_main": 7,
+      "behind_vs_main": 24,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8c46fa2af15759d6e4de8e1a85257c9e1833373d",
+        "8aab246ddc1966d1dc2c8a5f45a52d4c0520b7fc",
+        "9d99bcafddb6a032ea1c816b79b4aa9be9228194",
+        "c4b07ba57d048e6a96eae0bb84839354d642a9da",
+        "9eeffdee83fe805b96ef6b1c12547ace3768f11f",
+        "dd7a1e75aa70bc053ea42d8b53c43c4273fe7ab4",
+        "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8c46fa2af15759d6e4de8e1a85257c9e1833373d",
           "subject": "memory: Add temporal provenance contracts"
@@ -3360,8 +3697,8 @@
           "subject": "fix(brain): restore store file newline"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 4,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 4,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3500,17 +3837,21 @@
         73
       ],
       "disposition": "INTEGRATED_KEEP_WORKTREE",
-      "disposition_evidence": "PR #73 merged; worktree is clean and remains attached as a managed recovery artifact pending final archive/cleanup decision."
+      "evidence": "PR #73 merged; clean managed worktree remains attached."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb05-brain-api-mcp-contract",
       "sha": "377ad2857bf129487714050e8bbb73b88243674e",
       "upstream": "",
-      "ahead": 2,
-      "behind": 20,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 21,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "e15e78cbf6b5ef4510b08e3b3e6db5373808d61a",
+        "377ad2857bf129487714050e8bbb73b88243674e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e15e78cbf6b5ef4510b08e3b3e6db5373808d61a",
           "subject": "feat: add NB-05 Brain API and MCP contract"
@@ -3520,8 +3861,8 @@
           "subject": "docs: tidy NB-05 progress evidence"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3572,24 +3913,27 @@
         81
       ],
       "disposition": "PRESERVE_OPEN_PR",
-      "disposition_evidence": "PR #81 is an open draft with unique NB-05 implementation; keep branch and worktree."
+      "evidence": "Unique NB-05 code belongs to open draft PR #81."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb10-closeout",
       "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
       "upstream": "",
-      "ahead": 1,
-      "behind": 45,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 46,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "e3e911d1209df8a1b3e22fff4837ce1e2a46d710"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
           "subject": "docs: record NB-10 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3600,24 +3944,27 @@
         52
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g0-github-baseline",
       "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
       "upstream": "",
-      "ahead": 1,
-      "behind": 44,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 45,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "5b5df1019017083ed628a1f23b37d087370f181f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
           "subject": "github: Record repository security baseline"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3632,24 +3979,27 @@
         53
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g1-naming-contracts",
       "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
       "upstream": "",
-      "ahead": 1,
-      "behind": 43,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 44,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "d10fb19b77ebb20c0062f503a64a07cae2dac40c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
           "subject": "github: Add Git naming validator"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3680,17 +4030,21 @@
         54
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g10-closeout",
       "sha": "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088",
       "upstream": "",
-      "ahead": 2,
-      "behind": 22,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 23,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8f70d6f50916f4a45edb04da01e3a05b7cf25ea2",
+        "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8f70d6f50916f4a45edb04da01e3a05b7cf25ea2",
           "subject": "github: Complete NB-19 concurrency validation"
@@ -3700,8 +4054,8 @@
           "subject": "Merge main after NB-04 acceptance"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3736,17 +4090,22 @@
         75
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g10-concurrency-validation",
       "sha": "50cdec0bf3e61a8888156e27bbdbf05ac3478406",
       "upstream": "",
-      "ahead": 3,
-      "behind": 26,
-      "remote_exists": true,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 27,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "15d7d6a93e9545749fc0434a5daddac20480f85c",
+        "f9d4e2e610922a2a6c8c47e18d88a9e15928f041",
+        "50cdec0bf3e61a8888156e27bbdbf05ac3478406"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "15d7d6a93e9545749fc0434a5daddac20480f85c",
           "subject": "engineering: Prevent concurrent ownership registry losses"
@@ -3760,8 +4119,8 @@
           "subject": "github: Record validated CodeQL queue transition"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3816,24 +4175,27 @@
         74
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g2-actions-policy",
       "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
       "upstream": "",
-      "ahead": 1,
-      "behind": 41,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 42,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8c987d39e2ba1ad3fe994fd3978c93d0037fa325"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
           "subject": "github: Record required Action pinning"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3848,24 +4210,27 @@
         56
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g2-ci-security",
       "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
       "upstream": "",
-      "ahead": 1,
-      "behind": 42,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 43,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "d916beed8a3bce8e9280593ac3e004dec34a3f36"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
           "subject": "github: Harden Actions workflow permissions"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3896,24 +4261,27 @@
         55
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g3-ci-tests",
       "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
       "upstream": "",
-      "ahead": 1,
-      "behind": 39,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 40,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "a5d09a47c6348f7e14613471c555db19d5d297e7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
           "subject": "github: run engineering gate tests in CI"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3928,17 +4296,21 @@
         58
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g3-delivery-git-hygiene",
       "sha": "fe471c080108f9f327bac8a6fc6a22167778105c",
       "upstream": "",
-      "ahead": 2,
-      "behind": 40,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 41,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "bb8d805c515968db70dbe0675857e4d98b1dd60e",
+        "fe471c080108f9f327bac8a6fc6a22167778105c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "bb8d805c515968db70dbe0675857e4d98b1dd60e",
           "subject": "engineering: add report-only git hygiene gate"
@@ -3948,8 +4320,8 @@
           "subject": "engineering: secure report output paths"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -3988,17 +4360,23 @@
         57
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g4-main-ruleset",
       "sha": "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f",
       "upstream": "",
-      "ahead": 4,
-      "behind": 38,
-      "remote_exists": true,
+      "ahead_vs_main": 4,
+      "behind_vs_main": 39,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "57ea61a7ae0e27ff223474ab7e9fc51e43779cc6",
+        "017d5210a84b4e8fdb2bc4d2cac5102ff22d619c",
+        "9be44834683bf9cfbf72b15b11003c4f1561ac64",
+        "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "57ea61a7ae0e27ff223474ab7e9fc51e43779cc6",
           "subject": "github: document protected main policy"
@@ -4016,8 +4394,8 @@
           "subject": "github: record active protected main policy"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -4048,24 +4426,27 @@
         59
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g5-closeout",
       "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
       "upstream": "",
-      "ahead": 1,
-      "behind": 36,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 37,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "4dba1d1d6d104d4787a4a638f1120c98c69eb74c"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
           "subject": "docs: record NB-19 G5 gate evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4080,24 +4461,27 @@
         63
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g5-complete",
       "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
       "upstream": "",
-      "ahead": 1,
-      "behind": 35,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 36,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8ee5e33a2742e4a7ccf56bda47b385850ece91fa"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
           "subject": "docs: complete NB-19 G5 evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4112,24 +4496,27 @@
         64
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g5-security-gates",
       "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
       "upstream": "",
-      "ahead": 1,
-      "behind": 37,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 38,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "60351eb8c112e135940e3ade993d88eb6dcfebbc"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
           "subject": "security: enforce secret and dependency review gates"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4168,17 +4555,22 @@
         60
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g6-codeowners-oidc",
       "sha": "fb8bd07b5231747c9506b0b256ae814e5d915179",
       "upstream": "",
-      "ahead": 3,
-      "behind": 34,
-      "remote_exists": true,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 35,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "09935197a8c94b9f2ad96a3b22cebca560421c14",
+        "2cddc1ab6f59a3d8da36c71a12569736be475cd4",
+        "fb8bd07b5231747c9506b0b256ae814e5d915179"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "09935197a8c94b9f2ad96a3b22cebca560421c14",
           "subject": "security: secure sensitive paths and cloud OIDC"
@@ -4192,8 +4584,8 @@
           "subject": "security: keep code-owner review advisory"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4232,24 +4624,27 @@
         65
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g6-evidence-closeout",
       "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
       "upstream": "",
-      "ahead": 1,
-      "behind": 33,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 34,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "f0f6e99c1323293789883c6173b4e46fb1a0b235"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
           "subject": "docs: record NB-19 G6 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4264,24 +4659,27 @@
         66
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g7-evidence-closeout",
       "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
       "upstream": "",
-      "ahead": 1,
-      "behind": 31,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 32,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "6d84757d3b06c3e2630da3551734346d74bc783e"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
           "subject": "docs: record NB-19 G7 completion evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4296,24 +4694,27 @@
         68
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g7-maestri-evidence",
       "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
       "upstream": "",
-      "ahead": 1,
-      "behind": 29,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 30,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
           "subject": "docs: record NB-19 G7 ownership correction evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4328,24 +4729,27 @@
         70
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g7-maestri-split",
       "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
       "upstream": "",
-      "ahead": 1,
-      "behind": 30,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 31,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "5a7fcc5df0d45989e67c77063bd39dd2f486eb17"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
           "subject": "security: enforce Maestri task ownership splits"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4372,24 +4776,27 @@
         69
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g7-ownership-registry",
       "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
       "upstream": "",
-      "ahead": 1,
-      "behind": 32,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 33,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "cf4980b52dfffdb442d4d23880fbcf343a18d42b"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
           "subject": "security: register task worktree ownership"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4440,24 +4847,27 @@
         67
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g8-orphan-detection",
       "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
       "upstream": "",
-      "ahead": 1,
-      "behind": 28,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 29,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "124ab0516ba47795544d041b0a1f65f08220bb06"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
           "subject": "engineering: Detect orphaned and duplicate Git work"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4496,17 +4906,24 @@
         71
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-g9-safe-retirement",
       "sha": "3a6776218c74b72c0d8b3960bb156d2a8e79187d",
       "upstream": "",
-      "ahead": 5,
-      "behind": 27,
-      "remote_exists": true,
+      "ahead_vs_main": 5,
+      "behind_vs_main": 28,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "1f4cbc7a3c9fb18b98b1bf7e64f63f84db0bada5",
+        "9b9fa183c6da3e44fb788a5482b6fec5aefc5e00",
+        "c8aaa2a63d94b308ac6e8278c4b56da3cc77b1a2",
+        "cfc051bd6b59872664f2e2b05df8929b990500ad",
+        "3a6776218c74b72c0d8b3960bb156d2a8e79187d"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1f4cbc7a3c9fb18b98b1bf7e64f63f84db0bada5",
           "subject": "engineering: Require proof for local branch retirement"
@@ -4528,8 +4945,8 @@
           "subject": "docs: Record safe retirement proof"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 5,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 5,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4564,24 +4981,27 @@
         72
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb19-oidc-crlf-portability",
       "sha": "f4ca08c00bf2bbb620e47d67079056effe4cb299",
       "upstream": "",
-      "ahead": 1,
-      "behind": 19,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 20,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "f4ca08c00bf2bbb620e47d67079056effe4cb299"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "f4ca08c00bf2bbb620e47d67079056effe4cb299",
           "subject": "test: normalize OIDC fixture line endings"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4592,24 +5012,27 @@
         83
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb29-cutover-revalidation-20260928",
       "sha": "c64a341877bba32b8c4cc11997d3c06ad4db4177",
       "upstream": "",
-      "ahead": 1,
-      "behind": 18,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 19,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "c64a341877bba32b8c4cc11997d3c06ad4db4177"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "c64a341877bba32b8c4cc11997d3c06ad4db4177",
           "subject": "docs: record NB-29 cutover revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4636,24 +5059,27 @@
         84
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/codex/nb29-protected-worktree-metadata",
       "sha": "a871076d16307b7d0dbb63ff2830c577ec8d48df",
       "upstream": "",
-      "ahead": 1,
-      "behind": 17,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 18,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "a871076d16307b7d0dbb63ff2830c577ec8d48df"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "a871076d16307b7d0dbb63ff2830c577ec8d48df",
           "subject": "docs: record protected worktree Git metadata"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4664,24 +5090,27 @@
         85
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/dependabot/github_actions/github-actions-f1e5ee2635",
       "sha": "4041072e64db39b0f8d64de0acf0344d9a4434d5",
       "upstream": "",
-      "ahead": 1,
-      "behind": 25,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "4041072e64db39b0f8d64de0acf0344d9a4434d5"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4041072e64db39b0f8d64de0acf0344d9a4434d5",
           "subject": "build(deps): bump the github-actions group across 1 directory with 3 updates"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4700,24 +5129,27 @@
         62
       ],
       "disposition": "PRESERVE_OPEN_PR",
-      "disposition_evidence": "PR #62 is open; retain pending dependency review."
+      "evidence": "Open dependency PR; preserve pending review."
     },
     {
       "scope": "remote",
       "name": "origin/dependabot/npm_and_yarn/production-dependencies-39d93a22fb",
       "sha": "126e8704d1631e60867ef0a8d5663f9e32d2d2c5",
       "upstream": "",
-      "ahead": 1,
-      "behind": 22,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 23,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "126e8704d1631e60867ef0a8d5663f9e32d2d2c5"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "126e8704d1631e60867ef0a8d5663f9e32d2d2c5",
           "subject": "build(deps): bump the production-dependencies group across 1 directory with 2 updates"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4733,24 +5165,27 @@
         61
       ],
       "disposition": "PRESERVE_OPEN_PR",
-      "disposition_evidence": "PR #61 is open; retain pending dependency review."
+      "evidence": "Open dependency PR; preserve pending review."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-03-codex-oauth-revalidation",
       "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
       "upstream": "",
-      "ahead": 1,
-      "behind": 24,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 25,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "6a423b61f6ca6160c4db1f1282f9f6608e727839"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
           "subject": "docs: Record NB-03 Codex OAuth revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4765,24 +5200,27 @@
         79
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-03-codex-oauth-revalidation-20260928",
       "sha": "9209a9eff27168c677131adb1eb4a8d0908f0530",
       "upstream": "",
-      "ahead": 1,
-      "behind": 13,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 14,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "9209a9eff27168c677131adb1eb4a8d0908f0530"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "9209a9eff27168c677131adb1eb4a8d0908f0530",
           "subject": "docs: Record NB-03 Codex OAuth live verification"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4793,24 +5231,27 @@
         90
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-04-memory-e2e-revalidation",
       "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
       "upstream": "",
-      "ahead": 1,
-      "behind": 14,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 15,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
           "subject": "docs: record NB-04 live memory E2E revalidation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4821,24 +5262,62 @@
         89
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
+    },
+    {
+      "scope": "remote",
+      "name": "origin/docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "upstream": "",
+      "ahead_vs_main": 1,
+      "behind_vs_main": 1,
+      "remote_exists_on_github": true,
+      "exclusive_commits": [
+        "d03b589224cec04909edf5af4b373c592ef09232"
+      ],
+      "exclusive_commit_subjects": [
+        {
+          "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+          "subject": "docs: record Nexus branch recovery audit"
+        }
+      ],
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
+      "branch_files_vs_merge_base": [
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json"
+        ],
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md"
+        ]
+      ],
+      "pull_request_numbers": [
+        104
+      ],
+      "disposition": "INTEGRATED_DOCS",
+      "evidence": "Recovery audit commit is in main; safe candidate after snapshot."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-browsermesh-fast-path",
       "sha": "870301e24f76a2296c01790eccd39ba3852647be",
       "upstream": "",
-      "ahead": 1,
-      "behind": 1,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 2,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "870301e24f76a2296c01790eccd39ba3852647be"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "870301e24f76a2296c01790eccd39ba3852647be",
           "subject": "docs: record BrowserMesh fast-path acceptance gates"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4849,24 +5328,27 @@
         102
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-canonical-checkout",
       "sha": "efa37873b2883ee325eb96af3ea31b8983547bec",
       "upstream": "",
-      "ahead": 1,
-      "behind": 11,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 12,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "efa37873b2883ee325eb96af3ea31b8983547bec"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "efa37873b2883ee325eb96af3ea31b8983547bec",
           "subject": "docs: Record canonical checkout path"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4881,24 +5363,27 @@
         92
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-canonical-plan-sync",
       "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
       "upstream": "",
-      "ahead": 1,
-      "behind": 2,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 3,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "18a1e1d899b2867bb3e62c7b1d83e883ba277823"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
           "subject": "docs: add canonical Nexus implementation plans"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4917,24 +5402,27 @@
         101
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-forensic-revalidation-20260928",
       "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
       "upstream": "",
-      "ahead": 1,
-      "behind": 7,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 8,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "7362b9b6c8e70c975c0348547712af88b2bb9eca"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
           "subject": "docs: verify migration readiness evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4953,17 +5441,21 @@
         96
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-migration-readiness-snapshot",
       "sha": "6df8541851e5d5d63414538d2fd09cdf6930c079",
       "upstream": "",
-      "ahead": 2,
-      "behind": 12,
-      "remote_exists": false,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 13,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "ca4a7c0377663b37c646950a7c5fa272e47d5c61",
+        "6df8541851e5d5d63414538d2fd09cdf6930c079"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "ca4a7c0377663b37c646950a7c5fa272e47d5c61",
           "subject": "docs: Refresh migration readiness evidence"
@@ -4973,8 +5465,8 @@
           "subject": "docs: Record migration readiness evidence links"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -4993,24 +5485,27 @@
         91
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-observed-state-manifest",
       "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
       "upstream": "",
-      "ahead": 1,
-      "behind": 3,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 4,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "1544098c9441d8d59e5b60d7db37c6e20e9282d7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
           "subject": "docs: close NB-29 using observed state inventory"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5029,24 +5524,27 @@
         100
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-postmerge-snapshot",
       "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
       "upstream": "",
-      "ahead": 1,
-      "behind": 6,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 7,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "e1a950c21559f1efaa3c0ad0702d5907925e204d"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
           "subject": "docs: record PR 96 merge state"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5057,17 +5555,22 @@
         97
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-preservation-audit",
       "sha": "bf8fd45dffd029d0e34f05c09868561975a2a0f9",
       "upstream": "",
-      "ahead": 3,
-      "behind": 10,
-      "remote_exists": true,
+      "ahead_vs_main": 3,
+      "behind_vs_main": 11,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "ffee677caadc7aa99b11a681ad2d38a3807ec8b6",
+        "0a297c75af0786eff78efc078f54ba9cb920a8dc",
+        "bf8fd45dffd029d0e34f05c09868561975a2a0f9"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "ffee677caadc7aa99b11a681ad2d38a3807ec8b6",
           "subject": "docs(nb-29): reconcile preservation gates"
@@ -5081,8 +5584,8 @@
           "subject": "docs(nb-29): record PR title validation"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 3,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 3,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5101,24 +5604,27 @@
         93
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/NB-29-vss-snapshot-evidence",
       "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
       "upstream": "",
-      "ahead": 1,
-      "behind": 5,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 6,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
           "subject": "docs: record NB-29 snapshot evidence"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5129,17 +5635,56 @@
         98
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
+    },
+    {
+      "scope": "remote",
+      "name": "origin/docs/NEXUS-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "upstream": "",
+      "ahead_vs_main": 1,
+      "behind_vs_main": 1,
+      "remote_exists_on_github": true,
+      "exclusive_commits": [
+        "d03b589224cec04909edf5af4b373c592ef09232"
+      ],
+      "exclusive_commit_subjects": [
+        {
+          "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+          "subject": "docs: record Nexus branch recovery audit"
+        }
+      ],
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
+      "branch_files_vs_merge_base": [
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json"
+        ],
+        [
+          "A",
+          "docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md"
+        ]
+      ],
+      "pull_request_numbers": [
+        103
+      ],
+      "disposition": "CLOSED_CARRIER",
+      "evidence": "PR #103 closed after naming gate; same commit carried by merged PR #104."
     },
     {
       "scope": "remote",
       "name": "origin/docs/PR-87-lossless-eacp-control-plane",
       "sha": "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f",
       "upstream": "",
-      "ahead": 2,
-      "behind": 15,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 16,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
+        "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
           "subject": "docs: merge lossless engineering agent control plane plan"
@@ -5149,8 +5694,8 @@
           "subject": "Merge remote-tracking branch 'origin/main' into docs/PR-87-lossless-eacp-control-plane"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5161,24 +5706,27 @@
         88
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/browsermesh-jev-ultrafast-20260927",
       "sha": "117b7b7ecc5b0f148c1c43ae6ad5d13905638cc2",
       "upstream": "",
-      "ahead": 1,
-      "behind": 46,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 47,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "117b7b7ecc5b0f148c1c43ae6ad5d13905638cc2"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "117b7b7ecc5b0f148c1c43ae6ad5d13905638cc2",
           "subject": "docs(browsermesh): integrate jev-ultrafast patterns into blueprint"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5189,24 +5737,27 @@
         50
       ],
       "disposition": "INTEGRATED_CONTENT",
-      "disposition_evidence": "PR #50 closed after PR #102 added BrowserMesh fast-path gates; remaining five non-identical source lines are represented by equivalent Blueprint statements."
+      "evidence": "PR #50 closed after its criteria were integrated by PR #102."
     },
     {
       "scope": "remote",
       "name": "origin/docs/canonical-eacp-lossless-2026-09-28",
       "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
       "upstream": "",
-      "ahead": 1,
-      "behind": 16,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 17,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "79194969dc1eaa2a687b9c2eee82a0c3d192d309"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
           "subject": "docs: merge lossless engineering agent control plane plan"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5217,24 +5768,27 @@
         87
       ],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
+      "evidence": "Local tracking ref has no GitHub branch."
     },
     {
       "scope": "remote",
       "name": "origin/docs/nb29-ignored-state-audit",
       "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
       "upstream": "",
-      "ahead": 1,
-      "behind": 8,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 9,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "471bd8039c105a7e58eb242bbd33c97b817de945"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
           "subject": "docs: record NB-29 ignored-path audit"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5245,24 +5799,27 @@
         95
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/nb29-postmerge-audit",
       "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
       "upstream": "",
-      "ahead": 1,
-      "behind": 9,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 10,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "161fd2b82a50795bd15b72e8b6b6422051d7f986"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
           "subject": "docs: record NB-29 post-merge validation"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5277,24 +5834,27 @@
         94
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/docs/plan1-nexus-implementation-plan",
       "sha": "66075d7dc27be7c3afdf4e226cbb7be3ad57ba38",
       "upstream": "",
-      "ahead": 1,
-      "behind": 24,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 25,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "66075d7dc27be7c3afdf4e226cbb7be3ad57ba38"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "66075d7dc27be7c3afdf4e226cbb7be3ad57ba38",
           "subject": "blueprints: Add updated Nexus implementation plan"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 1,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 1,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -5303,17 +5863,21 @@
       ],
       "pull_request_numbers": [],
       "disposition": "INTEGRATED_CONTENT",
-      "disposition_evidence": "All 13 source headings match canonical plan; all 415 source lines are present in canonical 419-line plan."
+      "evidence": "All 415 source lines and 13 headings are present in canonical implementation plan."
     },
     {
       "scope": "remote",
       "name": "origin/docs/plan2-nexus-engineering-control-plane-v2",
       "sha": "4b1283704eabfbab19e4025ddc0be906d57726a6",
       "upstream": "",
-      "ahead": 2,
-      "behind": 21,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 22,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "9754d5476fc05af67029bc9d82eacb451ce2b86e",
+        "4b1283704eabfbab19e4025ddc0be906d57726a6"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "9754d5476fc05af67029bc9d82eacb451ce2b86e",
           "subject": "blueprints: Add canonical Nexus Engineering Control Plane V2 plan"
@@ -5323,8 +5887,8 @@
           "subject": "blueprints: enforce automatic plugin activation and lazy routing"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -5333,17 +5897,34 @@
       ],
       "pull_request_numbers": [],
       "disposition": "INTEGRATED_CONTENT",
-      "disposition_evidence": "All 104 source headings match canonical plan; all 2,487 source lines are present in canonical 2,491-line plan."
+      "evidence": "All 2,487 source lines and 104 headings are present in canonical EACP plan."
     },
     {
       "scope": "remote",
       "name": "origin/docs/provider-native-directory-boundary",
       "sha": "9cc19936ef0e9b5683aaf280dedaacfaf51453a2",
       "upstream": "",
-      "ahead": 15,
-      "behind": 50,
-      "remote_exists": true,
+      "ahead_vs_main": 15,
+      "behind_vs_main": 51,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "4a855ad04e62eb90da98c91fdf50db5cbb34e64b",
+        "01a2cb803f2085606b70c1a27a34ba6ad2690c30",
+        "3efcc1803db727ffc02f46f91cf1c9240a72d14d",
+        "6da9fda1056baacbf2799ad9486a24906fab5b1f",
+        "9deb0b32e518e587dbf18c1b714266d64c76b673",
+        "6ae33d1814a8b7ce9099cf95c9aeda8f85fae71a",
+        "f4253b7dcd3da671c2fd3be338cf3c7cef653a22",
+        "ab8710843a1e0c24c367bb026b5cc6fd875555fc",
+        "738b7031dd3a9e6e6a703d696fbf67ec631f8b9f",
+        "f9efd4b1ceaf536d246964164ba95cf570ea9ac7",
+        "864b58b4efba8b6728cf097c195229983faf7f22",
+        "5beb1e41e7aa12f6ba074fb42458726359827721",
+        "1d7c5567601c5fe288aa4c59e4f9c576d82e8588",
+        "ad46384f9ed6c09df0fa4ede128757dc7f3e7ddc",
+        "9cc19936ef0e9b5683aaf280dedaacfaf51453a2"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "4a855ad04e62eb90da98c91fdf50db5cbb34e64b",
           "subject": "docs: preserve provider-native directories"
@@ -5405,8 +5986,8 @@
           "subject": "blueprint: Remove local path from canonical baseline"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 14,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 14,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5417,24 +5998,27 @@
         43
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/NB-02-contracts-threat-scope",
       "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
       "upstream": "",
-      "ahead": 1,
-      "behind": 49,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 50,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "63c5d3411f50994b5163e0c80f2d210307c0c0f8"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
           "subject": "feat(contracts): add scoped Nexus contracts"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -5637,24 +6221,27 @@
         46
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/NB-03-cloud-baseline",
       "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
       "upstream": "",
-      "ahead": 1,
-      "behind": 48,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 49,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
           "subject": "docs(blueprint): record NB-03 cloud blocker"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5665,24 +6252,27 @@
         47
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/NB-03-cloud-iac",
       "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
       "upstream": "",
-      "ahead": 1,
-      "behind": 47,
-      "remote_exists": true,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 48,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
           "subject": "feat(infra): prepare NB-03 cloud baseline"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5737,17 +6327,28 @@
         48
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/NB-03-zero-cost-local",
       "sha": "5c1d662858d1a5eba3993db0497559f97a03402b",
       "upstream": "",
-      "ahead": 9,
-      "behind": 25,
-      "remote_exists": true,
+      "ahead_vs_main": 9,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "d095fb6f751c96d5e9941016b2953827bd9a3b4e",
+        "9fe25fa209ae1514fa818568c46aea5cb8d36f9d",
+        "dc6a5a3eb7e9f52f052b82871ef4933535686172",
+        "e1d5aad023f01f66a3dc2c8d483e42bdf5677326",
+        "be9f26e805e96b770f41e760ce3f982513176d58",
+        "e1633a4155b1a3a553cc82c5531a48a0490e2ecb",
+        "4e8d37c0617db275935c35abdf50e43e7a9193a4",
+        "e392b29134efebce936fdc9dde711d1a22b3dfab",
+        "5c1d662858d1a5eba3993db0497559f97a03402b"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "d095fb6f751c96d5e9941016b2953827bd9a3b4e",
           "subject": "infra: Adopt zero-cost local Hindsight runtime"
@@ -5785,8 +6386,8 @@
           "subject": "fix(nb-03): use existing Codex OAuth runtime"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 8,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 8,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5869,17 +6470,25 @@
         49
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/NB-10-everything-git-edge",
       "sha": "e819f5b234a0a4de171e8cb68a059bf7253033ff",
       "upstream": "",
-      "ahead": 6,
-      "behind": 46,
-      "remote_exists": true,
+      "ahead_vs_main": 6,
+      "behind_vs_main": 47,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "0aa10889903e91e264e6cda7e95e26c6a849a579",
+        "74970e19973f937ed0516ec58ce9feb1986e1505",
+        "86143bdd714e77a71d2d77a2ec75123842867de6",
+        "e5c57a6d7be57f8b8ba5685fabbf3f466e3e8eae",
+        "12284ce1f9062d17e81715f7167bcb997163c625",
+        "e819f5b234a0a4de171e8cb68a059bf7253033ff"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0aa10889903e91e264e6cda7e95e26c6a849a579",
           "subject": "edge: add scoped Everything journal adapter"
@@ -5905,8 +6514,8 @@
           "subject": "docs: organize NB-10 acceptance evidence"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 6,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 6,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -5949,17 +6558,23 @@
         51
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/feature/audit-1-email-blueprint-assimilation",
       "sha": "5aea849d17e2c030759a0fd1333e4f83bcc29d3b",
       "upstream": "",
-      "ahead": 4,
-      "behind": 25,
-      "remote_exists": true,
+      "ahead_vs_main": 4,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "34331f8f3d4eed3dc10c349bda7414c27345057f",
+        "c0b265edfd312e926f1cb5c05eb8a94de6660f13",
+        "6e4ba6262a7fddf314ea8a4a0a6688e0b863354b",
+        "5aea849d17e2c030759a0fd1333e4f83bcc29d3b"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "34331f8f3d4eed3dc10c349bda7414c27345057f",
           "subject": "control-plane: Add deterministic Maestri decision baseline"
@@ -5977,8 +6592,8 @@
           "subject": "docs: Record Maestri decision baseline progress"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 4,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 4,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -6001,17 +6616,44 @@
         77
       ],
       "disposition": "PRESERVE_REVIEW",
-      "disposition_evidence": "PR #77 is closed without merge. Its decision source, tests and package metadata match PR #78; retain branch until PR #78 disposition resolves the remaining Blueprint/history delta."
+      "evidence": "PR #77 closed; common implementation files match PR #78, but retain branch history and Blueprint delta."
     },
     {
       "scope": "remote",
       "name": "origin/feature/audit-2-nexus-blueprint-assimilation",
       "sha": "fa3f2217a777c20b16292908b080a85aff03aef7",
       "upstream": "",
-      "ahead": 25,
-      "behind": 25,
-      "remote_exists": true,
+      "ahead_vs_main": 25,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "2dc64a66102de300a2d842754e0ff37f9c6b7c22",
+        "edadffa1a5b03a86758e3f1c2c9ea2623f385cd3",
+        "8cc731265874fa26cae303ec8828879895e6cf41",
+        "3a572bbda829147c1334973f82961f5e32ab2659",
+        "2d6a9fa23430b2398ffdfd6cec5a994ecd9abc91",
+        "185033c22b418a7702112e0239a7ceaee5731eb1",
+        "8d68d2390a591556fa44aadfe6b4ed294c344e7d",
+        "ff76a729f286b439c4c65ad9f97fb2494e14f223",
+        "6841108f214507c2f167aa371837db82ee278456",
+        "60680ed25d6f64c71ab0f51d7f56c30eebb5b960",
+        "65fa8e488d4e003840c41da2799da375c572bee8",
+        "64eb4f8ec71182cea92d4051cb039ba42c3f45ae",
+        "684be0c3e448b5de571413bc8d11b3ee7f51e1be",
+        "a84c04957180d826a5042620fbb0bcc92d7ea6f7",
+        "5b08cec8b26bbaeffe0c4264d47821549ece7d73",
+        "47e69d48c09d700123ad687f6b9eb7e4ff44dd4e",
+        "e75c9d3c3012b5b787097d4b0f76749a2b9a351e",
+        "d19aecd17a4f65d3662c97b180d472299ce1eb3e",
+        "396e711dcfb002987edf954800e002c39e34f4b9",
+        "2dc02521bf7a2ff382c36a801fdec7ff72706304",
+        "a07d27adb9a9e6203aff663538a14fa9c61721ce",
+        "8e55828d1265a658970cd22411ef1e3c411e3566",
+        "15e63d9ba77dfd5f1ab5d4e94d7182cc48fc8f8e",
+        "bb565c13a308d325afe789658eee06817f2d56b2",
+        "fa3f2217a777c20b16292908b080a85aff03aef7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "2dc64a66102de300a2d842754e0ff37f9c6b7c22",
           "subject": "contracts: add Project Factory types"
@@ -6113,8 +6755,8 @@
           "subject": "docs: Record decision-engine assimilation"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 25,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 25,
       "branch_files_vs_merge_base": [
         [
           "A",
@@ -6197,35 +6839,40 @@
         78
       ],
       "disposition": "PRESERVE_OPEN_PR",
-      "disposition_evidence": "PR #78 is open with 25 branch-only commits and unique Project Factory/Maestri implementation; preserve due dependency ordering."
+      "evidence": "Unique contracts/compiler implementation belongs to open PR #78; dependencies gate integration."
     },
     {
       "scope": "remote",
       "name": "origin/feature/email-blueprint-assimilation-20260927",
       "sha": "dd09060ebca21104912465b079d8d12107c927a4",
       "upstream": "",
-      "ahead": 0,
-      "behind": 25,
-      "remote_exists": true,
+      "ahead_vs_main": 0,
+      "behind_vs_main": 26,
+      "remote_exists_on_github": true,
       "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [],
       "pull_request_numbers": [
         76
       ],
       "disposition": "INTEGRATED_BY_ANCESTRY",
-      "disposition_evidence": "Branch tip is already an ancestor of main; no exclusive tree changes."
+      "evidence": "Branch tip is reachable from main; no exclusive commits."
     },
     {
       "scope": "remote",
       "name": "origin/fix/NB-04-task-retain-agent-binding",
       "sha": "d23540dd01b8ad75aa9a460878d5fb7c194568e7",
       "upstream": "",
-      "ahead": 2,
-      "behind": 4,
-      "remote_exists": true,
+      "ahead_vs_main": 2,
+      "behind_vs_main": 5,
+      "remote_exists_on_github": true,
       "exclusive_commits": [
+        "0ae98256b1cb812ecc6a09d733ada6bdd24497fb",
+        "d23540dd01b8ad75aa9a460878d5fb7c194568e7"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "0ae98256b1cb812ecc6a09d733ada6bdd24497fb",
           "subject": "fix: record originating agent in TASK lifecycle event"
@@ -6235,8 +6882,8 @@
           "subject": "docs: name TASK agent binding regression test"
         }
       ],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 2,
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 2,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -6259,40 +6906,44 @@
         99
       ],
       "disposition": "INTEGRATED_VIA_MERGED_PR",
-      "disposition_evidence": "The branch tip matches a merged pull request head; changes are represented by the merged PR. Candidate for cleanup only after this recovery manifest is committed."
+      "evidence": "Branch tip matches merged PR head; PR history remains on GitHub."
     },
     {
       "scope": "remote",
       "name": "origin/main",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
+      "sha": "cf95999393477bcf483cc3462ac68520d8a40ab9",
       "upstream": "",
-      "ahead": 0,
-      "behind": 0,
-      "remote_exists": true,
+      "ahead_vs_main": 0,
+      "behind_vs_main": 0,
+      "remote_exists_on_github": true,
       "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
+      "exclusive_commit_subjects": [],
+      "patch_equivalent_commits": 0,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [],
       "pull_request_numbers": [],
       "disposition": "CANONICAL",
-      "disposition_evidence": "Canonical branch; clean and synchronized at captured head."
+      "evidence": "Canonical branch."
     },
     {
       "scope": "remote",
       "name": "origin/pr/87",
       "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
       "upstream": "",
-      "ahead": 1,
-      "behind": 16,
-      "remote_exists": false,
+      "ahead_vs_main": 1,
+      "behind_vs_main": 17,
+      "remote_exists_on_github": false,
       "exclusive_commits": [
+        "79194969dc1eaa2a687b9c2eee82a0c3d192d309"
+      ],
+      "exclusive_commit_subjects": [
         {
           "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
           "subject": "docs: merge lossless engineering agent control plane plan"
         }
       ],
-      "patch_equivalent_count": 1,
-      "unique_patch_count": 0,
+      "patch_equivalent_commits": 1,
+      "unique_patch_commits": 0,
       "branch_files_vs_merge_base": [
         [
           "M",
@@ -6301,131 +6952,10 @@
       ],
       "pull_request_numbers": [],
       "disposition": "STALE_TRACKING_REF",
-      "disposition_evidence": "This local remote-tracking ref has no matching GitHub branch; it is not a remote branch."
-    },
-    {
-      "scope": "local",
-      "name": "docs/NEXUS-branch-worktree-recovery-20260928",
-      "sha": "854f9628a0a2914093db1a138c215654e931cc1a",
-      "upstream": "",
-      "ahead": 0,
-      "behind": 0,
-      "remote_exists": null,
-      "exclusive_commits": [],
-      "patch_equivalent_count": 0,
-      "unique_patch_count": 0,
-      "branch_files_vs_merge_base": [],
-      "pull_request_numbers": [],
-      "disposition": "AUDIT_CARRIER",
-      "disposition_evidence": "At capture this branch points to current main 854f962; its evidence files are untracked and recorded in the worktree status below. It will be preserved by its merged documentation PR."
+      "evidence": "Local tracking ref has no GitHub branch."
     }
   ],
-  "worktrees": [
-    {
-      "path": "%USERPROFILE%/Desktop/Projetos/nexus-brain",
-      "head": "854f9628a0a2914093db1a138c215654e931cc1a",
-      "branch": "refs/heads/docs/NEXUS-branch-worktree-recovery-20260928",
-      "detached": false,
-      "status_porcelain_v2": "# branch.oid 854f9628a0a2914093db1a138c215654e931cc1a\n# branch.head docs/NEXUS-branch-worktree-recovery-20260928\n? docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json\n? docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md",
-      "untracked": [
-        "docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json",
-        "docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md"
-      ],
-      "ignored_summary": [
-        "?? docs/engineering/NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json",
-        "?? docs/engineering/NEXUS_BRANCH_WORKTREE_AUDIT_2026-09-28.md",
-        "!! .jules/cache/",
-        "!! .nexus-state/",
-        "!! .tools/",
-        "!! apps/cli/node_modules/",
-        "!! apps/control-center/node_modules/",
-        "!! apps/control-center/state/",
-        "!! apps/edge/node_modules/",
-        "!! infra/cloud/tofu/.terraform/",
-        "!! infra/local/hindsight/.venv/",
-        "!! infra/local/hindsight/__pycache__/",
-        "!! infra/local/hindsight/tests/__pycache__/",
-        "!! node_modules/",
-        "!! packages/brain/node_modules/",
-        "!! packages/compat/node_modules/",
-        "!! packages/context-gateway/node_modules/",
-        "!! packages/contracts/node_modules/",
-        "!! packages/control-plane/node_modules/",
-        "!! packages/evidence/node_modules/",
-        "!! packages/execution/node_modules/",
-        "!! packages/governance/node_modules/",
-        "!! packages/local-runtime/node_modules/",
-        "!! packages/operating-core/node_modules/",
-        "!! packages/providers/node_modules/",
-        "!! packages/routing/node_modules/",
-        "!! state/"
-      ]
-    },
-    {
-      "path": "%USERPROFILE%/.codex/worktrees/nb04-hindsight-integration/nexus-brain",
-      "head": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
-      "branch": "refs/heads/codex/nb04-temporal-provenance-prep",
-      "detached": false,
-      "status_porcelain_v2": "# branch.oid 41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce\n# branch.head codex/nb04-temporal-provenance-prep\n# branch.upstream origin/codex/nb04-temporal-provenance-prep\n# branch.ab +0 -0",
-      "untracked": [],
-      "ignored_summary": [
-        "!! apps/cli/node_modules/",
-        "!! apps/control-center/node_modules/",
-        "!! apps/edge/node_modules/",
-        "!! node_modules/",
-        "!! packages/brain/node_modules/",
-        "!! packages/compat/node_modules/",
-        "!! packages/context-gateway/node_modules/",
-        "!! packages/contracts/node_modules/",
-        "!! packages/control-plane/node_modules/",
-        "!! packages/evidence/node_modules/",
-        "!! packages/execution/node_modules/",
-        "!! packages/governance/node_modules/",
-        "!! packages/providers/node_modules/",
-        "!! packages/routing/node_modules/"
-      ]
-    },
-    {
-      "path": "%USERPROFILE%/.lumenva/worktrees/mcg-finalization",
-      "head": "0f972b504c5089044e0594f67595ebf4896b3295",
-      "branch": "refs/heads/codex/mcg-finalization",
-      "detached": false,
-      "status_porcelain_v2": "# branch.oid 0f972b504c5089044e0594f67595ebf4896b3295\n# branch.head codex/mcg-finalization\n# branch.upstream origin/codex/mcg-finalization\n# branch.ab +0 -0",
-      "untracked": [],
-      "ignored_summary": [
-        "!! node_modules/",
-        "!! packages/local-runtime/node_modules/",
-        "!! packages/operating-core/node_modules/",
-        "!! state/"
-      ]
-    },
-    {
-      "path": "%USERPROFILE%/Desktop/Projetos/nexus-brain-nb10-worktree",
-      "head": "377ad2857bf129487714050e8bbb73b88243674e",
-      "branch": "refs/heads/codex/nb05-brain-api-mcp-contract",
-      "detached": false,
-      "status_porcelain_v2": "# branch.oid 377ad2857bf129487714050e8bbb73b88243674e\n# branch.head codex/nb05-brain-api-mcp-contract\n# branch.upstream origin/codex/nb05-brain-api-mcp-contract\n# branch.ab +0 -0",
-      "untracked": [],
-      "ignored_summary": [
-        "!! apps/cli/node_modules/",
-        "!! apps/control-center/node_modules/",
-        "!! apps/control-center/state/",
-        "!! apps/edge/node_modules/",
-        "!! node_modules/",
-        "!! packages/brain/node_modules/",
-        "!! packages/compat/node_modules/",
-        "!! packages/context-gateway/node_modules/",
-        "!! packages/contracts/node_modules/",
-        "!! packages/control-plane/node_modules/",
-        "!! packages/evidence/node_modules/",
-        "!! packages/execution/node_modules/",
-        "!! packages/governance/node_modules/",
-        "!! packages/providers/node_modules/",
-        "!! packages/routing/node_modules/"
-      ]
-    }
-  ],
-  "github_heads": [
+  "github_branch_heads": [
     "codex/mcg-finalization",
     "codex/nb03-codex-oauth-revalidation-2026-09-28",
     "codex/nb03-codex-oauth-revalidation-20260928",
@@ -6456,6 +6986,7 @@
     "dependabot/npm_and_yarn/production-dependencies-39d93a22fb",
     "docs/NB-03-codex-oauth-revalidation",
     "docs/NB-04-memory-e2e-revalidation",
+    "docs/NB-19-branch-worktree-recovery-20260928",
     "docs/NB-29-browsermesh-fast-path",
     "docs/NB-29-canonical-plan-sync",
     "docs/NB-29-forensic-revalidation-20260928",
@@ -6463,6 +6994,7 @@
     "docs/NB-29-postmerge-snapshot",
     "docs/NB-29-preservation-audit",
     "docs/NB-29-vss-snapshot-evidence",
+    "docs/NEXUS-branch-worktree-recovery-20260928",
     "docs/PR-87-lossless-eacp-control-plane",
     "docs/browsermesh-jev-ultrafast-20260927",
     "docs/nb29-ignored-state-audit",
@@ -6481,18 +7013,29 @@
     "fix/NB-04-task-retain-agent-binding",
     "main"
   ],
-  "github_only_stale_remote_tracking": [
-    "origin/codex/nb03-codex-reflect-revalidation-20260928",
-    "origin/codex/nb19-oidc-crlf-portability",
-    "origin/codex/nb29-cutover-revalidation-20260928",
-    "origin/codex/nb29-protected-worktree-metadata",
-    "origin/docs/NB-03-codex-oauth-revalidation-20260928",
-    "origin/docs/NB-29-canonical-checkout",
-    "origin/docs/NB-29-migration-readiness-snapshot",
-    "origin/docs/canonical-eacp-lossless-2026-09-28",
-    "origin/pr/87"
-  ],
   "pull_requests": [
+    {
+      "number": 104,
+      "state": "MERGED",
+      "title": "docs: record Nexus branch recovery audit",
+      "headRefName": "docs/NB-19-branch-worktree-recovery-20260928",
+      "headRefOid": "d03b589224cec04909edf5af4b373c592ef09232",
+      "baseRefName": "main",
+      "isDraft": false,
+      "mergedAt": "2026-09-28T05:02:04Z",
+      "url": "https://github.com/trydavidqix/nexus-brain/pull/104"
+    },
+    {
+      "number": 103,
+      "state": "CLOSED",
+      "title": "docs: record Nexus branch recovery audit",
+      "headRefName": "docs/NEXUS-branch-worktree-recovery-20260928",
+      "headRefOid": "d03b589224cec04909edf5af4b373c592ef09232",
+      "baseRefName": "main",
+      "isDraft": false,
+      "mergedAt": null,
+      "url": "https://github.com/trydavidqix/nexus-brain/pull/103"
+    },
     {
       "number": 102,
       "state": "MERGED",
@@ -7616,15 +8159,138 @@
       "url": "https://github.com/trydavidqix/nexus-brain/pull/1"
     }
   ],
-  "captured_at": "2026-09-28T05:54:40+01:00",
-  "counts": {
-    "local_branch_refs": 49,
-    "remote_tracking_branch_refs": 63,
-    "github_branch_heads": 54,
-    "unique_branch_names": 66,
-    "stale_remote_tracking_refs": 9,
-    "git_refs": 117,
-    "registered_worktrees": 4
-  },
-  "scope_note": "Point-in-time snapshot before branch cleanup. The temporary documentation carrier branch points to main at capture; its evidence commit will be included in main after PR merge. No branch or worktree was deleted in this snapshot."
+  "worktrees": [
+    {
+      "path": "%USERPROFILE%/Desktop/Projetos/nexus-brain",
+      "head": "cf95999393477bcf483cc3462ac68520d8a40ab9",
+      "branch": "refs/heads/docs/NB-19-final-ref-snapshot-20260928",
+      "detached": false,
+      "porcelain_v2": "# branch.oid cf95999393477bcf483cc3462ac68520d8a40ab9\n# branch.head docs/NB-19-final-ref-snapshot-20260928",
+      "untracked_files": [],
+      "ignored_summary": [
+        "!! .jules/cache/",
+        "!! .nexus-state/",
+        "!! .tools/",
+        "!! apps/cli/node_modules/",
+        "!! apps/control-center/node_modules/",
+        "!! apps/control-center/state/",
+        "!! apps/edge/node_modules/",
+        "!! infra/cloud/tofu/.terraform/",
+        "!! infra/local/hindsight/.venv/",
+        "!! infra/local/hindsight/__pycache__/",
+        "!! infra/local/hindsight/tests/__pycache__/",
+        "!! node_modules/",
+        "!! packages/brain/node_modules/",
+        "!! packages/compat/node_modules/",
+        "!! packages/context-gateway/node_modules/",
+        "!! packages/contracts/node_modules/",
+        "!! packages/control-plane/node_modules/",
+        "!! packages/evidence/node_modules/",
+        "!! packages/execution/node_modules/",
+        "!! packages/governance/node_modules/",
+        "!! packages/local-runtime/node_modules/",
+        "!! packages/operating-core/node_modules/",
+        "!! packages/providers/node_modules/",
+        "!! packages/routing/node_modules/",
+        "!! state/"
+      ]
+    },
+    {
+      "path": "%USERPROFILE%/.codex/worktrees/nb04-hindsight-integration/nexus-brain",
+      "head": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
+      "branch": "refs/heads/codex/nb04-temporal-provenance-prep",
+      "detached": false,
+      "porcelain_v2": "# branch.oid 41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce\n# branch.head codex/nb04-temporal-provenance-prep\n# branch.upstream origin/codex/nb04-temporal-provenance-prep\n# branch.ab +0 -0",
+      "untracked_files": [],
+      "ignored_summary": [
+        "!! apps/cli/node_modules/",
+        "!! apps/control-center/node_modules/",
+        "!! apps/edge/node_modules/",
+        "!! node_modules/",
+        "!! packages/brain/node_modules/",
+        "!! packages/compat/node_modules/",
+        "!! packages/context-gateway/node_modules/",
+        "!! packages/contracts/node_modules/",
+        "!! packages/control-plane/node_modules/",
+        "!! packages/evidence/node_modules/",
+        "!! packages/execution/node_modules/",
+        "!! packages/governance/node_modules/",
+        "!! packages/providers/node_modules/",
+        "!! packages/routing/node_modules/"
+      ]
+    },
+    {
+      "path": "%USERPROFILE%/.lumenva/worktrees/mcg-finalization",
+      "head": "0f972b504c5089044e0594f67595ebf4896b3295",
+      "branch": "refs/heads/codex/mcg-finalization",
+      "detached": false,
+      "porcelain_v2": "# branch.oid 0f972b504c5089044e0594f67595ebf4896b3295\n# branch.head codex/mcg-finalization\n# branch.upstream origin/codex/mcg-finalization\n# branch.ab +0 -0",
+      "untracked_files": [],
+      "ignored_summary": [
+        "!! node_modules/",
+        "!! packages/local-runtime/node_modules/",
+        "!! packages/operating-core/node_modules/",
+        "!! state/"
+      ]
+    },
+    {
+      "path": "%USERPROFILE%/Desktop/Projetos/nexus-brain-nb10-worktree",
+      "head": "377ad2857bf129487714050e8bbb73b88243674e",
+      "branch": "refs/heads/codex/nb05-brain-api-mcp-contract",
+      "detached": false,
+      "porcelain_v2": "# branch.oid 377ad2857bf129487714050e8bbb73b88243674e\n# branch.head codex/nb05-brain-api-mcp-contract\n# branch.upstream origin/codex/nb05-brain-api-mcp-contract\n# branch.ab +0 -0",
+      "untracked_files": [],
+      "ignored_summary": [
+        "!! apps/cli/node_modules/",
+        "!! apps/control-center/node_modules/",
+        "!! apps/control-center/state/",
+        "!! apps/edge/node_modules/",
+        "!! node_modules/",
+        "!! packages/brain/node_modules/",
+        "!! packages/compat/node_modules/",
+        "!! packages/context-gateway/node_modules/",
+        "!! packages/contracts/node_modules/",
+        "!! packages/control-plane/node_modules/",
+        "!! packages/evidence/node_modules/",
+        "!! packages/execution/node_modules/",
+        "!! packages/governance/node_modules/",
+        "!! packages/providers/node_modules/",
+        "!! packages/routing/node_modules/"
+      ]
+    }
+  ],
+  "unregistered_nexus_paths": [
+    {
+      "path": "%USERPROFILE%/Desktop/.codex/worktrees/nb04-hindsight-integration/nexus-brain",
+      "exists": true,
+      "git_metadata": false,
+      "shallow_entries": [
+        "packages"
+      ],
+      "disposition": "Preserved; not a registered checkout."
+    },
+    {
+      "path": "%USERPROFILE%/.lumenva/archive/nexus-docs-finalization-worktree-2026-09-26",
+      "exists": true,
+      "git_metadata": false,
+      "shallow_entries": [
+        "apps",
+        "node_modules",
+        "packages",
+        "scripts",
+        "src",
+        "state",
+        "test",
+        "tests",
+        "tooling",
+        "types",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "README.md"
+      ],
+      "disposition": "Preserved; no recursive content audit; contains state/."
+    }
+  ],
+  "note": "Point-in-time snapshot before topic branch cleanup. The snapshot-carrying branch points at main during capture; its later documentation commit is preserved by its merged PR. No branch, worktree or remote-tracking ref was deleted."
 }
