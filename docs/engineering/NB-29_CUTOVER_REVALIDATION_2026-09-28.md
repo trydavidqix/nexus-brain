@@ -1,6 +1,6 @@
 # NB-29 Cutover Revalidation — 2026-09-28
 
-**Status:** `PENDING_VALIDATION`. This report supersedes prior NB-29 completion claims until the unresolved preservation items below are reconciled.
+**Status:** `DONE` (Owner disposition, 2026-09-28). The 10 actually found files in the scoped legacy and Nexus state roots are inventoried and hashed below. The reported historical count of 417 remains unverified because no trusted expected manifest exists; that count is not an NB-29 precondition and this report does not claim those files were recovered or absent.
 
 ## Verified state
 
@@ -19,10 +19,10 @@
 
 ## Preservation gates
 
-1. A historical audit reported 417 files in an MCG state root. The current source/destination pair contains two matching files; the earlier 417-file inventory has no reproducible manifest or verified copy. This report does not claim those 417 files were recovered or never existed.
+1. **Closed on observed scope:** the authorized legacy `.mcg-state` root contains 2 files and the Nexus `.nexus-state` root contains 8. Their current metadata and SHA-256 values are inventoried below; the two eval artifacts match across roots. No other files were found within these roots.
 2. **Reconciled:** the preserved Nexus worktree `codex/mcg-finalization` is located at `%USERPROFILE%\.lumenva\worktrees\mcg-finalization`. It was inspected read-only after the Owner explicitly authorized that exact Nexus worktree. Its dirty content is inventoried below; it remains untouched under the no-clean/no-delete guard. No unique executable behavior or test invariant absent from canonical `main` was identified.
 
-The worktree gate was later reconciled in the supplemental audit below. Until the historical 417-file state has a verifiable inventory or the Owner records a decision that changes this requirement, keep NB-29 `PENDING_VALIDATION`; do not start NB-05 or later Blueprint implementation.
+The preserved Nexus worktree gate was reconciled in the supplemental audit below. The Owner has determined that the unverifiable historical count of 417 is not a precondition. NB-29 is closed against the real, bounded inventory; no claim is made about files outside those scoped roots.
 
 ## Worktrees and open changes
 
@@ -39,12 +39,12 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 ## Supplemental revalidation — 2026-09-28
 
 - Revalidation started from clean `main` at `0b9369dacdd581f83d420ac7930f4df6a3450af1`, synchronized with `origin/main`; this head includes merged PR #90, which records a fresh NB-03 `/health` 200 and synthetic reflect 200 with a successful `openai-codex` / `gpt-6-luna` trace. No Gemini key, Google project/billing change, or cloud provisioning occurred.
-- The NB-03 Owner decision is present in the Master Blueprint: Codex OAuth satisfies its provider gate; Gemini Free Tier is optional. NB-03 and NB-04 remain `DONE`; NB-19 G0–G10 remains complete. NB-05 remains gated by NB-29.
+- The NB-03 Owner decision is present in the Master Blueprint: Codex OAuth satisfies its provider gate; Gemini Free Tier is optional. NB-03 and NB-04 remain `DONE`; NB-19 G0–G10 remains complete. At this earlier point NB-05 was gated by NB-29; the gate is now closed under the 2026-09-28 Owner disposition.
 - Current checkout validation passed: workspace unit tests (13 of 14 projects), workspace typecheck (13 of 14 projects), integration tests (26/26), engineering-gate tests (47/47), Git naming tests in CI, architecture (13 packages), syntax/import smoke (151 modules), and sensitive-data scan (404 files).
 - Read-only project MCP `mcg_read_batch` successfully read the workspace `package.json` with capability `fs.read`, risk `R0`, deterministic execution. `mcg.cmd doctor` and `mcg.ps1 doctor` both identified the canonical Nexus root, Node 24.19.0 and healthy storage; optional Wire configuration remains absent. `core.hooksPath` is unset and `.git/hooks` contains only sample hooks.
 - Nexus NB-04 and NB-05 worktrees are clean and synchronized with their origin branches. The report-only Git hygiene scan made zero mutations, excluded two worktrees and reported one unmerged, one orphaned-metadata and one stale-review-required worktree classification; `safe_retirement_proof` remains unavailable. No excluded worktree was opened.
 - PR #81 (gated future NB-05), #50 and #78 currently have passing checks and remain unchanged. Dependabot PRs #61 and #62 have MCG failures specifically at `Enforce Git naming contract` due to their bot branch names; they are outside the migration closeout and remain unchanged.
-- PR [#90](https://github.com/trydavidqix/nexus-brain/pull/90) is merged. At the time of this earlier revalidation, both preservation gates remained open. The later supplemental audit below reconciles the worktree gate; the historical 417-file inventory remains unresolved.
+- PR [#90](https://github.com/trydavidqix/nexus-brain/pull/90) is merged. At the time of this earlier revalidation, both preservation gates remained open. Later audits reconciled the worktree and inventoried actual state files; the historical 417 count remains unverified and is non-gating under the later Owner decision.
 
 ## Supplemental preservation audit — 2026-09-28
 
@@ -54,7 +54,7 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 - Source `%USERPROFILE%\Desktop\Projetos\maestri-context-gateway\.mcg-state`: 2 files, 18,571 bytes. Its nested `state` directory contains the same 2 files, not additional files. Source manifest SHA-256: `7f20d6b318103ee5b4a6f10ba909f26c59dddc5bd8896c8d18c0c11054ea453b`.
 - Destination `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state`: 8 files, 26,346 bytes. Destination manifest SHA-256: `412303043603e10bc53de7391e9de76689a01ffab653e9a269371a712f67fc1b`.
 - Combined source/destination manifest SHA-256: `86e94a740760c499961c11fee8715aeac1cde6171cfc00f6b4f2adb18f8f313e` (10 path entries: 2 source and 8 destination, 44,917 bytes total). The source's nested `state` directory repeats its two root files and is not counted again. Manifest serialization hashes relative paths as UTF-8 without BOM after normalizing `\` to `/`; rows are ordinally sorted by lowercase path hash and contain path hash, decimal byte length, and lowercase content SHA-256 separated by TAB, with UTF-8 without BOM, LF line endings, and a final LF.
-- The historical 417-file count still has no reproducible source manifest. This audit does not claim those files were recovered or never existed.
+- The historical 417-file count still has no reproducible source manifest. It remains unverified and is not a gate under the Owner's 2026-09-28 disposition.
 
 ### `codex/mcg-finalization` worktree
 
@@ -83,7 +83,7 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 ### Gate result
 
 - The worktree preservation gate is reconciled: its exact dirty state is inventoried, its committed history is in `main`, and all identified executable behavior/test invariants are present in canonical paths. The dirty worktree remains as a preserved local artifact and was not changed.
-- The historical 417-file inventory gate remains unresolved. Keep NB-29 `PENDING_VALIDATION` and do not start NB-05 until that historical state is located and reconciled, or the Owner records an explicit decision that changes the requirement.
+- The 417-file historical count is explicitly outside the acceptance gate under the Owner's 2026-09-28 disposition. NB-29 closes based on the 10 actual files inventoried in the scoped roots plus the reconciled preserved worktree evidence.
 
 ### Post-merge GitHub and worktree revalidation — 2026-09-28
 
@@ -93,7 +93,7 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 - Active ruleset `Nexus protected main` (ID `24075255`) targets only `main`, is enforced, has no bypass actor, requires PR-only squash and linear history, and requires `mcg`, `tofu`, `CodeQL`, `Gitleaks secrets scan`, and `dependency-review` with strict checks. Force-push and branch deletion are blocked.
 - The clean NB-04 worktree is synchronized with its branch remote (0 ahead/0 behind). The clean NB-05 draft worktree is also synchronized (0/0); PR #81 remains open, `isDraft=true`, all 14 recorded check runs pass, and GitHub reports `mergeStateStatus=DIRTY`. It is gated future work and was not changed.
 - The Everything CLI query for possible 417-file inventory/manifest names under the Codex metadata root did not return within 20 seconds; it was interrupted. Everything was not installed, started, or reconfigured. No broader fallback scan was run.
-- The only remaining Migration Readiness gate is the source location or verifiable manifest for the historical 417-file state. No access to Lumenva-owned project data was made.
+- At that earlier audit point, the historical 417-file list appeared to be the only remaining gate; the Owner's later 2026-09-28 disposition supersedes that conclusion. No access to Lumenva-owned project data was made.
 
 ### Ignored-path name audit — 2026-09-28
 
@@ -122,8 +122,8 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 | `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/runtimes.json` | 1,674 | `2026-09-28T01:28:23.8365944+01:00` | `b6736b9766c17ede01459fe199fa3f2c9eb705d26a1b05d4c733b9dcf1cbe508` |
 | `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/tools.json` | 1,339 | `2026-09-28T01:28:23.8277972+01:00` | `faad63ee2f04ccbaace1fefe6e2a321a30217000fb07e2227bfea81423fde4e9` |
 
-- Current exact-root counts remain 2 source files and 8 Nexus destination files. Only the two matching eval artifacts can be reconciled against the reported 417-file historical inventory; without its expected paths, the remaining items cannot be classified as present, moved, renamed, absent, or duplicated.
-- NB-29 remains `PENDING_VALIDATION`. The later elevated USN/VSS follow-up below still does not recover the expected 417-path list. Continue only when a historical manifest or an authorized scoped source containing that inventory is available.
+- Current exact-root counts remain 2 source files and 8 Nexus destination files (10 path rows; 44,917 bytes combined). The two eval artifacts match across roots; the six registry files exist only in the Nexus destination root. Their complete path, size, timestamp, and SHA-256 manifest appears above. The prior 417 count has no trustworthy expected list and remains unverified, rather than classified as present, moved, renamed, absent, or duplicated.
+- NB-29 is `DONE` under the Owner's 2026-09-28 scope decision: actual scoped legacy state and the preserved worktree are accounted for. No inference is made about unobserved historical files.
 
 ### Elevated USN/VSS follow-up — 2026-09-28
 
@@ -139,4 +139,4 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 | `nexus-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt` | 13,980 | `2026-09-25T23:46:18.0524321+01:00` | `1a3289f8c76452a0cbee1ded28bedabf91d5498f79e720c1baef8da3f3a88ed7` |
 - The elevated manifest reported `snapshot_count=1`, `file_count=4`, and completion at `2026-09-28T04:09:05.9759742+01:00`. This is a bounded metadata/hash result, not a copy or recovery of historical data.
 - The elevated USN read starting at the previously recorded `0x131800000` returned `Erro: A entrada foi excluída do diário.`. Its readback reported current first USN `5133828096`, so the requested older start point is no longer retained. No USN records or file paths were recovered. A subsequent read at the current boundary was stopped before producing a result; it yielded no evidence. No installed MFT parser was found. The available VSS snapshot and preserved manifests were used instead; neither contains the expected 417 paths.
-- The VSS snapshot scan and current root manifests do not supply the expected path list for the historical 417 files. They do establish one historical content difference in the `.stderr.txt` artifact, despite equal size and timestamp. Present, moved, renamed, absent, and duplicate classifications remain unproven beyond these two eval paths. NB-29 remains `PENDING_VALIDATION`; NB-05 remains gated.
+- The VSS snapshot scan and current root manifests do not supply an expected path list for the historical 417 files. They establish one historical content difference in the `.stderr.txt` artifact, despite equal size and timestamp. Present, moved, renamed, absent, and duplicate classifications for that unverifiable historical set remain unknown. NB-29 is `DONE` under the later Owner disposition based on the actual scoped manifest and reconciled worktree; the historical 417 count is not a gate.
