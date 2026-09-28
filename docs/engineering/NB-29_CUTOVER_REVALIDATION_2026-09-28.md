@@ -101,3 +101,26 @@ The worktree gate was later reconciled in the supplemental audit below. Until th
 - The seven `state` paths were `state/dashboard/snapshot.json` and six `state/registry/*.json` files (`agents`, `mcps`, `models`, `plugins`, `runtimes`, `tools`). Their contents were not read.
 - No ignored path name in that worktree matched `.mcg-state`, `.nexus-state`, a manifest/inventory/SHA file, or `417`. This is a filename-only check within that exact worktree; it does not prove the historical files never existed or rule out another source location.
 - The worktree and its Git state remain unchanged. No Lumenva project data was inspected.
+
+### Read-only filesystem forensics — 2026-09-28
+
+- `fsutil usn queryjournal C:` succeeded. It reported journal ID `0x01dd4777b0acd0f7`, first USN `0x131800000`, next USN `0x133ada5c8`, lowest valid USN `0`, and a 32 MiB maximum journal size. These bounds alone do not establish which dates the retained records cover.
+- `fsutil usn readjournal C: startusn=0x133ada5c0` returned `Access denied`; the current PowerShell token is not elevated. `vssadmin list shadows /for=C:` also returned an elevated-permissions error. No journal records or shadow copies were read, and no repeated whole-volume scan was attempted.
+- Everything is running; `es.exe` is callable and returned indexed matches in the canonical Nexus checkout, the specifically authorized `codex/mcg-finalization` worktree, and the previously inventoried MCG/Nexus state roots. PowerShell `Get-FileHash -Algorithm SHA256` returned 64-character SHA-256 digests. Queries and hashes read metadata/content hashes only; no file contents were opened.
+- The following is a current-file manifest, not the missing historical 417-entry manifest. Paths are relative to the root column. `LastWriteTime` uses the machine's local offset. The source/destination eval rows match by relative path, byte length, and SHA-256; the six registry rows have no matching file in the currently inventoried source root.
+
+| Root | Relative path | Bytes | LastWriteTime | SHA-256 |
+|---|---|---:|---|---|
+| `%USERPROFILE%\Desktop\Projetos\maestri-context-gateway\.mcg-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl` | 4,591 | `2026-09-25T23:46:18.0524321+01:00` | `e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa` |
+| `%USERPROFILE%\Desktop\Projetos\maestri-context-gateway\.mcg-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt` | 13,980 | `2026-09-25T23:46:18.0524321+01:00` | `9da3de1409214ef33d0f2d02b1190f087a5c6bbfde59da6596bcf7491f578b47` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/agents.json` | 2,936 | `2026-09-28T01:28:23.8208174+01:00` | `13992c885d275b71162837f54ba3e7c13b034b7ef92f1cd6e4b62665eed9ab81` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/mcps.json` | 1,015 | `2026-09-28T01:28:23.8326034+01:00` | `476465438e076331873abe3edc35f78cfdc73a90b79c52cf9e23fadc96cc4258` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/models.json` | 414 | `2026-09-28T01:28:23.8386037+01:00` | `1dcdcf9f194550260e53732170d40ba6502db428837cff9cf28010e4f6c80f3f` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.jsonl` | 4,591 | `2026-09-25T23:46:18.0524321+01:00` | `e8eb5b6ca96911bf613e6361f06403d37fdec74717dbd478799ae60be55473aa` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/evals/runs/pair-smoke-context-recall-1-1790376343486-7da5f2dd-baseline.stderr.txt` | 13,980 | `2026-09-25T23:46:18.0524321+01:00` | `9da3de1409214ef33d0f2d02b1190f087a5c6bbfde59da6596bcf7491f578b47` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/plugins.json` | 397 | `2026-09-28T01:28:23.8307923+01:00` | `ad5f00dd314e99aa70d7f2c991a16468b4a1341a91c63b79c62f3ae0c20dc4fe` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/runtimes.json` | 1,674 | `2026-09-28T01:28:23.8365944+01:00` | `b6736b9766c17ede01459fe199fa3f2c9eb705d26a1b05d4c733b9dcf1cbe508` |
+| `%USERPROFILE%\Desktop\Projetos\nexus-brain\.nexus-state` | `state/registry/tools.json` | 1,339 | `2026-09-28T01:28:23.8277972+01:00` | `faad63ee2f04ccbaace1fefe6e2a321a30217000fb07e2227bfea81423fde4e9` |
+
+- Current exact-root counts remain 2 source files and 8 Nexus destination files. Only the two matching eval artifacts can be reconciled against the reported 417-file historical inventory; without its expected paths, the remaining items cannot be classified as present, moved, renamed, absent, or duplicated.
+- NB-29 remains `PENDING_VALIDATION`. Continue only after an elevated read-only USN/VSS query becomes available, or the historical manifest/source is provided. Do not infer that the journal rotated from the access-denied result.
