@@ -1,0 +1,18 @@
+{
+  "name": "@nexus-brain/github-indexer",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./indexer": "./src/indexer.mjs",
+    "./github-client": "./src/github-client.mjs",
+    "./postgres-store": "./src/postgres-store.mjs",
+    "./webhook-http": "./src/webhook-http.mjs"
+  },
+  "scripts": {
+    "test:unit": "node --test tests/indexer.test.mjs tests/webhook-http.test.mjs",
+    "test:pg0-integration": "node --test tests/postgres-store.integration.test.mjs"
+  },
+  "dependencies": {
+    "pg": "8.23.0"
+  }
+}
