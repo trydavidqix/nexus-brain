@@ -39,7 +39,7 @@ The pg0 database uses PostgreSQL's logical dump/restore format. DEV migration to
 
 ## Final gate
 
-NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariants, security scans, restore/import evidence, and passing required GitHub checks. PR #73 is merged. NB-05 remains gated on the active PR #75 closeout of NB-19 G10.
+NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariants, security scans, restore/import evidence, and passing required GitHub checks. PR #73 is merged. NB-05 remains gated until Migration Readiness is fully validated.
 
 ## Supplemental live E2E revalidation — 2026-09-28 01:48 Europe/Lisbon
 
@@ -54,3 +54,11 @@ NB-04 acceptance is backed by code, tests, live integration, scope/ACL invariant
 - Reflect returned the expected synthetic token `NB04_REFLECT_CODEX_PASS`; the response body stayed in memory and was not printed or saved. The reflect result remained an unpersisted `CANDIDATE`.
 - The Hindsight `llm_requests` registry recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, `operation=reflect`, and `scope=reflect_tool_call`.
 - The retained test record is synthetic, task-scoped, and expires for retrieval after ten minutes. No Gemini credential/request, Google project or billing setting, cloud resource, or production data was involved.
+
+## TASK-scope lifecycle fix and fresh E2E — 2026-09-28
+
+- A fresh task-isolated E2E exposed a PostgreSQL retention failure before Hindsight indexing. The canonical lifecycle event omitted `agent_id`; the applied TASK-scope constraint requires both `task_id` and `agent_id`, so the transaction rolled back without partial writes.
+- A regression test first failed with `null !== 'agent-1'`. `PostgresMemoryStore.persistRecord()` now copies `record.provenance.actor_id` into `agent_id` for TASK-scope lifecycle events. The focused store suite passes 7/7; Brain unit tests and typecheck pass.
+- A fresh local E2E then passed: Hindsight/pg0 health, canonical TASK retain and indexing, one extracted memory unit, exact raw tag-scoped recall, canonical recall constrained by task, originating agent, and explicit ACL, then an unpersisted `CANDIDATE` reflect.
+- The reflect marker matched in memory and was not printed or persisted. Hindsight `llm_requests` recorded successful `openai-codex` / `gpt-6-luna` traces for `retain` (`retain_extract_facts`) and `reflect` (`reflect`). The test record expires for retrieval after ten minutes.
+- The first placeholder test sentence produced zero extracted memory units; the final synthetic assertion produced one. No Gemini call/key, Google project or billing change, cloud resource, or production data was involved.
