@@ -36,3 +36,10 @@ The Hindsight LLM-request registry is the runtime evidence source. This file sto
 - One synthetic `POST /v1/default/banks/nb03-e2e-check/reflect` returned HTTP 200. The response matched `REFLECT_CODEX_PASS`; response text was checked in memory and was not printed or persisted.
 - The Hindsight `llm_requests` registry recorded three successful reflect tool calls using provider `openai-codex`, model `gpt-6-luna`, and scope `reflect_tool_call`, at 01:30:43, 01:30:49, and 01:30:52 Europe/Lisbon.
 - The service was already using `openai-codex`; no restart, Gemini request, API key access, Google project change, billing change, or cloud resource action occurred.
+
+## Live verification — 2026-09-28
+
+- Confirmed the local Hindsight `/health` endpoint returned HTTP 200 with its database connected.
+- One synthetic, low-budget `POST /v1/default/banks/nb03-e2e-check/reflect` returned HTTP 200. The response matched `REFLECT_CODEX_PASS`; response text was checked in memory and not printed or persisted.
+- The Hindsight LLM-request registry returned a successful `reflect` record for `provider=openai-codex`, `model=gpt-6-luna`, and `status=success` after this request.
+- The service already used the existing Codex OAuth profile; no API key was read/requested. No Gemini call, Google project/billing change, or cloud provisioning occurred.
