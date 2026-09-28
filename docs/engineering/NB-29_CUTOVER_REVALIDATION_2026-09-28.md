@@ -29,3 +29,9 @@ Until both preservation gates have independent evidence or an explicit scope dec
 - Nexus `main`, NB-04, and NB-05 worktrees remain present. The main worktree is clean; NB-04 and NB-05 worktrees are clean and synchronized with their branch remotes.
 - PR #81 remains an open draft for future NB-05 work. PRs #50 and #78 remain open outside the migration closeout. They were not changed by this audit. PR #72 was not queried or modified.
 - No worktree was deleted, reset, cleaned, or force-pushed. No billing, Google project, cloud resource, or Gemini setting changed.
+
+## Supplemental Git metadata check
+
+- The Nexus Git metadata records `codex/mcg-finalization` at commit `5d78258893cf25ce4c6038999a82e1e2be97e8a7`; that commit is an ancestor of `origin/main`.
+- `origin` has no branch ref named `codex/mcg-finalization`. Thus the branch's committed history is present in `main`; this does not account for staged, unstaged, or untracked worktree changes.
+- The protected worktree's index and files remain uninspected. This Git-object check does not resolve the prior dirty-worktree report or the 417-file state discrepancy.
