@@ -5,6 +5,7 @@ on:
   push:
     branches: ['**']
   pull_request:
+    types: [opened, synchronize, reopened, edited]
   merge_group:
     types: [checks_requested]
 
@@ -77,6 +78,8 @@ jobs:
               --pr-author "$NEXUS_PR_AUTHOR" \
               --pr-head-repo "$NEXUS_PR_HEAD_REPO" \
               --repository "$NEXUS_REPOSITORY"
+          elif [[ "$NEXUS_EVENT_NAME" == 'push' && "$NEXUS_BRANCH" == dependabot/* ]]; then
+            echo "Dependabot branches are validated in pull_request context."
           elif [[ "$NEXUS_EVENT_NAME" == 'push' && "$NEXUS_BRANCH" == 'main' ]]; then
             commit_subject="${NEXUS_HEAD_COMMIT_MESSAGE%%$'\n'*}"
             node tooling/scripts/check-git-naming.mjs --subject "$commit_subject"
