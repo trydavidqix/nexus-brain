@@ -29,3 +29,16 @@ export interface ResearchResult extends NexusIdentity {
   summary?: string;
   provenance?: Record<string, unknown>;
 }
+
+export interface NexusResearchRun extends NexusIdentity {
+  run_id: string;
+  status: ResearchStatus;
+  started_at: string;
+  completed_at: string;
+  evidence_ids: string[];
+  warnings: string[];
+  limits: ResearchLimits;
+  budget: Record<string, unknown>;
+  provenance: Record<string, unknown>;
+  summary?: string;
+}

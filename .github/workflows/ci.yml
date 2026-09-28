@@ -64,11 +64,19 @@ jobs:
           NEXUS_EVENT_NAME: ${{ github.event_name }}
           NEXUS_IS_PULL_REQUEST: ${{ github.event_name == 'pull_request' }}
           NEXUS_PR_TITLE: ${{ github.event.pull_request.title }}
+          NEXUS_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          NEXUS_PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          NEXUS_REPOSITORY: ${{ github.repository }}
           NEXUS_HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           pnpm test:git-naming
           if [[ "$NEXUS_IS_PULL_REQUEST" == 'true' ]]; then
-            node tooling/scripts/check-git-naming.mjs --pr-title "$NEXUS_PR_TITLE" --branch "$NEXUS_BRANCH"
+            node tooling/scripts/check-git-naming.mjs \
+              --pr-title "$NEXUS_PR_TITLE" \
+              --branch "$NEXUS_BRANCH" \
+              --pr-author "$NEXUS_PR_AUTHOR" \
+              --pr-head-repo "$NEXUS_PR_HEAD_REPO" \
+              --repository "$NEXUS_REPOSITORY"
           elif [[ "$NEXUS_EVENT_NAME" == 'push' && "$NEXUS_BRANCH" == 'main' ]]; then
             commit_subject="${NEXUS_HEAD_COMMIT_MESSAGE%%$'\n'*}"
             node tooling/scripts/check-git-naming.mjs --subject "$commit_subject"

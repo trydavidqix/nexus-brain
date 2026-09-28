@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nexus.memory-event.v1",
+  "title": "Nexus Append-only Memory Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "memory_id", "scope", "scope_id", "event_type", "recorded_at", "actor", "provenance", "payload"],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "memory_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "scope": { "enum": ["GLOBAL", "PROJECT", "SESSION", "TASK"] },
+    "scope_id": { "type": "string", "minLength": 1 },
+    "event_type": { "enum": ["OBSERVED", "CANDIDATE", "VERIFIED", "CANONICAL", "SUPERSEDED", "CONFLICTED", "REVOKED", "RECALLED", "SELECTED", "INJECTED", "USED", "VALIDATED", "CONTRIBUTED"] },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "valid_at": { "type": "string", "format": "date-time" },
+    "task_id": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "agent_id": { "type": "string", "minLength": 1 },
+    "trace_id": { "type": "string", "minLength": 1 },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_type"],
+      "properties": {
+        "actor_id": { "type": "string", "minLength": 1 },
+        "actor_type": { "enum": ["agent", "user", "system", "policy"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "source_id"],
+      "properties": {
+        "source_type": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "attributes": { "type": "object" }
+      }
+    },
+    "payload": { "type": "object" }
+  }
+}

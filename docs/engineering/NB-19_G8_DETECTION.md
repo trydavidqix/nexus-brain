@@ -1,6 +1,6 @@
 # NB-19 G8: Duplicate, Orphan, and Stale Detection
 
-**Status:** Implementation PR #71 merged; all required PR checks passed. This evidence closeout is on the next NB-19 follow-up and remains pending integration. No hygiene cleanup ran.
+**Status:** Complete. Implementation PR #71 merged and its required checks passed. G10 evidence closeout integrates these local verification results. No hygiene cleanup ran.
 
 ## Detection behavior
 
@@ -29,4 +29,4 @@ Observed on 2026-09-27 in the G8 worktree:
 - `actionlint` passed for all four workflow files.
 - `pnpm report:engineering-gates`: succeeded with an available local ownership registry and complete GitHub open-PR inventory (4 open PRs); 0 orphan owner records, 0 equivalent tree groups, and 0 mutations. The report intentionally classified the in-progress G8 worktree as dirty.
 
-PR #71 (`engineering: Detect orphaned and duplicate Git work`) merged to `main` as `d5c22f9134d63dfd5d8dd1d6a71b0797a78c3894`. `gh pr checks 71` reports all required and security checks passed. G8 remains in progress until this evidence closeout is integrated.
+PR #71 (`engineering: Detect orphaned and duplicate Git work`) merged to `main` as `d5c22f9134d63dfd5d8dd1d6a71b0797a78c3894`. `gh pr checks 71` reports all required and security checks passed. G8 remains report-only; no branch or worktree cleanup was executed.

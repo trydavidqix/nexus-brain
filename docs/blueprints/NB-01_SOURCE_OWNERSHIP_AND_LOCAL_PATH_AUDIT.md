@@ -1,7 +1,7 @@
 # NB-01 — Source ownership and local path audit
 
-**Audit date:** 2026-09-25
-**Status:** IN_PROGRESS — current Windows audit supersedes the historical 2026-09-25 snapshots below; stop legacy MCP/autostart and complete remote/local cutover before renaming.
+**Audit date:** 2026-09-25 (historical source inventory)
+**Status:** Historical. Current cutover state and remaining NB-29 gates are in [`NB-29_CUTOVER_REVALIDATION_2026-09-28.md`](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). Do not execute the old rename sequence below; the canonical Nexus checkout is `%USERPROFILE%\Desktop\Projetos\nexus-brain`.
 
 > All process/task/PID and `.mcg-state` observations below are time-sensitive. Use the latest dated audit section as authoritative; older entries are retained as history, not current state.
 **Scope:** initial inspection was read-only. A later evidence-backed re-audit disabled only the obsolete duplicate Scheduled Task; it did not stop a process, alter a repository/worktree, change the Startup shortcut, or touch CRM/voice data.
