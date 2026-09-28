@@ -1,0 +1,747 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-28T06:42:21.8531971+01:00",
+  "repository": "https://github.com/trydavidqix/nexus-brain",
+  "scope": "Git refs only; no worktree contents changed",
+  "source_recovery_manifest": "NEXUS_BRANCH_RECOVERY_MANIFEST_2026-09-28.json",
+  "audit_counts": {
+    "initial_snapshot_local_branches": 51,
+    "initial_snapshot_remote_tracking_refs": 65,
+    "initial_snapshot_github_branch_heads": 56,
+    "initial_snapshot_stale_tracking_refs": 9,
+    "post_snapshot_new_local_branch_refs": 2,
+    "post_snapshot_new_remote_branch_refs": 3,
+    "pre_cleanup_local_branch_heads": 53,
+    "pre_cleanup_remote_branch_heads": 59,
+    "pre_cleanup_stale_tracking_refs": 9,
+    "audited_branch_heads": 112,
+    "audited_stale_tracking_refs": 9
+  },
+  "cleanup_counts": {
+    "local_branch_refs_deleted": 49,
+    "remote_branch_heads_deleted": 51,
+    "stale_remote_tracking_refs_deleted": 9,
+    "local_branch_heads_remaining": 4,
+    "remote_branch_heads_remaining": 8,
+    "stale_tracking_refs_remaining": 0
+  },
+  "main_head_before_cleanup_report": "3e9b6bfaf90350fdd230d90df55a6a0802b75366",
+  "deleted_local_branch_refs": [
+    {
+      "branch": "codex/nb03-codex-oauth-revalidation-2026-09-28",
+      "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb03-codex-oauth-revalidation-20260928",
+      "sha": "faa5cb6e7ecd1cd25edda7364613373bd542e02e",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb04-temporal-provenance-prep",
+      "sha": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
+      "disposition": "INTEGRATED_KEEP_WORKTREE",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb06-github-project-indexer",
+      "sha": "1cbdf841bbe91e333280bf9c4c612f1255064116",
+      "disposition": "INTEGRATED_BY_ANCESTRY",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb10-closeout",
+      "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g0-github-baseline",
+      "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g1-naming-contracts",
+      "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g10-closeout",
+      "sha": "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g10-concurrency-validation",
+      "sha": "50cdec0bf3e61a8888156e27bbdbf05ac3478406",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g2-actions-policy",
+      "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g2-ci-security",
+      "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g3-ci-tests",
+      "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g3-delivery-git-hygiene",
+      "sha": "fe471c080108f9f327bac8a6fc6a22167778105c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g4-main-ruleset",
+      "sha": "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-closeout",
+      "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-complete",
+      "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-security-gates",
+      "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g6-codeowners-oidc",
+      "sha": "fb8bd07b5231747c9506b0b256ae814e5d915179",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g6-evidence-closeout",
+      "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-evidence-closeout",
+      "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-maestri-evidence",
+      "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-maestri-split",
+      "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-ownership-registry",
+      "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g8-orphan-detection",
+      "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nexus-canonical-architecture",
+      "sha": "816fed950651ad4d981fb8ed22a9ec25ef00b0f6",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-03-codex-oauth-revalidation",
+      "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-04-memory-e2e-revalidation",
+      "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "disposition": "INTEGRATED_DOCS",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-19-final-ref-snapshot-20260928",
+      "sha": "13e35d2e50e7518de45c01c3317511023aa4f08a",
+      "disposition": "INTEGRATED_DOCS",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-browsermesh-fast-path",
+      "sha": "870301e24f76a2296c01790eccd39ba3852647be",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-canonical-plan-sync",
+      "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-forensic-revalidation-20260928",
+      "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-observed-state-manifest",
+      "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-postmerge-snapshot",
+      "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-preservation-audit",
+      "sha": "bf8fd45dffd029d0e34f05c09868561975a2a0f9",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-vss-snapshot-evidence",
+      "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NEXUS-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "disposition": "CLOSED_CARRIER",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/PR-87-lossless-eacp-control-plane",
+      "sha": "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/nb29-ignored-state-audit",
+      "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/nb29-postmerge-audit",
+      "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/provider-native-directory-boundary",
+      "sha": "9cc19936ef0e9b5683aaf280dedaacfaf51453a2",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-02-contracts-threat-scope",
+      "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-cloud-baseline",
+      "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-cloud-iac",
+      "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-zero-cost-local",
+      "sha": "5c1d662858d1a5eba3993db0497559f97a03402b",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-10-everything-git-edge",
+      "sha": "e819f5b234a0a4de171e8cb68a059bf7253033ff",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "fix/NB-04-task-retain-agent-binding",
+      "sha": "d23540dd01b8ad75aa9a460878d5fb7c194568e7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-observed-state-manifest-20260928",
+      "sha": "2d22361f5210fe38a96c58be8921a8c5dd0f7341",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "PR #106; merged head verified"
+    },
+    {
+      "branch": "docs/NB-29-manifest-checksum-portability-20260928",
+      "sha": "97b4bcc4ede889f4b2ed0126d4d76e4321b57ef6",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "PR #107; merged head verified"
+    }
+  ],
+  "deleted_remote_branch_heads": [
+    {
+      "branch": "codex/nb03-codex-oauth-revalidation-2026-09-28",
+      "sha": "8a22f079e807df28fb22b5d8ba3e0a16b32bd96a",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb03-codex-oauth-revalidation-20260928",
+      "sha": "faa5cb6e7ecd1cd25edda7364613373bd542e02e",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb04-temporal-provenance-prep",
+      "sha": "41b68ce44fae6a9fef2b6ad9a1465a7a4986b2ce",
+      "disposition": "INTEGRATED_KEEP_WORKTREE",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb10-closeout",
+      "sha": "e3e911d1209df8a1b3e22fff4837ce1e2a46d710",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g0-github-baseline",
+      "sha": "5b5df1019017083ed628a1f23b37d087370f181f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g1-naming-contracts",
+      "sha": "d10fb19b77ebb20c0062f503a64a07cae2dac40c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g10-closeout",
+      "sha": "4a7b39c0edd82a6b5846f1ff0aeda73519e9a088",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g10-concurrency-validation",
+      "sha": "50cdec0bf3e61a8888156e27bbdbf05ac3478406",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g2-actions-policy",
+      "sha": "8c987d39e2ba1ad3fe994fd3978c93d0037fa325",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g2-ci-security",
+      "sha": "d916beed8a3bce8e9280593ac3e004dec34a3f36",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g3-ci-tests",
+      "sha": "a5d09a47c6348f7e14613471c555db19d5d297e7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g3-delivery-git-hygiene",
+      "sha": "fe471c080108f9f327bac8a6fc6a22167778105c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g4-main-ruleset",
+      "sha": "8c4e4f18744521b75e34dfa1ca2c8bd2b7667a9f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-closeout",
+      "sha": "4dba1d1d6d104d4787a4a638f1120c98c69eb74c",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-complete",
+      "sha": "8ee5e33a2742e4a7ccf56bda47b385850ece91fa",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g5-security-gates",
+      "sha": "60351eb8c112e135940e3ade993d88eb6dcfebbc",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g6-codeowners-oidc",
+      "sha": "fb8bd07b5231747c9506b0b256ae814e5d915179",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g6-evidence-closeout",
+      "sha": "f0f6e99c1323293789883c6173b4e46fb1a0b235",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-evidence-closeout",
+      "sha": "6d84757d3b06c3e2630da3551734346d74bc783e",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-maestri-evidence",
+      "sha": "3d84a96a7f6816dc6045ca3f3a17f9700c7d6315",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-maestri-split",
+      "sha": "5a7fcc5df0d45989e67c77063bd39dd2f486eb17",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g7-ownership-registry",
+      "sha": "cf4980b52dfffdb442d4d23880fbcf343a18d42b",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "codex/nb19-g8-orphan-detection",
+      "sha": "124ab0516ba47795544d041b0a1f65f08220bb06",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-03-codex-oauth-revalidation",
+      "sha": "6a423b61f6ca6160c4db1f1282f9f6608e727839",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-04-memory-e2e-revalidation",
+      "sha": "1ba33f648487fff7cc17cc0c1df9a5b3dc9c63bb",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-19-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "disposition": "INTEGRATED_DOCS",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-browsermesh-fast-path",
+      "sha": "870301e24f76a2296c01790eccd39ba3852647be",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-canonical-plan-sync",
+      "sha": "18a1e1d899b2867bb3e62c7b1d83e883ba277823",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-forensic-revalidation-20260928",
+      "sha": "7362b9b6c8e70c975c0348547712af88b2bb9eca",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-observed-state-manifest",
+      "sha": "1544098c9441d8d59e5b60d7db37c6e20e9282d7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-postmerge-snapshot",
+      "sha": "e1a950c21559f1efaa3c0ad0702d5907925e204d",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-preservation-audit",
+      "sha": "bf8fd45dffd029d0e34f05c09868561975a2a0f9",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-29-vss-snapshot-evidence",
+      "sha": "8058d438b3e4ef9987f0ec9d8a223ade08bbe6a2",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NEXUS-branch-worktree-recovery-20260928",
+      "sha": "d03b589224cec04909edf5af4b373c592ef09232",
+      "disposition": "CLOSED_CARRIER",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/PR-87-lossless-eacp-control-plane",
+      "sha": "056749eec12ef2f7937daaa3e4ffdf49acdb7f7f",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/browsermesh-jev-ultrafast-20260927",
+      "sha": "117b7b7ecc5b0f148c1c43ae6ad5d13905638cc2",
+      "disposition": "INTEGRATED_CONTENT",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/nb29-ignored-state-audit",
+      "sha": "471bd8039c105a7e58eb242bbd33c97b817de945",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/nb29-postmerge-audit",
+      "sha": "161fd2b82a50795bd15b72e8b6b6422051d7f986",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/plan1-nexus-implementation-plan",
+      "sha": "66075d7dc27be7c3afdf4e226cbb7be3ad57ba38",
+      "disposition": "INTEGRATED_CONTENT",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/plan2-nexus-engineering-control-plane-v2",
+      "sha": "4b1283704eabfbab19e4025ddc0be906d57726a6",
+      "disposition": "INTEGRATED_CONTENT",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/provider-native-directory-boundary",
+      "sha": "9cc19936ef0e9b5683aaf280dedaacfaf51453a2",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-02-contracts-threat-scope",
+      "sha": "63c5d3411f50994b5163e0c80f2d210307c0c0f8",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-cloud-baseline",
+      "sha": "0704b6482e3f5129f94a87f1ed25e27f4ea1dc07",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-cloud-iac",
+      "sha": "81fca0ace9b26b0c8bc9004b582c0368c0f0fa00",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-03-zero-cost-local",
+      "sha": "5c1d662858d1a5eba3993db0497559f97a03402b",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/NB-10-everything-git-edge",
+      "sha": "e819f5b234a0a4de171e8cb68a059bf7253033ff",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "feature/email-blueprint-assimilation-20260927",
+      "sha": "dd09060ebca21104912465b079d8d12107c927a4",
+      "disposition": "INTEGRATED_BY_ANCESTRY",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "fix/NB-04-task-retain-agent-binding",
+      "sha": "d23540dd01b8ad75aa9a460878d5fb7c194568e7",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "recovery_manifest"
+    },
+    {
+      "branch": "docs/NB-19-final-ref-snapshot-20260928",
+      "sha": "13e35d2e50e7518de45c01c3317511023aa4f08a",
+      "disposition": "INTEGRATED_DOCS",
+      "source": "PR #105; merged head verified"
+    },
+    {
+      "branch": "docs/NB-29-observed-state-manifest-20260928",
+      "sha": "2d22361f5210fe38a96c58be8921a8c5dd0f7341",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "PR #106; merged head verified"
+    },
+    {
+      "branch": "docs/NB-29-manifest-checksum-portability-20260928",
+      "sha": "97b4bcc4ede889f4b2ed0126d4d76e4321b57ef6",
+      "disposition": "INTEGRATED_VIA_MERGED_PR",
+      "source": "PR #107; merged head verified"
+    }
+  ],
+  "deleted_stale_remote_tracking_refs": [
+    {
+      "ref": "origin/codex/nb03-codex-reflect-revalidation-20260928",
+      "sha": "4ca676cfc90a91167c4d33f7ff094d6e27fb3e5f",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/codex/nb19-oidc-crlf-portability",
+      "sha": "f4ca08c00bf2bbb620e47d67079056effe4cb299",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/codex/nb29-cutover-revalidation-20260928",
+      "sha": "c64a341877bba32b8c4cc11997d3c06ad4db4177",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/codex/nb29-protected-worktree-metadata",
+      "sha": "a871076d16307b7d0dbb63ff2830c577ec8d48df",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/docs/NB-03-codex-oauth-revalidation-20260928",
+      "sha": "9209a9eff27168c677131adb1eb4a8d0908f0530",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/docs/NB-29-canonical-checkout",
+      "sha": "efa37873b2883ee325eb96af3ea31b8983547bec",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/docs/NB-29-migration-readiness-snapshot",
+      "sha": "6df8541851e5d5d63414538d2fd09cdf6930c079",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/docs/canonical-eacp-lossless-2026-09-28",
+      "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    },
+    {
+      "ref": "origin/pr/87",
+      "sha": "79194969dc1eaa2a687b9c2eee82a0c3d192d309",
+      "reason": "confirmed absent on GitHub; exact local tracking ref removed"
+    }
+  ],
+  "retained_local_branch_heads": [
+    {
+      "branch": "codex/mcg-finalization",
+      "sha": "0f972b504c5089044e0594f67595ebf4896b3295"
+    },
+    {
+      "branch": "codex/nb05-brain-api-mcp-contract",
+      "sha": "377ad2857bf129487714050e8bbb73b88243674e"
+    },
+    {
+      "branch": "codex/nb19-g9-safe-retirement",
+      "sha": "3a6776218c74b72c0d8b3960bb156d2a8e79187d"
+    },
+    {
+      "branch": "main",
+      "sha": "3e9b6bfaf90350fdd230d90df55a6a0802b75366"
+    }
+  ],
+  "retained_remote_branch_heads": [
+    {
+      "branch": "codex/mcg-finalization",
+      "sha": "0f972b504c5089044e0594f67595ebf4896b3295"
+    },
+    {
+      "branch": "codex/nb05-brain-api-mcp-contract",
+      "sha": "377ad2857bf129487714050e8bbb73b88243674e"
+    },
+    {
+      "branch": "codex/nb19-g9-safe-retirement",
+      "sha": "3a6776218c74b72c0d8b3960bb156d2a8e79187d"
+    },
+    {
+      "branch": "dependabot/github_actions/github-actions-f1e5ee2635",
+      "sha": "4041072e64db39b0f8d64de0acf0344d9a4434d5"
+    },
+    {
+      "branch": "dependabot/npm_and_yarn/production-dependencies-39d93a22fb",
+      "sha": "126e8704d1631e60867ef0a8d5663f9e32d2d2c5"
+    },
+    {
+      "branch": "feature/audit-1-email-blueprint-assimilation",
+      "sha": "5aea849d17e2c030759a0fd1333e4f83bcc29d3b"
+    },
+    {
+      "branch": "feature/audit-2-nexus-blueprint-assimilation",
+      "sha": "fa3f2217a777c20b16292908b080a85aff03aef7"
+    },
+    {
+      "branch": "main",
+      "sha": "3e9b6bfaf90350fdd230d90df55a6a0802b75366"
+    }
+  ],
+  "standing_exclusions": [
+    "Lumenva project/worktrees",
+    "PR #72"
+  ],
+  "nb29": {
+    "historical_417": "unverified; no trusted expected manifest; not a gate",
+    "observed_manifest": "NB-29_OBSERVED_STATE_MANIFEST_2026-09-28.json",
+    "observed_file_count": 10
+  },
+  "notes": [
+    "The NB-04 worktree was archived with recoverable state after its merged PR was verified.",
+    "The MCG and NB-05 worktrees remain; their branch content is preserved.",
+    "Two unregistered Nexus-named directories remain preserved; no recursive inspection or removal occurred.",
+    "New cleanup-report PR branch is outside this pre-report snapshot."
+  ]
+}

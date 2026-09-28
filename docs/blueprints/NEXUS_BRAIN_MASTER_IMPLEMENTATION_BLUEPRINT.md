@@ -2,8 +2,10 @@
 
 **Canonical project:** Nexus Brain (`trydavidqix/nexus-brain`)
 **Default branch:** `main`
-**Status:** NB-03, NB-04, NB-10, NB-19, and migration readiness NB-24–NB-29 are DONE. PR #75 closes NB-19 G10; NB-05 is IN_PROGRESS. NB-02 is DONE. DEV is local-first with zero additional monthly cost; no PROD in this phase.
+**Status:** NB-03, NB-04, NB-10, NB-19, and NB-24–NB-29 are DONE. NB-02 is DONE. NB-05 is IN_PROGRESS on PR #81 with Owner-approved identity and budget authorities; required remote checks remain pending. Migration Readiness is complete. DEV is local-first with zero additional monthly cost; no PROD in this phase.
 **Last reconciled:** 2026-09-28
+
+Companion plans: [Nexus Implementation Plan](../plans/NEXUS_IMPLEMENTATION_PLAN.md) describes capability phases; [Engineering Control Plane Implementation Plan](../plans/NEXUS_ENGINEERING_CONTROL_PLANE_IMPLEMENTATION_PLAN.md) gives subsystem detail. Neither duplicates milestone state: this Blueprint owns NB dependency, scope, acceptance and status.
 
 This is the only active cross-project implementation tracker. Nexus Brain itself is one product and one monorepo. The ecosystem it manages is explicitly multi-project: many independent projects, repositories, workspaces, sessions and agents may be registered and governed by Nexus without being moved into the Nexus monorepo. “Maestri”, “Lumenva Brain”, “Context Gateway/MCG”, “Local Runtime”, “Cloud Fabric”, “Command Center” and “Everything Edge” name historical designs or internal modules—not separate products or repositories. CRM, voice, social-business/Meta integrations, tenant business data and unrelated Lumenva code remain out of scope unless a later explicit decision identifies an exact owned path.
 
@@ -17,7 +19,7 @@ Implementation order for every work package:
 
 `DONE` requires the package acceptance criteria and evidence. A written design, skill, successful CI run, or agent claim alone is not implementation proof. Unknowns stay `UNRESOLVED`; no percentage is inferred from elapsed time or prose.
 
-**Current operational phase:** `BLUEPRINT IMPLEMENTATION`. NB-03 is accepted through existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 canonical PostgreSQL/pg0 + Hindsight integration, scope/ACL gates, restore, and standalone PostgreSQL compatibility are merged in PR #73 (`12997f2`). NB-19 G0–G10 evidence is complete in PR #75; GitHub merge queue is unavailable for this public personal-account repository, so strict required checks and squash-only delivery remain active. Migration readiness NB-24–NB-29 is complete. NB-03 live revalidation was recorded in PR #80 (`1cbdf84`). NB-05 is in progress; its trusted identity issuer/transport binding and server-enforced Reach budget source remain unresolved, so its API fails closed without an injected trusted authenticator and no external provider is wired. No cloud billing/resource, PROD deployment, API key requirement, or automatic paid fallback is authorized. Existing partial MCG, dashboard and security work does not satisfy their full acceptance gates. Do not skip dependency order or mark a package `DONE` without its evidence.
+**Current operational phase:** `BLUEPRINT IMPLEMENTATION`. NB-03 is accepted through existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 canonical PostgreSQL/pg0 + Hindsight integration, scope/ACL gates, restore, and standalone PostgreSQL compatibility are merged in PR #73 (`12997f2`). NB-19 G0–G10 evidence is complete in PR #75; the active protected-main ruleset and strict required checks were revalidated. GitHub merge queue is unavailable for this public personal-account repository, so squash-only delivery remains active. NB-24–NB-29 are complete. NB-29 uses the manifest of the actual files found in the scoped roots and the reconciled preserved worktree; the unverified historical 417 count is not a precondition. See [cutover revalidation evidence](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). NB-05 is underway on PR #81 after the Owner approved Nexus Edge gateway identity and Maestri Reach budgets; local enforcement tests pass, and required remote checks remain pending. No cloud billing/resource, PROD deployment, API key requirement, or automatic paid fallback is authorized. Existing partial MCG, dashboard and security work does not satisfy their full acceptance gates. Do not skip dependency order or mark a package `DONE` without its evidence.
 
 ## 2. Canonical system boundary
 
@@ -122,6 +124,46 @@ Provider agents execute bounded work inside the selected project's repository/wo
 ### Multi-project Control Center
 
 The Nexus Control Center must support portfolio-level and project-level views. Portfolio view shows registered projects, health/status, active tasks, agents, budgets, incidents and blockers. Project drill-down exposes that project's tasks, sessions, memory, knowledge, Git/PRs, tests, deployments, evidence, costs and history without mixing unrelated project state.
+
+## 3A.1 Project Factory and email-blueprint assimilation
+
+The 2026-09-27 Gmail blueprint audit is recorded in `docs/audits/NEXUS_EMAIL_BLUEPRINT_AUDIT_2026-09-27.md`. Source plans are provenance, not authority by title. Business-only Lumenva modules remain outside Nexus; technical capabilities are assimilated into existing Nexus owners and must not create duplicate control planes, routers, memory engines, gateways or evidence stores.
+
+The main missing capability promoted by that audit is **Project Factory**. It is a coordination domain above existing owners, not a second orchestrator.
+
+```text
+OWNER OBJECTIVE
+  ↓
+ProjectFactoryRequest
+  ↓
+discovery + evidence + resource/capability discovery
+  ↓
+REUSE | USE_PROVIDER | ADAPT | BUILD
+  ↓
+architecture decisions + bounded ProjectFactoryPlan
+  ↓
+Maestri task graph
+  ↓
+Engineering Control + Execution
+  ↓
+independent validation
+  ↓
+completion gates
+```
+
+Canonical ownership:
+
+- Maestri owns task/session/DAG lifecycle and recovery.
+- Reach owns capability/provider/tool discovery.
+- Engineering Control owns methodology, scope and verification requirements.
+- Execution owns provider/runtime/agent execution.
+- Governance owns risk, approvals, secrets and policy.
+- Evidence owns proof and provenance.
+- Project Factory coordinates these owners and may not create parallel stores or authorities.
+
+Contracts-first V1 adds `project-factory-request` and `project-factory-plan`. The plan records discovery evidence, architecture decisions, build/reuse/provider decisions, task seeds, completion gates and human gates. `packages/execution/src/cloud-fabric/project-factory.ts` implements the first deterministic compiler: it requires discovery evidence, enforces candidate budgets, prefers `REUSE → USE_PROVIDER → ADAPT → BUILD`, emits bounded task seeds, and requires an owner gate for R3/R4 work. It coordinates existing owners rather than replacing them.
+
+The same audit assimilates Capability OS / Tool Hub / Tool Gateway patterns into existing Reach/Capability Registry/Execution/Governance owners: progressive discovery, provider health/version telemetry, per-task tool profiles, implementation selection/evaluation and Credential Broker semantics. Do not inject the full tool catalog into agents and do not create separate Capability OS, Tool Hub or Tool Gateway products.
 
 ## 3B. V1 memory engine: Hindsight
 
@@ -1055,7 +1097,1320 @@ browser_takeovers
 
 Secrets remain outside these records.
 
-#### Repository ownership during implementation
+#
+### Lossless Engineering Agent Team substrate — owner-authored source merge
+
+> **Documentation-only reconciliation (2026-09-28).** This subsection changes the canonical plan only. It does **not** claim implementation, completion, runtime activation, provider configuration, deployment or migration progress.
+>
+> The owner-authored Engineering Agent Control Plane plans supplied on 2026-09-28 are treated as a **lossless architectural baseline** for the agent-team runtime. Their requirements are preserved and extended by Nexus governance; they are not replaced by a smaller handoff-only design. The three source-plan views were: **Master Blueprint V1**, **Plano de Implementação V1 — Roadmap técnico fase a fase**, and **Plano de Implementação V1 — 38 fases + gates + milestones**.
+
+#### Lossless merge rule
+
+1. Preserve every functional requirement from the owner-authored plans.
+2. Nexus additions are overlays: EngineeringPlan, Risk/Autonomy, Context Compiler/Token Firewall, provenance-backed Memory/Code Intelligence, enforcement rings, convergence and evidence-first delivery.
+3. Do not turn the source plans into a second control plane. **Nexus/Maestri remains the single authority.**
+4. Do not hard-wire Claude directly to Codex. The abstraction is always:
+
+~~~text
+Agent ↔ Nexus Control Plane ↔ Agent
+~~~
+
+5. Host plugins are thin integration surfaces. Task state, policy, routing, sessions, evidence, recovery and canonical memory remain Nexus-owned.
+6. A plan requirement is not marked implemented merely because this blueprint records it.
+
+#### Final agent-team architecture
+
+~~~text
+USER
+  │
+  ▼
+Claude Code / Codex / Gemini / future agent
+  │
+  ▼
+HOST INTEGRATION
+MCP + hooks + permanent rules + skill discovery
+  │
+  ▼
+┌──────────────────────────────────────────────────────────────┐
+│                NEXUS ENGINEERING CONTROL PLANE              │
+│                                                              │
+│ Project Registry        EngineeringPlan / Risk / Autonomy    │
+│ Task Router             Agent + Model + Resource Router      │
+│ Skill Router            Session Manager                      │
+│ Task Ownership          Dependency Graph / Task DAG          │
+│ Delegation Lineage      Anti-recursion                       │
+│ Write Leases            Workspace / Worktree Manager         │
+│ Context Compiler        Token Firewall / Context Budget      │
+│ Artifact Store          Structured Deliverables              │
+│ Verification Engine     Independent Review / Convergence     │
+│ Recovery / Watchdog     Usage / Quota Router                 │
+│ Memory / Code Intel     Telemetry / Doctor                   │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                      Universal Agent API
+                               │
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+        Claude Adapter     Codex Adapter    Gemini Adapter
+              │                │                │
+        Claude Code       Codex App Server   Gemini CLI
+              │                │                │
+              └────────────────┼────────────────┘
+                               │
+                         ACP / native
+                               │
+                         Workspace Manager
+                               │
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+         Worktree A       Worktree B       Worktree C
+           Claude            Codex            Gemini
+~~~
+
+Any supported host can be the entry point. The user may open Claude, Codex or Gemini; the active host can delegate through Nexus and receive the delegated result back into the same governed task flow.
+
+#### Bidirectional communication requirements
+
+The V1 gate must prove all six directed routes:
+
+~~~text
+Claude → Codex
+Claude → Gemini
+Codex  → Claude
+Codex  → Gemini
+Gemini → Claude
+Gemini → Codex
+~~~
+
+The runtime must also prove:
+
+~~~text
+Claude + Codex
+Claude + Gemini
+Codex + Gemini
+Claude + Codex + Gemini
+~~~
+
+Delegation is not a one-way file handoff. A governed execution can:
+
+~~~text
+delegate
+→ start/resume provider session
+→ stream/collect structured result
+→ request review
+→ return findings
+→ resume original implementer
+→ steer correction
+→ re-review
+→ complete only after evidence
+~~~
+
+A controlled return such as Claude review → resume Codex implementer → fix → Claude re-review is valid workflow orchestration. It must not be confused with uncontrolled recursive delegation. Recursive cycles remain blocked by lineage/depth policy.
+
+#### Universal protocol — required contracts
+
+The provider-neutral protocol must cover at minimum:
+
+~~~text
+AgentId
+AgentCapabilities
+Task
+TaskSpec
+TaskState
+Session
+SessionState
+Artifact
+Deliverable
+WriteScope
+Lease
+VerificationResult
+DelegationRequest
+DelegationResult
+RuntimeEvent
+~~~
+
+Stable identities:
+
+~~~text
+project_id
+run_id
+task_id
+session_id
+agent_id
+attempt_id
+artifact_id
+lease_id
+~~~
+
+Every delegated task records:
+
+~~~text
+run_id
+parent_task_id
+delegation_depth
+created_by
+owner
+~~~
+
+Provider/model transport details never leak into the domain contract.
+
+#### Durable state and storage
+
+V1 uses a storage interface, not direct SQLite coupling:
+
+~~~text
+StateStore
+  ├── SQLiteStore      # V1 local implementation
+  └── PostgresStore    # later interchangeable implementation
+~~~
+
+Required durable records:
+
+~~~text
+projects
+agents
+tasks
+task_dependencies
+sessions
+leases
+artifacts
+deliverables
+verification_results
+events
+attempts
+usage
+idempotency_keys
+~~~
+
+Rules:
+
+- events are append-only;
+- state transition + event write is transactional where required;
+- restart must preserve task/session/lease/artifact state;
+- domain packages do not issue raw SQL directly;
+- important retries use idempotency keys.
+
+#### Task lifecycle, dependencies and ownership
+
+Required task operations:
+
+~~~text
+createTask()
+claimTask()
+startTask()
+blockTask()
+resumeTask()
+verifyTask()
+completeTask()
+failTask()
+cancelTask()
+retryTask()
+~~~
+
+Base states remain:
+
+~~~text
+PENDING
+CLAIMED
+WORKING
+BLOCKED
+VERIFYING
+COMPLETED
+FAILED
+CANCELLED
+~~~
+
+Nexus may expose stricter engineering terminal semantics such as DONE_VERIFIED, but must not erase the protocol states. Invalid transitions such as COMPLETED → WORKING and CANCELLED → CLAIMED are rejected. Dependencies gate readiness. Each task has one operational owner.
+
+#### Delegation lineage and anti-loop
+
+Initial bounded delegation policy:
+
+~~~text
+A → B                    allowed
+A → B → C                allowed
+A → B → A                denied as spontaneous delegation cycle
+depth > configured max   denied
+self-delegation          denied
+missing parent           denied
+cross-run parent         denied
+~~~
+
+Initial reference depth is max_delegation_depth = 3, subject to future policy tuning. Orchestrator-controlled review/fix returns use the existing task/session lineage and are not a new recursive delegation chain.
+
+#### Write Lease Manager
+
+Before write mutation:
+
+~~~text
+task
+→ request lease
+→ scope validation
+→ lease
+→ write
+~~~
+
+Required operations:
+
+~~~text
+acquire()
+renew()
+release()
+expire()
+findConflicts()
+~~~
+
+A lease binds task_id + agent + scope + created_at + expires_at + state. Two agents never receive conflicting live write leases. Success, failure, timeout, cancel and runtime crash must all release or safely expire ownership.
+
+#### Universal Agent Adapter API
+
+Canonical adapter contract:
+
+~~~text
+interface AgentAdapter {
+  id: string;
+  info();
+  capabilities();
+  health();
+  startSession();
+  resumeSession();
+  execute();
+  interrupt();
+  cancel();
+  shutdown();
+}
+~~~
+
+Capabilities include at least:
+
+~~~text
+implementation
+planning
+architecture
+debugging
+review
+security_review
+testing
+research
+documentation
+frontend
+backend
+devops
+database
+~~~
+
+Before consuming real provider quota, V1 tests the protocol with MockClaude, MockCodex and MockGemini.
+
+#### Orchestrator transactional flow
+
+~~~text
+delegate
+→ create task
+→ claim
+→ acquire lease
+→ start/resume session
+→ execute
+→ collect Structured Deliverable
+→ verify scope
+→ record artifacts/evidence
+→ release lease
+→ complete / fail / block
+~~~
+
+Every exit path is explicit. Retry occurs only when policy marks the failure retryable. Idempotency prevents duplicate execution.
+
+Nexus overlay: no coding dispatch occurs without a valid EngineeringPlan.
+
+#### Session Manager
+
+Task != Session.
+
+Required session record:
+
+~~~text
+session_id
+agent
+provider
+provider_session_id
+task_id
+project_id
+cwd
+worktree
+status
+started_at
+last_activity
+~~~
+
+Required operations:
+
+~~~text
+start
+get
+list
+resume
+interrupt
+cancel
+archive
+~~~
+
+A task may have multiple attempts while reusing the same provider session. Provider session handles survive Control Plane restart where the provider supports resume.
+
+#### Codex Adapter requirements
+
+Primary V1 route:
+
+~~~text
+Codex App Server
+  ↓
+JSON-RPC
+~~~
+
+Required concepts:
+
+~~~text
+CodexAppServerClient
+CodexBroker
+CodexSession
+CodexAdapter
+thread start
+thread resume
+turn start
+interrupt
+cancel
+stream notifications
+background execution
+watchdog
+request timeout
+hard timeout
+broker recovery
+history/diagnostics where useful
+~~~
+
+Acceptance path:
+
+~~~text
+Control Plane → Codex → edit bounded fixture → test → Structured Deliverable
+~~~
+
+#### Claude Adapter requirements
+
+Prefer structured transport when officially available; PTY is a fallback.
+
+Required:
+
+~~~text
+ClaudeAdapter
+ClaudeSession
+ClaudeProcessManager
+session persistence
+resume
+tool permissions
+role restrictions
+timeouts
+interrupt
+cancel
+hooks
+existing Claude Code login/session path
+~~~
+
+Roles:
+
+~~~text
+planner
+architect
+implementer
+reviewer
+security_reviewer
+debugger
+~~~
+
+Default reviewer permissions are read-oriented; implementers receive write only inside policy/lease scope. Nested uncontrolled agents, recursive Control Plane invocation and unauthorized MCP are blocked.
+
+The acceptance gate must prove both:
+
+~~~text
+Codex → Nexus → Claude
+Claude → Nexus → Codex
+~~~
+
+#### Gemini Adapter requirements
+
+Primary route:
+
+~~~text
+Gemini CLI
+  ↓
+stream-json
+  ↓
+NDJSON parser
+~~~
+
+Parse/record at least:
+
+~~~text
+init
+message
+tool_use
+tool_result
+result
+error
+session_id
+output
+tools
+files_touched
+errors
+~~~
+
+Acceptance requires Claude and Codex to delegate to Gemini and receive a Structured Deliverable. The architecture remains adapter-based so Gemini may be replaced or supplemented without changing core contracts.
+
+#### ACP Gateway
+
+ACP is the preferred generic adapter path for compatible agents, not a mandatory transport for every provider.
+
+Required operations:
+
+~~~text
+initialize()
+newSession()
+loadSession()
+prompt()
+cancel()
+setModel()
+setMode()
+~~~
+
+An ACPAgentAdapter must allow a future compatible agent to enter through config + capability manifest without Control Plane domain changes. Adapter internals may use ACP, App Server, JSON-RPC, NDJSON/stream-json, PTY or CLI.
+
+#### Workspace Manager and parallel execution
+
+Required Git/workspace operations:
+
+~~~text
+getRepoRoot
+getHead
+getStatus
+createWorktree
+removeWorktree
+createBranch
+collectDiff
+detectDirtyFiles
+~~~
+
+Each worktree binds task ID, agent ID, branch, base SHA and scope.
+
+Parallelism rule:
+
+~~~text
+same/conflicting write scope → SERIALIZE
+independent scope           → PARALLEL
+~~~
+
+The Parallel Task Engine includes dependency checks, write-scope conflict detection, worktree allocation and an integration barrier. Parallel results never bypass integration verification before mainline delivery.
+
+#### Agent Router and Resource/Quota Router
+
+V1 routing is deterministic-first and explainable.
+
+Primary result:
+
+~~~text
+LOCAL
+DELEGATE
+REVIEW
+PARALLEL
+~~~
+
+Signals include:
+
+~~~text
+capability match
+task type
+risk
+complexity
+availability
+active workload
+quota
+latency
+session reuse
+workspace
+context size
+cost policy
+security sensitivity
+autonomy level
+~~~
+
+Runtime/provider state:
+
+~~~text
+READY
+BUSY
+RATE_LIMITED
+UNAVAILABLE
+DISABLED
+~~~
+
+Nexus model/effort classes remain:
+
+~~~text
+TINY
+LIGHT
+NORMAL
+HEAVY
+EXCLUSIVE
+~~~
+
+#### Skill Registry and progressive loading
+
+Permanent registry memory contains metadata only. Required operations:
+
+~~~text
+searchSkills()
+loadSkill()
+unloadSkill()
+getActiveSkills()
+~~~
+
+Canonical invariant remains:
+
+~~~text
+NEVER LOAD THE FULL SKILL CATALOG INTO AN AGENT CONTEXT
+SKILLS BELONG TO TASKS, NOT TO SESSIONS
+~~~
+
+Metadata may include:
+
+~~~text
+id
+capabilities
+triggers
+agents
+dependencies
+conflicts
+priority
+risk_levels
+precedence_owner
+estimated_context_cost
+version
+status
+~~~
+
+Flow:
+
+~~~text
+Task
+→ Skill Index metadata
+→ Skill Resolver
+→ minimum justified SkillSet
+→ load
+→ execute
+→ record evidence
+→ unload/compact/non-reinject
+~~~
+
+Nexus engineering methodology remains available under this same router: Product/PDR/PRD, Specification, Architecture/ADR, Planning, Debugging, TDD, Implementation, Security, Review, Audit, Anti-Slop, Branch Engineering, Verification, Convergence and Release. These do not become a second orchestration system.
+
+#### Permanent policies and hooks
+
+Core policy remains small and always active. Policy domains include at least:
+
+~~~text
+delegation
+skills
+security
+verification
+workspace
+resource usage
+~~~
+
+Project policy is layered through supported project files/config, including AGENTS.md, CLAUDE.md and provider equivalents.
+
+Universal lifecycle targets:
+
+~~~text
+SessionStart
+UserPromptSubmit
+PreToolUse
+PostToolUse
+PreWrite
+PostWrite
+TaskStart
+TaskComplete
+AgentStop
+~~~
+
+When providers support them safely, Nexus may additionally use:
+
+~~~text
+SubagentStart
+PreCompact
+PostCompact
+SessionEnd
+~~~
+
+PreWrite checks lease/scope; without a valid lease, write is denied. UserPromptSubmit drives classification, skill discovery and routing hints. PostToolUse records commands, files, tests and artifacts.
+
+#### Context Envelope
+
+Do not forward full provider transcripts between agents.
+
+Canonical handoff envelope:
+
+~~~text
+objective
+decisions
+constraints
+files
+write_scope
+dependencies
+artifacts
+previous_deliverables
+tests
+verification_criteria
+~~~
+
+Nexus adds:
+
+~~~text
+project/task scope
+Context Compiler
+Token Firewall
+context budget
+task-scoped retrieval
+compaction
+non-reinjection
+provenance/evidence refs
+~~~
+
+Acceptance: Claude can continue a Codex-created task, and vice versa, without receiving the entire prior chat and without losing required decisions/constraints.
+
+#### Artifact Store and Structured Deliverable
+
+Artifact types include at least:
+
+~~~text
+plan
+diff
+patch
+report
+review
+test_result
+benchmark
+diagnostic
+handoff
+decision
+logs
+~~~
+
+Nexus engineering artifacts may additionally include PRD, SPEC, ADR, architecture, security and convergence evidence.
+
+Initial storage:
+
+~~~text
+.agentcp/artifacts/
++ metadata in durable StateStore
++ SHA-256/content addressing when useful
+~~~
+
+Every adapter normalizes output:
+
+~~~json
+{
+  "status": "COMPLETE",
+  "summary": "",
+  "files_changed": [],
+  "artifacts": [],
+  "tests": [],
+  "blockers": [],
+  "verification_results": []
+}
+~~~
+
+The Control Plane never interprets free-form prose alone as completion proof.
+
+#### Verification Engine and independent review
+
+Required verification path:
+
+~~~text
+Scope Check
+→ Git Diff Check
+→ Static Analysis
+→ Tests
+→ Acceptance Criteria
+→ Independent Review
+~~~
+
+Verifier families:
+
+~~~text
+CommandVerifier
+FileVerifier
+DiffVerifier
+TestVerifier
+ReviewVerifier
+~~~
+
+Nexus adds build/lint/typecheck/contracts/security/fresh-evidence/convergence/delivery gates according to risk/project policy.
+
+Independent-review invariant:
+
+~~~text
+implementer != reviewer
+~~~
+
+Examples:
+
+~~~text
+Codex implements  → Gemini reviews
+Claude implements → Codex reviews
+Codex implements  → Claude reviews
+~~~
+
+Review findings are structured (severity, file, reason, suggested_action) and return to the original implementer session through resume when correction is required.
+
+#### Convergence overlay
+
+For governed feature/architecture work, Nexus compares:
+
+~~~text
+PRD
+↕
+SPEC
+↕
+ADR
+↕
+ARCHITECTURE
+↕
+PLAN
+↕
+TASKS
+↕
+CODE
+↕
+TESTS
+↕
+EVIDENCE
+~~~
+
+A gap creates a remediation task, resumes or routes the correct implementer, re-verifies and converges again. Convergence augments—never replaces—the source-plan Verification Engine.
+
+#### Watchdog and recovery
+
+Failures include:
+
+~~~text
+idle stall
+hard timeout
+child crash
+broker crash
+MCP disconnect
+session loss
+orphan lease
+provider rate limit
+network loss
+corrupted artifact/state
+partial integration
+~~~
+
+Recovery ladder:
+
+~~~text
+1 interrupt
+2 resume
+3 restart runtime
+4 restore session/task
+5 retry bounded attempt
+6 change evidence-backed strategy / qualified agent when policy allows
+7 fail safely
+~~~
+
+No infinite retry. Recovery records evidence and leaves state reconciliable.
+
+#### Telemetry
+
+Required event classes include:
+
+~~~text
+TASK_CREATED
+TASK_CLAIMED
+TASK_STARTED
+TASK_COMPLETED
+DELEGATION_REQUESTED
+DELEGATION_COMPLETED
+SESSION_STARTED
+SESSION_RESUMED
+LEASE_ACQUIRED
+LEASE_RELEASED
+ARTIFACT_CREATED
+VERIFICATION_STARTED
+VERIFICATION_COMPLETED
+RECOVERY_STARTED
+RECOVERY_COMPLETED
+~~~
+
+Metrics include duration, attempts, timeouts, recoveries, agent usage, success/failure rate, session reuse, delegation depth, files changed and review findings. Logs are bounded/rotated and must not become a correctness dependency.
+
+#### Security and permissions
+
+Per-task permissions include:
+
+~~~text
+read
+write
+shell
+network
+git
+mcp
+~~~
+
+Scope enforcement covers project, worktree, file paths and commands. Reviewers are read-oriented by default; implementers write only in leased scope.
+
+Redact before persistence/forwarding:
+
+~~~text
+API keys
+cookies
+tokens
+Authorization headers
+.env values
+credentials
+~~~
+
+Never allow uncontrolled recursive delegation, cross-project context leakage, cross-task skill leakage, writing outside lease, secret dumping, arbitrary shell expansion or policy bypass.
+
+#### CLI and Doctor
+
+Operational CLI retains:
+
+~~~text
+agentcp status
+agentcp agents
+agentcp agents health
+agentcp tasks
+agentcp task show
+agentcp sessions
+agentcp leases
+agentcp skills
+agentcp artifacts
+agentcp telemetry
+agentcp doctor
+agentcp doctor --deep
+agentcp init
+~~~
+
+doctor --deep validates at minimum:
+
+~~~text
+Node
+Git
+SQLite / configured StateStore
+Claude binary/auth
+Codex binary/auth/App Server
+Gemini binary/auth
+MCP registration
+ACP support
+database
+leases
+orphan sessions
+worktrees
+policies
+skill registry
+Nexus router
+provider adapters
+hooks
+evidence integrity
+memory/code-intelligence health when enabled
+~~~
+
+A diagnostic must report a likely cause and a concrete remediation path; it must not merely say “unhealthy”.
+
+#### Shared MCP and host plugins
+
+One Nexus MCP surface is registered across supported hosts. Source-plan tools remain required:
+
+~~~text
+agent_delegate
+agent_status
+agent_resume
+agent_cancel
+task_create
+task_status
+task_list
+artifact_get
+artifact_publish
+verification_run
+workspace_acquire
+workspace_release
+skill_search
+skill_activate
+control_plane_status
+~~~
+
+Nexus may add compatible tools such as:
+
+~~~text
+agent_message
+agent_wait
+agent_review
+~~~
+
+Host wrappers:
+
+~~~text
+plugins/claude
+plugins/codex
+plugins/gemini
+~~~
+
+Claude wrapper: hooks + core policy + MCP registration + skill discovery.
+Codex wrapper: AGENTS/config/rules + MCP.
+Gemini wrapper: MCP + project instructions + hooks where supported.
+
+Installing/uninstalling a host wrapper must not corrupt the shared Control Plane or another provider.
+
+#### Automatic delegation and automatic skill loading
+
+Normal user prompts are sufficient:
+
+~~~text
+Prompt
+→ Host
+→ Permanent Policy
+→ Task Classifier
+→ EngineeringPlan
+→ Router
+→ LOCAL / DELEGATE / REVIEW / PARALLEL
+~~~
+
+The user does not need to say “use Codex”, “use Gemini”, “use Claude” or “use skill X”.
+
+Task-specific skills follow:
+
+~~~text
+Skill Index
+→ relevant capabilities
+→ load minimum set
+→ execute
+→ evidence
+→ unload/compact
+~~~
+
+#### Full multi-agent reference workflow
+
+The original owner-authored V1 scenario remains an acceptance case:
+
+~~~text
+USER
+  ↓
+Claude coordinator
+  ├── Codex → backend
+  └── Claude → frontend
+          ↓
+      integration
+          ↓
+Gemini → security review
+          ↓
+       findings
+          ↓
+     resume Codex
+          ↓
+          fix
+          ↓
+       re-review
+          ↓
+       COMPLETE
+~~~
+
+This is an acceptance example, not a fixed role map. Equivalent flows must work with Codex or Gemini as the user-facing/coordinating host when policy/capability routing selects them.
+
+#### Mandatory E2E matrix
+
+Directed delegation:
+
+~~~text
+Claude → Codex
+Claude → Gemini
+Codex → Claude
+Codex → Gemini
+Gemini → Claude
+Gemini → Codex
+~~~
+
+Parallel combinations:
+
+~~~text
+Claude + Codex
+Claude + Gemini
+Codex + Gemini
+Claude + Codex + Gemini
+~~~
+
+Every E2E proves identity, project/task scope, lineage, session continuity, write lease/worktree isolation, Structured Deliverable shape, artifact/evidence linkage and bounded cleanup.
+
+#### Failure E2E
+
+Simulate at minimum:
+
+~~~text
+Codex crash
+Claude crash
+Gemini crash
+MCP restart
+Control Plane restart
+SQLite/StateStore reopen
+lost session
+timeout
+lease conflict
+dirty worktree
+failed tests
+review rejection
+provider rate limit
+network loss
+stale/orphan lease
+corrupted artifact/state
+partial integration
+~~~
+
+Each case must recover or terminate safely with database/state, leases, sessions and worktrees reconciliable and auditable.
+
+#### Hardening
+
+Before V1:
+
+~~~text
+stress tests
+concurrency tests
+race-condition tests
+scope-escape tests
+recursive-delegation tests
+session-corruption tests
+large-output tests
+large-diff tests
+long-running-command tests
+prompt-injection tests
+malicious-skill/artifact tests
+state/policy tampering tests
+secret-leakage tests
+cross-project leakage tests
+cross-task skill leakage tests
+false-DONE/bypass tests
+~~~
+
+No known race or bypass may remain in the primary path at release.
+
+#### Canonical 0–38 implementation sequence — preserved
+
+The owner-authored 38-phase roadmap remains the lossless implementation sequence for this substrate. Nexus overlays are assigned to the corresponding phase; they do not remove source-plan gates.
+
+| Phase | Canonical scope | Required exit gate |
+|---|---|---|
+| 0 | Bootstrap monorepo, Node/TS/pnpm/Vitest/Zod/SQLite, lint/format/CI, AGENTS/CLAUDE/README | install + typecheck + test + build pass |
+| 1 | Universal Protocol, schemas, IDs, lineage | invalid state/scope/depth/artifact rejected |
+| 2 | StateStore + SQLite, durable tables, append-only events, transactions | CRUD/transaction/reopen pass; domain has no raw SQL coupling |
+| 3 | Task lifecycle + dependencies | full state-machine/dependency tests |
+| 4 | Delegation lineage + anti-loop | A→B and A→B→C pass; cycles/depth violations fail |
+| 5 | Write Lease Manager | conflicting live write leases impossible; crash does not lock forever |
+| 6 | Agent Adapter API + MockClaude/MockCodex/MockGemini | mock delegation works without provider quota |
+| 7 | Orchestrator + idempotent transactional delegation | every exit path leaves task/session/lease consistent |
+| 8 | Session Manager | persisted session metadata survives restart; deterministic resume |
+| 9 | Codex Adapter | Control Plane→Codex→bounded edit→test→Structured Deliverable |
+| 10 | Claude Adapter | Codex→Nexus→Claude and Claude→Nexus→Codex both work with correct scopes/sessions |
+| 11 | Gemini Adapter | Claude/Codex delegate to Gemini and receive Structured Deliverable |
+| 12 | ACP Gateway | new compatible agent enters via config + capability manifest |
+| 13 | Workspace Manager | Claude/Codex can run simultaneously without shared cwd/branch |
+| 14 | Parallel Task Engine | independent tasks parallelize; conflicts serialize; integration is testable |
+| 15 | Agent Router | LOCAL/DELEGATE/REVIEW/PARALLEL decisions explainable and reproducible |
+| 16 | Skill Registry | task loads only relevant skills and releases/compacts them |
+| 17 | Permanent Policy Engine | invariants apply even without user naming skills/delegation |
+| 18 | Hooks | write enforcement/event capture independent of prompt prose |
+| 19 | Context Envelope | cross-agent continuation without full chat and without losing required decisions |
+| 20 | Artifact Store | task/session artifacts are durable, integrity-addressable and retrievable |
+| 21 | Structured Deliverables | Claude/Codex/Gemini normalize to the same domain shape |
+| 22 | Verification Engine | task cannot complete until required verification passes |
+| 23 | Independent Agent Review | implementer != reviewer when required; findings return via resume |
+| 24 | Watchdog + Recovery | simulated failures recover or terminate in a consistent state |
+| 25 | Telemetry | event/metric capture works; telemetry failure does not break execution |
+| 26 | Resource / Quota Router | unavailable/rate-limited provider avoided; useful session reuse preserved |
+| 27 | Security Layer | negative tests block scope escape, unauthorized write and secret persistence |
+| 28 | CLI | operational commands expose consistent domain state |
+| 29 | MCP Server | all hosts use the same tools with distinct agent identity |
+| 30 | Host Plugins | wrappers install/uninstall without corrupting Control Plane or peers |
+| 31 | Automatic Delegation | normal prompts yield auditable automatic routing without manual provider command |
+| 32 | Automatic Skill Loading | no agent loads full library; active skills are explainable |
+| 33 | Full Multi-Agent Workflow | implementation→integration→review→resume→fix→re-review completes without manual session/worktree/lease management |
+| 34 | E2E Matrix | all six directed pairs + pairwise parallel + three-agent parallel pass |
+| 35 | Failure E2E | crash/restart/session/lease/dirty/test/review failures reconcile safely |
+| 36 | Doctor | deep doctor identifies likely cause + concrete remediation |
+| 37 | Hardening | no known primary-path race or invariant bypass |
+| 38 | V1 Release | all E2E/failure E2E pass; install/uninstall/docs reproducible; V1 contracts frozen |
+
+#### Original priority model — preserved
+
+~~~text
+P0 — core
+Protocol
+Storage
+Tasks
+Lineage
+Leases
+Adapter API
+Orchestrator
+Sessions
+Codex
+Claude
+Gemini
+Workspace
+Router
+Skills
+Policies/Hooks
+Verification
+Recovery
+MCP
+
+P1 — maturity
+ACP universal
+Parallel execution
+Artifacts
+Telemetry
+Quota router
+CLI
+Host plugins
+
+P2 — expansion
+Additional agents
+PostgreSQL distributed store
+Distributed execution
+Remote workers
+UI
+~~~
+
+Phase development discipline remains:
+
+~~~text
+SPEC
+→ IMPLEMENT
+→ UNIT TEST
+→ INTEGRATION TEST
+→ REVIEW
+→ GATE
+→ NEXT PHASE
+~~~
+
+Do not advance with critical TODOs, broken tests, production-path stubs or fakes masquerading as production.
+
+#### Original milestones — preserved
+
+~~~text
+M1 — after Phase 8
+Control Plane + Tasks + Storage + Leases + Sessions
++ Mock Agents + Delegation + Anti-loop
+(no real provider quota required)
+
+M2 — after Phase 11
+Claude ↔ Nexus Control Plane ↔ Codex ↔ Gemini
+with real provider communication
+
+M3 — after Phase 18
+Automatic routing + parallel worktrees
++ lazy skills + permanent policies/hooks
+
+FINAL — after Phase 38
+User requests a feature; Nexus manages classification, routing, skills,
+delegation, sessions, worktrees, leases, parallelism, tests, reviews,
+corrections, recovery, artifacts, telemetry and evidence-backed delivery.
+~~~
+
+#### Nexus-only overlays retained from the existing blueprint
+
+The lossless source-plan merge does **not** weaken existing Nexus requirements. The following remain mandatory overlays:
+
+- deterministic EngineeringPlan before coding mutation;
+- risk tiers and independent autonomy level;
+- FAST / STANDARD / STRICT / CRITICAL rigor routing;
+- A0..A4 autonomy policy;
+- one-concern/one-owner methodology precedence;
+- Context Compiler + Token Firewall + per-task context budget;
+- task/agent-scoped lazy SkillSets and non-reinjection after compaction;
+- evidence-first completion and provider-independent delivery gates;
+- Product/PDR/PRD, Spec, Architecture/ADR, TDD/Debug, Review/Audit, Branch Engineering, Verification, Convergence and Release modules under the same Skill Router;
+- Hindsight behind a Nexus-owned MemoryEngine adapter with provenance-governed promotion;
+- provider-neutral Code Intelligence as evidence, never authority;
+- five enforcement rings: Orchestration → Provider Adapter → Runtime → Evidence → Delivery;
+- cross-project isolation and project-scoped task/session/evidence/memory namespaces;
+- no provider-specific plugin or external bridge becomes task/policy/evidence authority.
+
+#### V1 acceptance — lossless union
+
+V1 is not accepted until all of these are true:
+
+~~~text
+Claude connected
+Codex connected
+Gemini connected
+bidirectional delegation across all directed pairs
+automatic routing
+lazy skills
+permanent policies
+write leases
+isolated worktrees
+sessions/resume
+independent review
+verification
+recovery
+telemetry
+shared MCP integration
+CLI / Doctor
+EngineeringPlan mandatory
+Risk + Autonomy routing
+Context Compiler / Token Firewall
+evidence-first DONE
+convergence
+memory provenance
+Code Intelligence
+cross-project isolation
+provider-neutral architecture
+all mandatory E2E + Failure E2E + hardening gates pass
+~~~
+
+#### Canonical user experience
+
+A user opens **Claude, Codex or Gemini** and can simply request:
+
+~~~text
+Implementa essa feature. Usa os outros agents quando ajudar
+e só termina depois de testar e revisar.
+~~~
+
+Nexus then governs:
+
+~~~text
+classify
+→ EngineeringPlan
+→ risk/autonomy
+→ minimum skills
+→ task DAG
+→ agent/model/resource routing
+→ bidirectional delegation
+→ sessions/resume
+→ isolated worktrees
+→ write leases
+→ parallel work when safe
+→ Context Envelope + artifacts
+→ implementation
+→ deterministic verification
+→ independent review
+→ return findings to original implementer
+→ corrections
+→ re-verification
+→ convergence
+→ evidence
+→ governed memory promotion
+→ cleanup
+→ DONE_VERIFIED
+~~~
+
+
+### Repository ownership during implementation
 
 Do **not** create `packages/browsermesh` on the first implementation commit merely because the target domain has a name. Start inside existing canonical owners:
 
@@ -1077,15 +2432,15 @@ After the BrowserMesh MVP gate, extract a dedicated `packages/browsermesh` only 
 These are **sub-milestones inside existing Nexus work packages**, not new top-level WPs.
 
 ```text
-B0  Legacy/source harvest: BrowserMesh repo + Maestri Wave 4 + Playwright skill + migrations/tests
+B0  Legacy/source harvest: BrowserMesh repo + Maestri Wave 4 + Playwright skill + selective jev-ultrafast pattern harvest + migrations/tests
 B1  Browser contracts + BrowserPlan + typed action/result/error vocabulary
 B2  Policy/trust/origin/side-effect/secret/file contracts before real interaction
 B3  Backend + Host + Capability registries
 B4  Session/lease/profile isolation core
-B5  Playwright deterministic backend
-B6  Observation Engine + browser-aware Context Compiler budget
+B5  Playwright deterministic backend with persistent-session/CDP reuse where safe
+B6  Indexed Observation Engine + compact DOM/ARIA projection + freshness/occlusion metadata + browser-aware Context Compiler budget
 B7  Scrapling Web Retrieval/Crawl backend
-B8  BrowserMesh MVP: Maestri → BrowserPlan → Playwright/Scrapling → Evidence → Verify
+B8  BrowserMesh MVP: Maestri → BrowserPlan → Indexed Observation → Dynamic Action Space → operation+target selection → guarded Playwright/Scrapling → independent OutcomeVerifier → Evidence
 B9  Stagehand SemanticResolver, only after measured selector/DOM failures
 B10 VisualResolver/computer-use adapters, only for cases B9 cannot solve
 B11 Trace/artifact/evidence pipeline using native Playwright traces where possible
@@ -1102,6 +2457,21 @@ B20 Production hardening + release gate
 
 **First production-useful BrowserMesh gate: B8.** B9/B10/B17 are not prerequisites for useful browser automation and must not be built merely because they are architecturally attractive.
 
+#### Jev-ultrafast pattern harvest
+
+`browser-use/jev-ultrafast` is a **reference/pattern source, not a control plane or required runtime dependency**. Nexus may selectively adapt only parts that improve measured BrowserMesh performance or reliability behind existing contracts:
+
+- indexed compact DOM/ARIA observations instead of shipping a full DOM or screenshot by default;
+- dynamic action space generation from the current observation;
+- one decision that binds operation and target together;
+- target freshness, visibility and occlusion checks immediately before interaction;
+- persistent browser/CDP session reuse where isolation and policy permit it;
+- screenshots/visual reasoning only when structured observation is insufficient;
+- never blindly replay a mutating/non-idempotent action after an ambiguous failure;
+- agent `DONE` is not proof: outcome verification is independent and evidence-backed.
+
+This does **not** replace Playwright, Scrapling, Stagehand escalation, Nexus PolicyEngine, BrowserPlan, session/lease/profile isolation, Evidence or Maestri authority. Any adoption must beat the current BrowserMesh baseline in Nexus evals before becoming default.
+
 #### BrowserMesh evaluation and release gates
 
 Measure at minimum:
@@ -1114,6 +2484,11 @@ recipe_success_rate
 actions_per_task
 llm_turns_per_task
 tokens_per_task
+observation_bytes_per_step
+protocol_calls_per_task
+screenshot_rate
+stale_target_rate
+mutation_retry_rate
 browser_seconds
 latency
 cost
@@ -1133,7 +2508,7 @@ cross_task_leakage
 secret_exposure
 ```
 
-Production acceptance requires contract/unit/integration tests plus parallel isolation, hostile-content/prompt-injection, approval, wrong-origin redirect, upload/download, secret-boundary, recipe replay, recovery, lease expiry, host failover where supported, evidence/observability and cost-budget gates.
+Production acceptance requires contract/unit/integration tests plus parallel isolation, hostile-content/prompt-injection, approval, wrong-origin redirect, upload/download, secret-boundary, recipe replay, recovery, lease expiry, host failover where supported, evidence/observability and cost-budget gates. The B8 gate additionally requires compact indexed observations, operation+target binding, pre-action freshness/occlusion checks, no blind replay of ambiguous mutating actions, and independent outcome verification.
 
 Target invariants for security/isolation failures are zero observed violations in the acceptance corpus:
 
@@ -1992,6 +3367,8 @@ R9  custom multi-head Maestri Reflex candidate, only when data proves benefit
 R10 staged promotion/rollback with continued drift/regression monitoring
 ```
 
+**Implementation note (2026-09-27 Gmail assimilation):** this branch implements the R0 typed `MaestriDecisionInput`/`MaestriDecisionResult` contracts and the first policy-first deterministic `maestri.decide()` baseline in `packages/control-plane/src/decisions/maestri-decision.ts`. Hard denial/approval/R4 gates outrank confidence, exact deterministic routes execute without a model, and conflicting/unsupported/insufficient evidence explicitly abstains to fallback. R1 remains incomplete until the golden decision corpus and broader policy baseline are proven.
+
 **V1 does not require custom model training.** V1 establishes the contracts, deterministic baseline, local open-component path, calibration, abstention, evaluation and telemetry. A Nexus-trained Maestri Reflex becomes eligible only when the evidence dataset is large/clean enough and a candidate beats the baseline on the relevant acceptance metrics without weakening safety.
 
 ### Acceptance gates
@@ -2012,8 +3389,8 @@ Maestri Reflex is not production-ready until all are demonstrated:
 ## 4. Current verified baseline
 
 - GitHub repository is `trydavidqix/nexus-brain`; `main` is default. The canonical checkout matches the active Nexus workspace, and `origin` points to `https://github.com/trydavidqix/nexus-brain.git`.
-- Before reconciliation, local `main` was clean and matched `origin/main` at `0b0552a9216d731696861de579c62262063dd682`. PR #43 is open from `docs/provider-native-directory-boundary`; this revision reconciles its Blueprint with the newer migration/readiness status on `main`.
-- Migration packages NB-24–NB-29 are complete. Their status is recorded separately below and is not a product-feature completion claim.
+- Git state verified at the start of revalidation (2026-09-28): canonical checkout is `%USERPROFILE%\Desktop\Projetos\nexus-brain`; local `main` was clean and matched `origin/main` at `9bfcdc0cb56607efc8933c975945f4e73ee1bd27`. PR #43 is merged. Current migration statuses are recorded separately below.
+- At this baseline capture, NB-24–NB-28 were complete and NB-29 was `PENDING_VALIDATION`; its current disposition is recorded in the migration-readiness section below. These preparation gates are not product-feature completion claims.
 - The migrated codebase contains 10 packages and 3 apps. Post-merge checks recorded in the migration audit passed; legacy CodeQL findings remain visible and are not declared fixed by code movement.
 - Existing `docs/MASTER_BLUEPRINT_CANONICAL.md` contains a prior Maestri-wide design and source-to-plan map. Its verified snapshot says MCG F0–F2 and F4 are accepted (**4/7 MCG phases, 57% MCG-only**); F3, F5 and F6 are partial. This is not a Nexus-wide percentage.
 - Existing plan/status records say Brain service/API/database, Git governance enforcement, provider-backed Cloud/Jules execution, full Cloud Fabric acceptance and cross-provider recovery are not yet proven complete. Treat them as pending until fresh tests/evidence confirm otherwise.
@@ -2047,7 +3424,7 @@ Statuses: `TODO`, `IN_PROGRESS`, `PENDING_VALIDATION`, `BLOCKED`, `VALIDATING`, 
 | NB-02 | Contracts and threat/scope model | NB-01 | Versioned request, identity, task, memory, evidence and permission schemas; provider-neutral Brain/Research/Reach plus `BrowserPlan`, `BrowserTask`, `BrowserSession`, `BrowserObservation`, typed `BrowserAction`, `BrowserBackend`, `BrowserHost`, `BrowserProfile`, `BrowserRecipe`; `EngineeringPlan`, `SkillRegistryEntry`, `TaskSkillSet`, skill-load/compaction events; browser origin/redirect/trust/secret/upload/download/side-effect boundaries; engineering risk/autonomy/context-budget/delivery contracts; conflicts recorded as unresolved | DONE |
 | NB-03 | Zero-cost local runtime baseline | NB-02 | Reproducible Windows setup for official full Hindsight API + embedded pg0/pgvector; on-demand API with internal worker; verified existing Codex OAuth provider path with no API key and no cloud billing; fail-closed errors with no provider fallback; optional Gemini lane remains restricted to a verified unbilled Free Tier project; local-only embeddings/reranker; persistent data outside Git; verified backup/restore; documented future PostgreSQL migration; cost boundary and secret hygiene checks. Cloud IaC remains reference-only and is never applied. | DONE — Owner decision and live provider evidence recorded below |
 | NB-04 | Canonical database, temporal memory and provenance | NB-02, NB-03 | Local PostgreSQL/pgvector canonical DEV store; Hindsight V1 behind Nexus ownership; global/project banks; session/task tags; append-only observations/events; research/evidence/sightings/run provenance; `OBSERVED/CANDIDATE/VERIFIED/CANONICAL/SUPERSEDED/CONFLICTED/REVOKED`; `RECALLED/SELECTED/INJECTED/USED/VALIDATED/CONTRIBUTED`; raw web evidence remains untrusted and separate from memory promotion; ACL/scope; verified local restore and pg0-to-external-Postgres export/import compatibility. | DONE — live E2E, ACL/scope, append-only, restore, and standalone PostgreSQL evidence recorded in [`NB-04 evidence`](../engineering/NB-04_PREPARATION.md) |
-| NB-05 | Brain API and one MCP contract | NB-02, NB-04 | Provider-neutral Nexus API/MCP fronts internal engines; external backends are never agent-facing authorities; authenticated context/search/remember/reuse/status plus bounded code/edit-context and research/web capability facade; `remember` stores observations/candidates unless policy passes; responses expose status/provenance/source/coverage/trust; contract tests; bounded context/tool surface | IN_PROGRESS — implementation and local tests in [`NB-05 progress`](../engineering/NB-05_API_MCP_PROGRESS.md); trusted identity issuer/transport and Reach hard-limit source remain unresolved |
+| NB-05 | Brain API and one MCP contract | NB-02, NB-04 | Provider-neutral Nexus API/MCP fronts internal engines; external backends are never agent-facing authorities; authenticated context/search/remember/reuse/status plus bounded code/edit-context and research/web capability facade; `remember` stores observations/candidates unless policy passes; responses expose status/provenance/source/coverage/trust; contract tests; bounded context/tool surface; Edge gateway is trusted identity source through server-owned transport context; Maestri resolves task-bound Reach limits and cost ceiling enforced before adapter dispatch | IN_PROGRESS — implementation and local validations recorded in [`NB-05 evidence`](../engineering/NB-05_API_MCP_PROGRESS.md); required PR checks pending |
 | NB-06 | GitHub project indexer and sync/reconciliation | NB-02, NB-03, NB-04 | Idempotent webhook + scheduled reconciliation; branch/commit provenance; safe retry | TODO |
 | NB-06A | Project Registry and multi-project identity/scope | NB-02, NB-04, NB-06 | Stable project IDs; repo/workspace bindings; lifecycle/stack metadata; per-project policies/agent/tool/browser permissions/budgets; memory bank + code-index + research/source/provider-policy bindings; global/project/session/task namespaces; cross-project isolation tests; project registration without code relocation | TODO |
 | NB-07 | Workspace index, Code Intelligence and capability evidence | NB-01, NB-06, NB-06A | `CodeIntelligenceEngine` with initial validated CBM adapter; per-project files/symbols/calls/imports/routes/tests/dependencies/Git-change evidence; incremental re-index; impact/blast-radius queries; coverage/confidence + source/commit/index-version metadata; bounded cross-repo links; safe direct-source fallback; no namespace collision | TODO |
@@ -2296,7 +3673,7 @@ G9  safe retirement workflow for proven SAFE_MERGED_CLEAN/EMPTY resources
 G10 concurrency validation; enable merge queue only if real parallel PR load justifies it
 ```
 
-G0 completed 2026-09-27. The read-only repository and Git baseline is recorded in [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md). G1 completed on 2026-09-27: [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), executable commit/PR/branch validator, and regression tests are in place; validation is in [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md). G2 completed on 2026-09-27: workflow permissions, checkout credential persistence, action SHA pins, CI naming enforcement, and the repository full-SHA pinning requirement are recorded in [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md). G3 completed on 2026-09-27 in report-only mode; [`NB-19_G3_EVIDENCE.md`](../engineering/NB-19_G3_EVIDENCE.md) records delivery validation, privacy-scoped worktree reporting, CI integration, and zero mutation. G4 completed on 2026-09-27. The active ruleset and repository merge-setting readback are recorded in [`NB-19_G4_RULESET_POLICY.md`](../engineering/NB-19_G4_RULESET_POLICY.md), with the versioned policy at [`.github/rulesets/main.json`](../../.github/rulesets/main.json). G5 completed on 2026-09-27: implementation PR [#60](https://github.com/trydavidqix/nexus-brain/pull/60) and evidence closeout PR [#63](https://github.com/trydavidqix/nexus-brain/pull/63) are merged; required-check and active-ruleset evidence is recorded in [`NB-19_G5_SECURITY_GATES.md`](../engineering/NB-19_G5_SECURITY_GATES.md). G6 completed on 2026-09-27: PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65) merged as `b89086a3d0be4b79411cc33d35372615b483d7d9`; [`NB-19_G6_CODEOWNERS_OIDC.md`](../engineering/NB-19_G6_CODEOWNERS_OIDC.md) records path ownership, advisory review policy, OIDC preparation, test evidence, and no cloud provisioning. G7 implementation PR [#67](https://github.com/trydavidqix/nexus-brain/pull/67) merged as `2963f21f443c6c4f9c31f264796328fad6f7b1c8`; correction PR [#69](https://github.com/trydavidqix/nexus-brain/pull/69) enforces the §7.5 single-owner/Maestri child-task rule and merged as `a9537f2d98a144e62168975eafa11d91d9cdaa94`. [`NB-19_G7_TASK_OWNERSHIP.md`](../engineering/NB-19_G7_TASK_OWNERSHIP.md) records the registry and complete verification evidence. G8 PR [#71](https://github.com/trydavidqix/nexus-brain/pull/71) merged as `d5c22f9134d63dfd5d8dd1d6a71b0797a78c3894`; G9 PR [#72](https://github.com/trydavidqix/nexus-brain/pull/72) merged with required checks passed. G8 and G9 implementation/evidence are in [`NB-19_G8_DETECTION.md`](../engineering/NB-19_G8_DETECTION.md) and [`NB-19_G9_SAFE_RETIREMENT.md`](../engineering/NB-19_G9_SAFE_RETIREMENT.md). G10 is in progress; local serialization and workflow validation are recorded in [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md). The merge queue is not active until CodeQL and all required merge-group checks are proven.
+G0 completed 2026-09-27. The read-only repository and Git baseline is recorded in [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md). G1 completed on 2026-09-27: [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), executable commit/PR/branch validator, and regression tests are in place; validation is in [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md). G2 completed on 2026-09-27: workflow permissions, checkout credential persistence, action SHA pins, CI naming enforcement, and the repository full-SHA pinning requirement are recorded in [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md). G3 completed on 2026-09-27 in report-only mode; [`NB-19_G3_EVIDENCE.md`](../engineering/NB-19_G3_EVIDENCE.md) records delivery validation, privacy-scoped worktree reporting, CI integration, and zero mutation. G4 completed on 2026-09-27. The active ruleset and repository merge-setting readback are recorded in [`NB-19_G4_RULESET_POLICY.md`](../engineering/NB-19_G4_RULESET_POLICY.md), with the versioned policy at [`.github/rulesets/main.json`](../../.github/rulesets/main.json). G5 completed on 2026-09-27: implementation PR [#60](https://github.com/trydavidqix/nexus-brain/pull/60) and evidence closeout PR [#63](https://github.com/trydavidqix/nexus-brain/pull/63) are merged; required-check and active-ruleset evidence is recorded in [`NB-19_G5_SECURITY_GATES.md`](../engineering/NB-19_G5_SECURITY_GATES.md). G6 completed on 2026-09-27: PR [#65](https://github.com/trydavidqix/nexus-brain/pull/65) merged as `b89086a3d0be4b79411cc33d35372615b483d7d9`; [`NB-19_G6_CODEOWNERS_OIDC.md`](../engineering/NB-19_G6_CODEOWNERS_OIDC.md) records path ownership, advisory review policy, OIDC preparation, test evidence, and no cloud provisioning. G7 implementation PR [#67](https://github.com/trydavidqix/nexus-brain/pull/67) merged as `2963f21f443c6c4f9c31f264796328fad6f7b1c8`; correction PR [#69](https://github.com/trydavidqix/nexus-brain/pull/69) enforces the §7.5 single-owner/Maestri child-task rule and merged as `a9537f2d98a144e62168975eafa11d91d9cdaa94`. [`NB-19_G7_TASK_OWNERSHIP.md`](../engineering/NB-19_G7_TASK_OWNERSHIP.md) records the registry and complete verification evidence. G8 PR [#71](https://github.com/trydavidqix/nexus-brain/pull/71) merged as `d5c22f9134d63dfd5d8dd1d6a71b0797a78c3894`; G9 PR [#72](https://github.com/trydavidqix/nexus-brain/pull/72) merged with required checks passed. G8 and G9 implementation/evidence are in [`NB-19_G8_DETECTION.md`](../engineering/NB-19_G8_DETECTION.md) and [`NB-19_G9_SAFE_RETIREMENT.md`](../engineering/NB-19_G9_SAFE_RETIREMENT.md). G10 completed on 2026-09-27; [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md) records ownership serialization and validation. The active ruleset does not support merge queues for this personal-account repository; strict required checks and squash-only delivery remain active.
 
 **Migration gate:** configuration that can move/delete/retire branches or worktrees remains subject to ownership, preservation and clean/merged proof. During any active recovery gate, the Git Hygiene Guard is discovery/report-only for protected resources.
 
@@ -2360,7 +3737,13 @@ Toolchain inventory covers Windows/global, repository-local, CLI, agents, skills
 
 The implementation tracker has **25 work packages total**: NB-00..NB-23 (24 packages) plus NB-06A (Project Registry). This denominator is canonical unless a future blueprint change explicitly adds/removes a package. Only `DONE` counts; `IN_PROGRESS`, `PENDING_VALIDATION`, `VALIDATING`, `BLOCKED` and `TODO` do not. Component-specific acceptance remains separately labeled (for example, MCG 4/7 = 57% MCG-only); do not average it into the Nexus total.
 
-Current tracker snapshot: `DONE 7/25`, `BLOCKED 0/25`, `IN_PROGRESS 1/25`, `PENDING_VALIDATION 0/25`, `TODO 17/25`; **Nexus implementation progress: 28%, remaining: 72%**. NB-00 through NB-04, NB-10, and NB-19 are accepted. NB-03 provider evidence uses existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 integration and restore evidence are in [`NB-04_PREPARATION.md`](../engineering/NB-04_PREPARATION.md). NB-19 G0–G10 and required-check evidence are in [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md). NB-05 is in progress. Versioned schemas and TypeScript types cover identity, task, memory, evidence, permission, EngineeringPlan, Brain, Research, Reach, BrowserPlan/task/session/observation/action/backend/host/profile/recipe, Skill Registry entries, TaskSkillSets and skill events. Evidence: [`threat-and-scope.md`](../architecture/threat-and-scope.md), focused tests under `packages/contracts/tests`, package typecheck, workspace integration tests, architecture and syntax checks, sensitive-data scan, [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md), [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md), [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md), [`NB-19_G3_EVIDENCE.md`](../engineering/NB-19_G3_EVIDENCE.md), [`NB-19_G4_RULESET_POLICY.md`](../engineering/NB-19_G4_RULESET_POLICY.md), [`NB-19_G5_SECURITY_GATES.md`](../engineering/NB-19_G5_SECURITY_GATES.md), [`NB-19_G6_CODEOWNERS_OIDC.md`](../engineering/NB-19_G6_CODEOWNERS_OIDC.md), and [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md). The threat/scope model records unresolved policy vocabularies for later runtime enforcement. Existing partial MCG, dashboard and security work remains evidence only; NB-17–NB-18 stay `TODO` until their full acceptance gates pass.
+Tracker snapshot after NB-29 acceptance and NB-05 implementation start: `DONE 7/25`, `BLOCKED 0/25`, `IN_PROGRESS 1/25`, `PENDING_VALIDATION 0/25`, `TODO 17/25`; **Nexus implementation progress: 28%, remaining: 72%**. NB-00 through NB-04, NB-10, and NB-19 are accepted. NB-03 provider evidence uses existing Codex OAuth; Gemini Free Tier is optional, not exclusive. NB-04 integration and restore evidence are in [`NB-04_PREPARATION.md`](../engineering/NB-04_PREPARATION.md). NB-19 G0–G10 and required-check evidence are in [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md). NB-05 implementation and local evidence are recorded in [`NB-05_API_MCP_PROGRESS.md`](../engineering/NB-05_API_MCP_PROGRESS.md); required PR checks remain pending. Versioned schemas and TypeScript types cover identity, task, memory, evidence, permission, EngineeringPlan, Brain, Research, Reach, BrowserPlan/task/session/observation/action/backend/host/profile/recipe, Skill Registry entries, TaskSkillSets and skill events. Evidence: [`threat-and-scope.md`](../architecture/threat-and-scope.md), focused tests under `packages/contracts/tests`, package typecheck, workspace integration tests, architecture and syntax checks, sensitive-data scan, [`NB-19_G0_BASELINE.md`](../engineering/NB-19_G0_BASELINE.md), [`GIT_NAMING_CONTRACT.md`](../engineering/GIT_NAMING_CONTRACT.md), [`NB-19_G1_EVIDENCE.md`](../engineering/NB-19_G1_EVIDENCE.md), [`NB-19_G2_EVIDENCE.md`](../engineering/NB-19_G2_EVIDENCE.md), [`NB-19_G3_EVIDENCE.md`](../engineering/NB-19_G3_EVIDENCE.md), [`NB-19_G4_RULESET_POLICY.md`](../engineering/NB-19_G4_RULESET_POLICY.md), [`NB-19_G5_SECURITY_GATES.md`](../engineering/NB-19_G5_SECURITY_GATES.md), [`NB-19_G6_CODEOWNERS_OIDC.md`](../engineering/NB-19_G6_CODEOWNERS_OIDC.md), and [`NB-19_G10_CONCURRENCY.md`](../engineering/NB-19_G10_CONCURRENCY.md). The threat/scope model records unresolved policy vocabularies for later runtime enforcement. Existing partial MCG, dashboard and security work remains evidence only; NB-17–NB-18 stay `TODO` until their full acceptance gates pass.
+
+### NB-05 trusted identity and Reach budget decision (2026-09-28)
+
+Owner approved the Nexus Edge gateway as the sole trusted identity source. Its verified principal enters through server-owned transport context; request identity fields remain untrusted claims and must match the principal. The Brain API does not select or expose a token format; the gateway adapter owns source-specific verification.
+
+Maestri is the sole trusted Reach budget authority. It resolves task- and capability-bound limits for queries, providers, results per provider, browser escalations, wall time, and cost. The Brain API fails closed when the resolver is absent or returns invalid scope/limits, rejects caller requests above the trusted limits, removes caller-supplied budgets, and passes the verified policy separately to Reach adapters. No external provider may be wired until Maestri resolution and provider-side enforcement are integrated and tested. Evidence: [`NB-05_API_MCP_PROGRESS.md`](../engineering/NB-05_API_MCP_PROGRESS.md).
 
 ### NB-01 audit record
 
@@ -2374,20 +3757,20 @@ NB-10 implementation is in progress on `feature/NB-10-everything-git-edge`. The 
 
 `pnpm --dir apps/edge test:unit` passed 43 tests, including cursor baselines/resets, filtering, Git fallback, large 64-bit journal IDs and burst coalescing; `pnpm --dir apps/edge typecheck` passed. A live local smoke test observed one real Everything Journal `CREATE` event after fixing JavaScript rounding of 64-bit journal IDs; the temporary probe file was removed. Full local repository gates passed: architecture check (13 packages), workspace unit tests, integration tests (20/20), syntax/import check (122 modules), sensitive-data scan (261 files), workspace typechecks, PowerShell parser validation and `git diff --check`. PR CI exposed issues missed by Windows: lowercased roots broke Linux `realpath`, and CodeQL flagged trailing-separator regex on arbitrary paths. Fixes preserve path casing for Git operations, use native path normalization and match ignore globs with segment-based dynamic programming; regressions cover mixed-case roots and 100 nested path components. NB-10 acceptance gates are complete.
 
-### Migration readiness completion record (NB-24–NB-29)
+### Migration readiness status (NB-24–NB-29)
 
-Migration readiness is a separate preparation track, not part of the 25-package implementation denominator. All six gates are complete. NB-29 completion and the canonical repository path are confirmed by the active task state; local `main` was verified clean and synchronized with `origin/main` at `0b0552a9216d731696861de579c62262063dd682` before this PR reconciliation.
+Migration readiness is a separate preparation track, not part of the 25-package implementation denominator. NB-24–NB-29 are `DONE`. NB-29 is closed against the actual files inventoried in the scoped legacy `.mcg-state` and Nexus `.nexus-state` roots, plus the reconciled preserved Nexus worktree. The historically reported count of 417 has no trusted expected manifest, remains unverified, and is not an acceptance precondition; no claim is made that those files were recovered or absent. See [NB-29 cutover revalidation](../engineering/NB-29_CUTOVER_REVALIDATION_2026-09-28.md). Migration Readiness is complete; future implementation packages remain governed by their own gates.
 
-| ID | Completed gate | Status |
+| ID | Gate | Status |
 |---|---|---|
 | NB-24 | Canonical monorepo AS-IS→TARGET map and boundary proof | DONE |
 | NB-25 | Shared contracts, schemas, registries and architecture gates | DONE |
 | NB-26 | Domain package migration | DONE |
 | NB-27 | Executable apps and Windows Edge migration | DONE |
 | NB-28 | PNPM, integration tests, evals, docs and GitHub architecture | DONE |
-| NB-29 | Canonical local path cutover and final local/GitHub synchronization | DONE |
+| NB-29 | Canonical local path cutover and final local/GitHub synchronization | DONE — actual scoped state manifest and preserved worktree reconciled; historical 417 count unverified and not a gate |
 
-The migration audit and implementation evidence remain in [`../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md`](../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md). The prior `NB-29 BLOCKED` statements in that historical audit are superseded by this completion record and the active task state. Do not infer implementation-package completion from migration gates, code movement, or migration CI.
+The migration audit and implementation evidence remain in [`../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md`](../migration/NEXUS_CANONICAL_ARCHITECTURE_MIGRATION.md). Historical snapshots remain historical; the latest NB-29 evidence governs current status. Do not infer implementation-package completion from migration gates, code movement, or migration CI.
 
 ### NB-03 architecture reconciliation and technical validation (2026-09-26)
 
@@ -2414,6 +3797,8 @@ Historical Gemini failure evidence (2026-09-27, 20:18 Europe/Lisbon; not the cur
 Owner decision and accepted live validation (2026-09-27): Gemini Free Tier is no longer the exclusive NB-03 provider gate. Using the existing local Codex OAuth profile without reading, printing or setting an API key, Hindsight 0.10.1 passed startup provider verification with the Codex CLI's configured model `gpt-6-luna`; `/health` returned HTTP 200; one synthetic `/v1/default/banks/nb03-e2e-check/reflect` POST returned HTTP 200 with usage data; and Hindsight's LLM-request registry recorded `provider=openai-codex`, `model=gpt-6-luna`, `status=success`, and `scope=reflect_tool_call`. Response text was not printed or persisted. The Hindsight package default `gpt-5.4-mini` was rejected by this account (`HTTP 400`, unsupported model); the launcher now reads the selected model from Codex CLI config or accepts `-Model`. This evidence satisfies the NB-03 live provider-path gate. Gemini remains optional with its Free Tier quota circuit breaker; no Google billing, project, cloud resource or API key changed. The zero-cost local pg0 setup, local embeddings/reranker, backup/restore evidence, secret hygiene and future PostgreSQL migration plan remain in force. NB-03 is `DONE` under this Owner decision; NB-04 integration merged in PR #73 as `12997f220dff5a5540411d1c7af5ae03de5fbbde`. See [`NB-04_PREPARATION.md`](../engineering/NB-04_PREPARATION.md) for E2E, ACL/scope, restore, and standalone PostgreSQL evidence.
 
 Supplemental Codex OAuth revalidation (2026-09-27): `/health` and synthetic reflect both returned HTTP 200; Hindsight recorded `openai-codex` / `gpt-6-luna` / `success`. See [NB-03 revalidation evidence](../engineering/NB-03_CODEX_OAUTH_REVALIDATION_2026-09-27.md). No key or response text was persisted.
+
+Owner confirmation and fresh live verification (2026-09-28): the existing `openai-codex` OAuth path remains the accepted NB-03 provider gate; Gemini Free Tier is optional. Hindsight `/health` and one synthetic `/reflect` returned HTTP 200, the response matched `REFLECT_CODEX_PASS`, and the LLM-request registry confirmed `openai-codex` / `gpt-6-luna` / `success`. PR #90 records the sanitized evidence. No Gemini API key, Google billing/project change, or cloud resource was involved; NB-03 remains `DONE`.
 
 Current backup/restore verification (2026-09-27): `backup.ps1` created custom-format dump `nexus-hindsight-20260927-213058-710.dump` with SHA-256 `b17f29bdb98e5d0a8f7c8aed7d612dd9741f944e9fae0402284151b34e35af1d`. `restore-test.ps1` verified the checksum, restored 24 public tables into an isolated pg0 PostgreSQL 18.1 instance, and stopped that instance. The restore launcher now detaches pg0 startup output to Windows NUL devices and polls readiness; this prevents PowerShell from waiting on inherited output handles and keeps local database credentials out of logs.
 

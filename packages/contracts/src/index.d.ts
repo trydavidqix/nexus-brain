@@ -1,6 +1,6 @@
 export type ContractType =
   | "task" | "event" | "trace" | "telemetry" | "agent" | "runtime"
-  | "tool" | "plugin" | "mcp" | "alert" | "eval" | "artifact" | "engineering-plan" | "identity" | "nexus-task" | "memory" | "evidence" | "permission" | "browser-plan" | "browser-task" | "browser-session" | "browser-observation" | "browser-action" | "browser-backend" | "browser-host" | "browser-profile" | "browser-recipe" | "brain-request" | "brain-response" | "research-request" | "research-result" | "reach-request" | "reach-outcome" | "skill-registry-entry" | "task-skill-set" | "skill-event";
+  | "tool" | "plugin" | "mcp" | "alert" | "eval" | "artifact" | "engineering-plan" | "identity" | "nexus-task" | "memory" | "evidence" | "permission" | "browser-plan" | "browser-task" | "browser-session" | "browser-observation" | "browser-action" | "browser-backend" | "browser-host" | "browser-profile" | "browser-recipe" | "brain-request" | "brain-response" | "research-request" | "research-result" | "reach-request" | "reach-outcome" | "skill-registry-entry" | "task-skill-set" | "skill-event" | "project-factory-request" | "project-factory-plan" | "maestri-decision-input" | "maestri-decision-result";
 
 export type { EngineeringAutonomyLevel, EngineeringPlan, EngineeringSkillPolicy, EngineeringTaskType } from "./engineering/plan.js";
 export type { NexusIdentity } from "./identity.js";
@@ -14,6 +14,8 @@ export type { BrainCoverage, BrainOperation, BrainRequest, BrainResponse, ReachS
 export type { ResearchLimits, ResearchRequest, ResearchResult, ResearchStatus } from "./research.js";
 export type { ReachOutcome, ReachRequest } from "./reach.js";
 export type { SkillEvent, SkillRegistryEntry, TaskSkillSet } from "./skills.js";
+export type { ProjectFactoryDiscoveryBudget, ProjectFactoryDisposition, ProjectFactoryPlan, ProjectFactoryRequest, ProjectFactoryResourceDecision, ProjectFactoryRisk, ProjectFactoryStatus, ProjectFactoryTaskSeed } from "./project-factory.js";
+export type { MaestriDecisionInput, MaestriDecisionPolicy, MaestriDecisionResult, MaestriDecisionRisk, MaestriDecisionSignals, MaestriDecisionSource } from "./maestri-decision.js";
 
 export interface ContractValidationResult {
   valid: boolean;
