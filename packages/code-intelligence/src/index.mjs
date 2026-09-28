@@ -373,10 +373,17 @@ export class CodeIntelligenceEngine {
       const targetWarnings = [];
       for (const indexedTarget of targetIndexResults) {
         let targetStatus = null;
-        try { targetStatus = await this.adapter.invoke('index_status', { project: indexedTarget.target.alias }); } catch { /* post-link generation remains unknown */ }
+        try { targetStatus = await this.adapter.invoke('index_status', { project: indexedTarget.target.alias }); } catch { /* target commit remains unverified */ }
+        let targetCoverage = null;
+        try {
+          targetCoverage = await this.adapter.invoke('check_index_coverage', {
+            project: indexedTarget.target.alias,
+            scopes: ['.'],
+          });
+        } catch { /* post-link generation remains unknown */ }
         const workspaceCommit = await currentCommit(indexedTarget.target.rootPath);
         const indexCommit = backendIndexCommit(targetStatus, indexedTarget.targetIndex);
-        const generation = backendGeneration(targetStatus);
+        const generation = backendGeneration(targetCoverage);
         const workspaceStable = Boolean(indexedTarget.workspaceCommitBefore && workspaceCommit && indexedTarget.workspaceCommitBefore === workspaceCommit);
         const freshness = indexCommit && workspaceCommit && indexCommit !== workspaceCommit
           ? 'stale'

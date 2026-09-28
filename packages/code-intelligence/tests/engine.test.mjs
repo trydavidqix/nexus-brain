@@ -49,7 +49,7 @@ async function initializeGit(rootPath) {
   return stdout.trim();
 }
 
-function fakeAdapter({ fail = false, onIndex, indexStatusOverride } = {}) {
+function fakeAdapter({ fail = false, onIndex, indexStatusOverride, coverageGeneration = true } = {}) {
   const calls = [];
   const workspacePaths = new Map();
   let crossPassComplete = false;
@@ -71,7 +71,11 @@ function fakeAdapter({ fail = false, onIndex, indexStatusOverride } = {}) {
     async invoke(tool, params) {
       calls.push([tool, params]);
       if (fail) throw new Error('expected failure');
-      if (tool === 'index_status') return { data: { metadata: { generation: crossPassComplete ? 'post-cross-generation-8' : 'pre-cross-generation-7' }, ...(indexStatusOverride?.(params) || {}) }, backend_version: 'fake@1' };
+      if (tool === 'index_status') return { data: { ...(indexStatusOverride?.(params) || {}) }, backend_version: 'fake@1' };
+      if (tool === 'check_index_coverage') return {
+        data: { ...(coverageGeneration ? { metadata: { generation: crossPassComplete ? 'post-cross-generation-8' : 'pre-cross-generation-7' } } : {}) },
+        backend_version: 'fake@1',
+      };
       if (tool === 'query_graph') {
         const rows = [...workspacePaths.entries()]
           .filter(([alias]) => alias !== params.project)
@@ -160,13 +164,40 @@ test('indexes only explicitly selected registered cross-repository targets and r
   const crossIndexPosition = adapter.calls.findIndex(([name, input]) => name === 'index' && input.mode === 'cross-repo-intelligence');
   const graphQueryPosition = adapter.calls.findIndex(([name]) => name === 'query_graph');
   const targetStatusPosition = adapter.calls.findIndex(([name, params]) => name === 'index_status' && params.project === indexCalls[1][1].projectAlias);
+  const targetCoveragePosition = adapter.calls.findIndex(([name, params]) => name === 'check_index_coverage' && params.project === indexCalls[1][1].projectAlias);
   const architectureCall = adapter.calls.find(([name]) => name === 'get_architecture');
   assert.deepEqual(architectureCall[1].aspects, ['routes']);
-  assert.ok(crossIndexPosition < graphQueryPosition && graphQueryPosition < targetStatusPosition);
+  assert.ok(crossIndexPosition < graphQueryPosition && graphQueryPosition < targetStatusPosition && targetStatusPosition < targetCoveragePosition);
+  assert.deepEqual(adapter.calls[targetCoveragePosition][1].scopes, ['.']);
   assert.equal(adapter.calls[graphQueryPosition][1].query.endsWith('LIMIT 200'), true);
   assert.ok(result.related_targets[0].warnings.some(warning => warning.code === 'TARGET_INDEX_PROVENANCE_UNVERIFIED'));
   assert.equal(JSON.stringify(result).includes(targetRoot), false);
   assert.equal(result.coverage.complete, false);
+});
+
+test('withholds target links when CBM does not provide a target index generation', async t => {
+  const sourceRoot = await fixture(t);
+  const targetRoot = await fixture(t);
+  await initializeGit(sourceRoot);
+  await initializeGit(targetRoot);
+  const source = project('source-generation-missing');
+  const target = project('target-generation-missing');
+  const projects = new Map([[source.project_id, source], [target.project_id, target]]);
+  const adapter = fakeAdapter({ coverageGeneration: false });
+  const engine = new CodeIntelligenceEngine({
+    stateStore: { getProject: id => projects.has(id) ? { project: projects.get(id), version: 1 } : null },
+    resolveWorkspace: async ({ project_id }) => project_id === source.project_id ? sourceRoot : targetRoot,
+    adapter,
+  });
+  const result = await engine.index({
+    project_id: source.project_id,
+    workspace_binding: source.workspace_bindings[0],
+    target_projects: [{ project_id: target.project_id, workspace_binding: target.workspace_bindings[0] }],
+  });
+  assert.equal(result.related_targets[0].index_version, 'unknown');
+  assert.equal(result.related_targets[0].evidence_associated, false);
+  assert.equal(result.data.code_graph.cross_repo, null);
+  assert.ok(result.related_targets[0].warnings.some(warning => warning.code === 'TARGET_INDEX_GENERATION_UNKNOWN'));
 });
 
 test('withholds target links when workspace HEAD changes during indexing', async t => {
