@@ -428,8 +428,10 @@ export class CodeIntelligenceEngine {
       }
       let architecture = null;
       let indexStatus = null;
+      let indexCoverage = null;
       try { architecture = await this.adapter.invoke('get_architecture', { project: scope.alias, aspects: ['routes'] }); } catch { /* architecture is advisory */ }
       try { indexStatus = await this.adapter.invoke('index_status', { project: scope.alias }); } catch { /* index status is advisory */ }
+      try { indexCoverage = await this.adapter.invoke('check_index_coverage', { project: scope.alias, scopes: ['.'] }); } catch { /* index generation remains unknown */ }
       return {
         data: {
           indexing: indexed?.data ?? indexed,
@@ -443,7 +445,7 @@ export class CodeIntelligenceEngine {
           index_status: indexStatus?.data ?? indexStatus,
         },
         coverage: { state: 'unknown', complete: false },
-        index_version: backendGeneration(indexStatus),
+        index_version: backendGeneration(indexCoverage),
         index_commit: crossRepo?.data?.index_commit || crossRepo?.index_commit || indexed?.data?.index_commit || indexed?.index_commit,
         backend_version: crossRepo?.backend_version || indexed?.backend_version || indexed?.data?.backend_version || null,
         related_targets: relatedTargets,

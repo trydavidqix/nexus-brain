@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import test from 'node:test';
-import { createCodeIntelligenceEngine } from '../src/index.mjs';
+import { CodebaseMemoryAdapter, createCodeIntelligenceEngine } from '../src/index.mjs';
 
 const execFileAsync = promisify(execFile);
 const runtimeBinary = process.env.CBM_BINARY;
@@ -71,10 +71,40 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
     workspace_bindings: [{ kind: 'local', location: 'opaque://ci/provider' }],
   };
   const projects = new Map([[project.project_id, project], [providerProject.project_id, providerProject]]);
+  const providerAlias = `nexus-${createHash('sha256').update(providerProject.project_id).update('\0').update(providerProject.workspace_bindings[0].location).digest('hex')}`;
+  const cbm = new CodebaseMemoryAdapter();
+  const queryGraphDiagnostics = [];
+  const adapter = {
+    index: (...args) => cbm.index(...args),
+    health: (...args) => cbm.health(...args),
+    async invoke(tool, params) {
+      const result = await cbm.invoke(tool, params);
+      if (tool === 'query_graph') {
+        const payload = result?.data ?? result;
+        const columns = Array.isArray(payload?.columns) ? payload.columns.map(column => typeof column === 'string' ? column : column?.name) : [];
+        const rows = Array.isArray(payload?.rows) ? payload.rows.map(row => {
+          if (!Array.isArray(row)) return row;
+          return Object.fromEntries(columns.map((name, index) => [name, row[index]]));
+        }) : [];
+        queryGraphDiagnostics.push({
+          payload_keys: Object.keys(payload || {}),
+          columns,
+          rows: rows.slice(0, 10).map(row => ({
+            keys: Object.keys(row || {}),
+            relation: row?.relation ?? row?.relationship ?? row?.edge_type ?? null,
+            target_matches_allowlist: [row?.target_project, row?.target_project_id, row?.target_alias, row?.target_id, row?.target?.project_id, row?.target?.alias, row?.target?.id]
+              .some(value => value === providerProject.project_id || value === providerAlias),
+          })),
+        });
+      }
+      return result;
+    },
+  };
 
   const engine = createCodeIntelligenceEngine({
     stateStore: { getProject: id => projects.has(id) ? { project: projects.get(id), version: 1 } : null },
     resolveWorkspace: async ({ project_id, binding }) => binding.location === projects.get(project_id)?.workspace_bindings[0].location ? (project_id === project.project_id ? repoPath : providerPath) : null,
+    adapter,
   });
   const request = { project_id: project.project_id, workspace_binding: project.workspace_bindings[0] };
 
@@ -137,8 +167,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   assert.notEqual(targetMetadata.index_version, 'unknown');
   assert.equal(targetMetadata.freshness, 'unverified');
   assert.equal(targetMetadata.workspace_stable, true);
-  assert.equal(targetMetadata.evidence_associated, true);
-  const providerAlias = `nexus-${createHash('sha256').update(providerProject.project_id).update('\0').update(providerProject.workspace_bindings[0].location).digest('hex')}`;
+  assert.equal(targetMetadata.evidence_associated, true, JSON.stringify({ warning_codes: targetMetadata.warnings.map(warning => warning.code), query_graph: queryGraphDiagnostics }));
   const linkedTarget = crossRepo.data.code_graph.cross_repo.links.find(link => link.target_project_id === providerProject.project_id);
   assert.ok(linkedTarget);
   assert.equal(linkedTarget.relation, 'CROSS_HTTP_CALLS');
