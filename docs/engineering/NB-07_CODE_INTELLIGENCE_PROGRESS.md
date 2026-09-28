@@ -23,5 +23,6 @@
 ## Current evidence
 
 - The package and Windows workflow are present in the working tree; the CI job is configured to download and checksum-verify the pinned CBM archive, then run the isolated Windows fixture.
-- No test, typecheck, install, adapter execution or runtime check has run locally on this PC. GitHub Actions evidence is pending because the branch has not yet been published as a PR.
-- Static review identified target-HEAD races and stale backend-index provenance; the current code suppresses links if HEAD changes or the backend reports a commit different from the current workspace HEAD. Focused fake tests cover both cases. Independent review of the latest delta and GitHub Actions evidence remain pending.
+- No test, typecheck, install, adapter execution or runtime check has run locally on this PC. The first PR run confirmed the Linux unit tests and OpenTofu checks pass, but the Windows fixture setup attempted to build unrelated `better-sqlite3` native code and failed because the hosted runner has no Visual Studio C++ workload. The Windows job now installs only the Code Intelligence dependency closure with lifecycle scripts disabled; fresh CI evidence is pending.
+- The first PR run also rejected the title naming format; PR #123 was renamed to `code-intelligence: add project-scoped CBM engine` before the rerun.
+- Independent static review passed. The code suppresses links if target HEAD changes during indexing or if CBM reports a stale backend index commit; focused fake tests cover both cases. Fresh GitHub Actions evidence remains pending.
