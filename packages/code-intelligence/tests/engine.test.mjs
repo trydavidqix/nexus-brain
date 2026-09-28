@@ -103,7 +103,7 @@ test('loads only the selected Project v2 workspace and isolates equal repo locat
   });
 
   const binding = projects.get('alpha').workspace_bindings[0];
-  const result = await engine.searchSymbol({ project_id: 'alpha', workspace_binding: binding, name: 'helper' });
+  const result = await engine.searchSymbol({ project_id: 'alpha', workspace_binding: binding, name: 'helper(value)' });
   assert.equal(result.status, 'PARTIAL');
   assert.equal(result.project_id, 'alpha');
   assert.equal(result.coverage.complete, false);

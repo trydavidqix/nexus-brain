@@ -162,7 +162,9 @@ function redactWorkspacePath(value, rootPath) {
 
 function symbolNeedle(request) {
   const raw = request.name || request.function_name || request.qualified_name || '';
-  return String(raw).split(/[.:/\\]/).at(-1).replace(/\(.*$/, '');
+  const symbol = String(raw).split(/[.:/\\]/).at(-1);
+  const signatureStart = symbol.indexOf('(');
+  return signatureStart === -1 ? symbol : symbol.slice(0, signatureStart);
 }
 
 function boundedInteger(value, fallback, maximum) {

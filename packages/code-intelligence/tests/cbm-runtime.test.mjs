@@ -11,35 +11,34 @@ import { CodebaseMemoryAdapter, createCodeIntelligenceEngine } from '../src/inde
 const execFileAsync = promisify(execFile);
 const runtimeBinary = process.env.CBM_BINARY;
 
-function safeQueryFailure(stdout, stderr, code, paths) {
-  let structuredError = null;
+function queryFailureCategory(value) {
+  const text = String(value || '').toLowerCase();
+  if (!text) return 'no_diagnostic_text';
+  if (text.includes('syntax') || text.includes('parse')) return 'query_syntax';
+  if (text.includes('unsupported') && text.includes('query')) return 'unsupported_query';
+  if (text.includes('project') && (text.includes('not found') || text.includes('unknown'))) return 'project_not_found';
+  if (text.includes('index') && (text.includes('unavailable') || text.includes('missing'))) return 'index_unavailable';
+  if (text.includes('lock') || text.includes('busy') || text.includes('admission')) return 'backend_busy';
+  if (text.includes('database') || text.includes('sqlite') || text.includes('storage')) return 'backend_storage';
+  if (text.includes('argument') || text.includes('required flag') || text.includes('invalid option')) return 'invalid_arguments';
+  if (text.includes('error') || text.includes('failed') || text.includes('invalid') || text.includes('unsupported')) return 'backend_error';
+  return 'unclassified';
+}
+
+function safeQueryFailure(stdout, stderr, code) {
+  let diagnostic = stderr;
   try {
     const response = JSON.parse(stdout);
-    if (typeof response?.structuredContent?.error === 'string') structuredError = response.structuredContent.error;
-    else if (typeof response?.error === 'string') structuredError = response.error;
-    else if (typeof response?.error?.message === 'string') structuredError = response.error.message;
+    const error = response?.structuredContent?.error ?? response?.error;
+    if (typeof error === 'string') diagnostic = error;
+    else if (typeof error?.message === 'string') diagnostic = error.message;
+    else if (typeof error?.code === 'string') diagnostic = error.code;
   } catch { /* failed commands can emit non-JSON diagnostics */ }
-  if (structuredError) {
-    let message = structuredError;
-    for (const path of paths) {
-      if (!path) continue;
-      message = message.split(path).join('<fixture-path>');
-      message = message.split(path.replace(/\\/g, '/')).join('<fixture-path>');
-    }
-    message = message
-      .replace(/AIza[\w-]{30,}/g, '<redacted-key>')
-      .replace(/(?:sk-[\w-]{20,}|gh[pousr]_[\w]{20,})/gi, '<redacted-token>')
-      .replace(/(api[-_ ]?key|secret|password|token)([\s"':=]+)[^\s,"'}]+/gi, '$1$2<redacted>')
-      .replace(/[A-Za-z]:\\[^\r\n"',}]+/g, '<path>')
-      .replace(/\/(?:home|Users|runner|tmp|var)\/[^\s"',}]+/g, '<path>')
-      .slice(0, 300);
-    return { exit_code: code, error: message };
-  }
   return {
     exit_code: code,
     stdout_bytes: Buffer.byteLength(stdout),
     stderr_bytes: Buffer.byteLength(stderr),
-    stderr_has_error_marker: /error|failed|invalid|unsupported/i.test(stderr),
+    error_category: queryFailureCategory(diagnostic),
   };
 }
 
@@ -113,7 +112,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
         child.stdout.on('data', chunk => { stdout = `${stdout}${chunk}`.slice(-65_536); });
         child.stderr.on('data', chunk => { stderr = `${stderr}${chunk}`.slice(-65_536); });
         child.on('close', code => {
-          if (code !== 0) queryGraphDiagnostics.push(safeQueryFailure(stdout, stderr, code, [repoPath, providerPath, cachePath]));
+          if (code !== 0) queryGraphDiagnostics.push(safeQueryFailure(stdout, stderr, code));
         });
       }
       return child;
