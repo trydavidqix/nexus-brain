@@ -1,8 +1,10 @@
 # NB-06A Project Registry progress
 
-**Status:** IN_PROGRESS on `codex/NB-06A-project-registry`, based on `main` at `f688a5c5815ccb90e7a7bf5d5590d74df0b8a74f`.
+**Status:** DONE. Merged by PR #120 on 2026-09-28 as `1a8973ec49ea47082182f63911e866120e4c9ae7`.
+**Implementation commit:** `0f06b947f451bf8f00e46f7abd41d7f997ff1de7` on `codex/nb06-a-project-registry`.
+**Next eligible milestone:** NB-07, subject to its documented CBM adapter validation gate.
 **Owner decision date:** 2026-09-28.
-**Validation:** implementation and tests are present on this branch; static review passed. GitHub Actions are pending. No local tests or typechecks are run on this PC.
+**Validation:** independent static review passed; required GitHub Actions passed on PR #120 before squash merge. No local tests or typechecks were run on this PC.
 
 ## Approved decisions
 
@@ -28,4 +30,5 @@
 
 - Main includes NX-03 StateStore Project/Goal v1 from PR #118 (`f688a5c5815ccb90e7a7bf5d5590d74df0b8a74f`). Its GitHub checks passed.
 - This branch adds the Project v2 schema and typed local workspace bindings, `registerProject`, the additive StateStore contract-version migration, and focused contract, state, and Hindsight isolation tests.
-- Static review passed for the code and test diff. GitHub Actions have not run yet; no NB-06A validation gate is claimed complete until fresh CI evidence is recorded here.
+- Independent review found no blocker. PR #120 required checks passed: MCG workspace boundaries, package unit tests, delivery/Git hygiene regression tests, cross-package integration, import/syntax smoke, secret/path/personal-data scan, TypeScript workspace checks, OpenTofu validation, CodeQL, dependency review, Gitleaks, OSV-Scanner, Semgrep and ZAP baseline.
+- PR #120 was squash-merged after checks passed. Merge commit: `1a8973ec49ea47082182f63911e866120e4c9ae7`. Local `main` was fast-forwarded to the same commit and was clean at verification.
