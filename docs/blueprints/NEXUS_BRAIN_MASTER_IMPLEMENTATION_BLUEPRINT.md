@@ -125,6 +125,46 @@ Provider agents execute bounded work inside the selected project's repository/wo
 
 The Nexus Control Center must support portfolio-level and project-level views. Portfolio view shows registered projects, health/status, active tasks, agents, budgets, incidents and blockers. Project drill-down exposes that project's tasks, sessions, memory, knowledge, Git/PRs, tests, deployments, evidence, costs and history without mixing unrelated project state.
 
+## 3A.1 Project Factory and email-blueprint assimilation
+
+The 2026-09-27 Gmail blueprint audit is recorded in `docs/audits/NEXUS_EMAIL_BLUEPRINT_AUDIT_2026-09-27.md`. Source plans are provenance, not authority by title. Business-only Lumenva modules remain outside Nexus; technical capabilities are assimilated into existing Nexus owners and must not create duplicate control planes, routers, memory engines, gateways or evidence stores.
+
+The main missing capability promoted by that audit is **Project Factory**. It is a coordination domain above existing owners, not a second orchestrator.
+
+```text
+OWNER OBJECTIVE
+  ↓
+ProjectFactoryRequest
+  ↓
+discovery + evidence + resource/capability discovery
+  ↓
+REUSE | USE_PROVIDER | ADAPT | BUILD
+  ↓
+architecture decisions + bounded ProjectFactoryPlan
+  ↓
+Maestri task graph
+  ↓
+Engineering Control + Execution
+  ↓
+independent validation
+  ↓
+completion gates
+```
+
+Canonical ownership:
+
+- Maestri owns task/session/DAG lifecycle and recovery.
+- Reach owns capability/provider/tool discovery.
+- Engineering Control owns methodology, scope and verification requirements.
+- Execution owns provider/runtime/agent execution.
+- Governance owns risk, approvals, secrets and policy.
+- Evidence owns proof and provenance.
+- Project Factory coordinates these owners and may not create parallel stores or authorities.
+
+Contracts-first V1 adds `project-factory-request` and `project-factory-plan`. The plan records discovery evidence, architecture decisions, build/reuse/provider decisions, task seeds, completion gates and human gates. `packages/execution/src/cloud-fabric/project-factory.ts` implements the first deterministic compiler: it requires discovery evidence, enforces candidate budgets, prefers `REUSE → USE_PROVIDER → ADAPT → BUILD`, emits bounded task seeds, and requires an owner gate for R3/R4 work. It coordinates existing owners rather than replacing them.
+
+The same audit assimilates Capability OS / Tool Hub / Tool Gateway patterns into existing Reach/Capability Registry/Execution/Governance owners: progressive discovery, provider health/version telemetry, per-task tool profiles, implementation selection/evaluation and Credential Broker semantics. Do not inject the full tool catalog into agents and do not create separate Capability OS, Tool Hub or Tool Gateway products.
+
 ## 3B. V1 memory engine: Hindsight
 
 **Decision:** Hindsight is the V1 memory engine. Nexus Brain remains the authority over canonical truth, scope, provenance, conflict resolution, policy and context delivery. For DEV, run the full Hindsight API on demand on existing Windows hardware, use pg0's embedded PostgreSQL/pgvector, and leave Hindsight's internal worker enabled. No paid cloud runtime or external database is part of this phase.
@@ -3326,6 +3366,8 @@ R8  evidence-backed decision dataset + offline retraining pipeline
 R9  custom multi-head Maestri Reflex candidate, only when data proves benefit
 R10 staged promotion/rollback with continued drift/regression monitoring
 ```
+
+**Implementation note (2026-09-27 Gmail assimilation):** this branch implements the R0 typed `MaestriDecisionInput`/`MaestriDecisionResult` contracts and the first policy-first deterministic `maestri.decide()` baseline in `packages/control-plane/src/decisions/maestri-decision.ts`. Hard denial/approval/R4 gates outrank confidence, exact deterministic routes execute without a model, and conflicting/unsupported/insufficient evidence explicitly abstains to fallback. R1 remains incomplete until the golden decision corpus and broader policy baseline are proven.
 
 **V1 does not require custom model training.** V1 establishes the contracts, deterministic baseline, local open-component path, calibration, abstention, evaluation and telemetry. A Nexus-trained Maestri Reflex becomes eligible only when the evidence dataset is large/clean enough and a candidate beats the baseline on the relevant acceptance metrics without weakening safety.
 
