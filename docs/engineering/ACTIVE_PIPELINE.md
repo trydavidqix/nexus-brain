@@ -2,20 +2,20 @@
 
 **Pipeline tracking:** ACTIVE
 **Implementation execution:** ACTIVE — Task 1 is authorized through NB-23 completion.
-**Updated:** 2026-09-29 03:47 Europe/Lisbon
+**Updated:** 2026-09-29
 **Canonical plan:** [`NEXUS_BRAIN_MASTER_IMPLEMENTATION_BLUEPRINT.md`](../blueprints/NEXUS_BRAIN_MASTER_IMPLEMENTATION_BLUEPRINT.md)
 **Repository:** `trydavidqix/nexus-brain`
 
 ## Progress
 
-- **Completed:** 12/25 work packages (48%)
-- **Last completed:** NB-08
-- **Current milestone:** NB-09 — Memory/event compiler, Skills and Maestri decision tiers, BLOCKED on local inference/calibration acceptance evidence
-- **Blocked parallel milestone:** NB-11 — persistent snapshot encryption key provider is undefined; owner decision requested
+- **Completed:** 13/25 work packages (52%)
+- **Last completed:** NB-09
+- **Current milestone:** NB-11 — encrypted snapshot persistence and restore, implementation/review in progress
+- **NB-11 Owner decision:** DPAPI CurrentUser approved; key restore is limited to the same Windows user profile and machine
 - **NB-08 branch:** `codex/nb08-hybrid-retrieval`
-- **NB-11 branch:** `codex/nb11-snapshot-restore` (no implementation changes)
+- **NB-11 branch:** `codex/nb11-snapshot-restore` (implementation ready for independent review)
 - **NB-09 branch:** `codex/nb09-decision-tiers` (base `779d334ddacae82bdde4643c1a04d5d04c4240a2`)
-- **Main base after NB-08 merge:** `25265fc7747614bc70db06f8a11db88161648e83` (before this documentation sync PR)
+- **Current main base for NB-09/NB-11:** `779d334ddacae82bdde4643c1a04d5d04c4240a2`
 - **Pull request:** [#124](https://github.com/trydavidqix/nexus-brain/pull/124), squash-merged as `25265fc`
 
 ## Completed work packages
@@ -35,8 +35,8 @@
 
 ## Remaining work packages
 
-- [ ] NB-09 — BLOCKED; implementation is local and unmerged; concrete local adapter, versioned held-out calibration data, and project risk/approval false-negative gate are missing
-- [ ] NB-11 — BLOCKED (persistent key provider decision)
+- [x] NB-09
+- [ ] NB-11
 - [ ] NB-12
 - [ ] NB-13
 - [ ] NB-14
@@ -53,9 +53,9 @@
 
 - NB-07 completed through PR #123. Final PR head `5d0be4228c084fe9858e671bae9fc84f52c5e979` passed the Windows fixture, MCG, OpenTofu, CodeQL, dependency review and security checks; merge `91ddfb40e00ef67b26330e861f1b7d337ba59666` is synchronized on `main`.
 - NB-08 completed through PR #124. Final PR head `e4231f0128f69b83e9aa276957f0c577cf1fe37f` passed all listed GitHub checks, including Windows CBM, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer, Semgrep, ZAP and OSV. Independent review approved it. Local Brain/Contracts tests and typechecks, integration (26 tests), architecture (16 packages), sensitive-data scan (365 files), frozen-lockfile install and focused timeout tests passed. Merge `25265fc7747614bc70db06f8a11db88161648e83` is synchronized on `main`. Adapters that ignore `AbortSignal` can continue pending operations in background after the bounded response; details are in [`NB-08 progress`](NB-08_HYBRID_RETRIEVAL_PROGRESS.md).
-- NB-11 discovery found no approved persistent key provider in the Blueprint or repo. The DoD requires encrypted snapshots that remain restorable after restart, so an injected ephemeral key alone cannot meet it. Owner decision was requested on Windows DPAPI CurrentUser (restore limited to the same Windows profile) versus another local provider. No NB-11 code was changed.
-- NB-09 partial implementation is synchronized to draft PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), code head `8958c01`; it remains unmerged. Registry isolation, metadata-first resolution, lazy loading, budget enforcement, event lifecycle and deterministic Maestri contract have focused code/tests. Independent review approved fixes for required dependencies, mutable returned state, concurrent budget loads, and resolver/load-event races. Local checks passed: Control Plane 24/24; Contracts Node 46/46 + Vitest 1/1; both package typechecks; `git diff --check`. GitHub Actions passed on code head `8958c01`: CodeQL, Dependency Review, Gitleaks, Semgrep, OSV, ZAP, MCG, OpenTofu and Windows CBM fixture. First MCG attempt rejected the PR title; the title was corrected to the Git naming contract and MCG rerun passed. The current benchmark is only an injected-adapter harness, not local inference. No versioned held-out Maestri dataset or project-defined risk/approval false-negative gate exists. See [`NB-09 progress`](NB-09_DECISION_TIERS_PROGRESS.md). This blocks NB-09 acceptance and therefore NB-12/13; scheduler authority migration remains NB-13 scope.
-- NB-11 does not block the independent NB-09 chain. Continue eligible work while the key-provider decision is pending.
+- NB-11 Owner decision approved Windows DPAPI CurrentUser for the persistent key, limited to the same profile/machine. NB-11 implementation is in progress on its isolated branch; cross-process queue and delivery locks are being validated.
+- NB-09 is staged for integration in PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), head `67e5ad1`. Owner-approved corpus has 24 deterministic cases (14/4/6); the 6-case held-out set observed 0 risk false negatives and 0 approval false negatives. Focused Maestri tests 9/9, Control Plane 27/27, Contracts Node 46/46 + Vitest 1/1, both typechecks, independent review, and all GitHub checks including Windows CBM, MCG, OpenTofu and security passed. The classifier remains benchmark/shadow-only because its held-out route accuracy is below the deterministic baseline. PR integration is the remaining NB-09 gate.
+- NB-11 does not block the eligible NB-12 chain after NB-09 integration.
 
 ## Update and sync rules
 
