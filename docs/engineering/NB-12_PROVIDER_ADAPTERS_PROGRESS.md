@@ -1,6 +1,6 @@
 # NB-12 — Provider adapters and project integrations
 
-**Status:** Local implementation and verification complete; PR #128 review, final GitHub checks, and integration remain pending.
+**Status:** DONE — PR #128 squash-merged as `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`; `main` synchronized.
 **Branch:** `codex/nb12-provider-adapters`
 **Owner decision:** Preserve the canonical order NB-12 → NB-13 → NB-14. Use the minimum adapter seam defined below.
 
@@ -29,11 +29,18 @@ Fresh local checks on the candidate after the implementation changes:
 | `pnpm check:syntax` | PASS — 177 modules parsed |
 | `pnpm scan:sensitive` | PASS — 373 files scanned |
 | `pnpm test:integration` | PASS — 26/26 |
+| `packages/execution`: `pnpm test:unit` | PASS — 4 Node tests, 55 Vitest tests |
+| `packages/execution`: `pnpm typecheck` | PASS |
 | `node --check tooling/generators/engineering-adapters/generate.mjs` | PASS |
 | `git diff --check` | PASS |
 
-The independent review confirmed the typed transport seam and Jules output. It noted the open-ended `delivery_policy` field; that field remains Maestri-owned contract data and is not interpreted by the adapter. No NB-13 wiring or provider-global changes were introduced.
+The independent review confirmed the typed transport seam and Jules output. It found no blocker at PR head `c2aab69b8872ceaf2cc56d2e284c96edc69404af`. The open-ended `delivery_policy` field remains opaque Maestri-owned data and is not interpreted by adapters. No NB-13 wiring or provider-global changes were introduced.
 
-## Integration gate
+## Final integration evidence
 
-Do not mark NB-12 complete until PR #128 has final required checks, independent review, merge, and synchronized `main`. Record the merge commit and final-head evidence here and in the canonical Blueprint after integration.
+- PR: [#128](https://github.com/trydavidqix/nexus-brain/pull/128), merged 2026-09-29.
+- Final PR head: `c2aab69b8872ceaf2cc56d2e284c96edc69404af`.
+- Merge commit: `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`.
+- Required GitHub checks: PASS — CodeQL, dependency review, MCG, Windows CBM, and OpenTofu. Security workflows (Gitleaks, OSV, Semgrep, ZAP) also passed.
+- Independent review: PASS — no blocker against the Owner-approved boundary.
+- `main` at merge: synchronized to `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`.
