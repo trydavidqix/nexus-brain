@@ -23,6 +23,7 @@ Fresh checks on the current branch passed on 2026-09-29:
 - Contracts: 51 Node tests + 1 Vitest test; typecheck passed.
 - Providers: 3 Node tests + 59 Vitest tests; typecheck passed.
 - Control plane after final security remediation: 7 files, 39 tests; typecheck passed.
+- Sensitive-data scan passed for 378 files after replacing local skill-file paths with stable skill identifiers; no absolute user-machine path is persisted.
 - `git diff --check` passed. Git emitted only LF-to-CRLF working-copy warnings.
 - Independent read-only review approved the isolated component after fixes. It did not approve NB-13 as a whole.
 
