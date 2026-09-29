@@ -19,7 +19,9 @@
         "denied": { "type": "boolean" },
         "approval_required": { "type": "boolean" },
         "ceo_required": { "type": "boolean" },
-        "retry_allowed": { "type": "boolean" }
+        "retry_allowed": { "type": "boolean" },
+        "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "confidence_threshold_version": { "type": "string", "minLength": 1 }
       }
     },
     "signals": {

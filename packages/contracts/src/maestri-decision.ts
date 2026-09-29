@@ -8,6 +8,8 @@ export interface MaestriDecisionPolicy {
   approval_required: boolean;
   ceo_required?: boolean;
   retry_allowed?: boolean;
+  confidence_threshold?: number;
+  confidence_threshold_version?: string;
 }
 
 export interface MaestriDecisionSignals {
