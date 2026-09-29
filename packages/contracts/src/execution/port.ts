@@ -3,6 +3,8 @@ import type { ContextPacket } from '../context/packet.js';
 export type { ContextPacket } from '../context/packet.js';
 
 import type { RiskLevel } from '../workforce/types.js';
+import type { EngineeringPlan } from '../engineering/plan.js';
+import type { TaskSkillSet } from '../skills.js';
 
 export function executionRiskFromPlanRisk(risk: RiskLevel): ExecutionRiskLevel {
   if (risk === 'R0' || risk === 'R1') return 'low';
@@ -58,6 +60,20 @@ export interface TaskContract {
   evidence_required: string[];
   acceptance_criteria?: string[];
   context_packet?: ContextPacket;
+}
+
+export interface LoadedEngineeringSkill {
+  skill_id: string;
+  version: string;
+  body: string;
+}
+
+/** Already-resolved task/agent context passed through the provider boundary. */
+export interface ProviderEngineeringContext {
+  engineering_plan: EngineeringPlan;
+  task_skill_set: TaskSkillSet;
+  tool_profile: string[];
+  loaded_skills: LoadedEngineeringSkill[];
 }
 
 export type ExecutionStatus = 'success' | 'failure' | 'partial' | 'blocked' | 'waiting_for_approval' | 'unavailable' | 'cancelled';
@@ -127,7 +143,7 @@ export interface HealthSnapshot {
 }
 
 export interface ExecutionPort {
-  execute(contract: TaskContract): Promise<ExecutionResult>;
+  execute(contract: TaskContract, engineeringContext?: ProviderEngineeringContext): Promise<ExecutionResult>;
   resume(taskId: string): Promise<ExecutionResult>;
   cancel(taskId: string): Promise<ExecutionResult>;
   health(): Promise<HealthSnapshot>;

@@ -2,6 +2,7 @@ import { Codex } from '@openai/codex-sdk';
 import type { Usage as CodexUsage } from '@openai/codex-sdk';
 import { spawnSync } from 'node:child_process';
 import { cancelledResult, ExecutionPort, HealthSnapshot, TaskContract, ExecutionResult, QuotaSnapshot, unavailableQuota, unavailableResult, UsageSnapshot } from '@nexus-brain/contracts/execution/port';
+import { projectProviderEngineeringContext, ProviderEngineeringContext, validateProviderEngineeringContext } from '../engineering-context.js';
 
 export interface CodexRunnerResult {
   finalResponse: string;
@@ -9,7 +10,7 @@ export interface CodexRunnerResult {
 }
 
 export interface CodexRunner {
-  run(contract: TaskContract): Promise<CodexRunnerResult>;
+  run(contract: TaskContract, engineeringContext: ProviderEngineeringContext): Promise<CodexRunnerResult>;
   health?: () => Promise<HealthSnapshot>;
   capabilities?: () => Promise<string[]>;
 }
@@ -53,7 +54,7 @@ export function createCodexSdkRunner(): CodexRunner {
     async capabilities() {
       return ['execute', 'structured_output', 'read_only'];
     },
-    async run(contract) {
+    async run(contract, engineeringContext) {
       const startedAt = Date.now();
       const codex = new Codex();
       const thread = codex.startThread({
@@ -64,7 +65,7 @@ export function createCodexSdkRunner(): CodexRunner {
         networkAccessEnabled: false,
         webSearchMode: 'disabled',
       });
-      const turn = await thread.run(JSON.stringify({ contract, instruction: 'Execute only within the contract and return the required structured result.' }), { outputSchema: executionSchema });
+      const turn = await thread.run(JSON.stringify({ contract, engineering_context: engineeringContext, instruction: 'Execute only within the contract and the supplied Engineering Control plan, resolved task skills, and tool profile; return the required structured result.' }), { outputSchema: executionSchema });
       return { finalResponse: turn.finalResponse, usage: mapCodexUsage(turn.usage, Date.now() - startedAt) };
     },
   };
@@ -97,10 +98,11 @@ export class CodexAdapter implements ExecutionPort {
 
   constructor(private readonly runner?: CodexRunner) {}
 
-  async execute(contract: TaskContract): Promise<ExecutionResult> {
+  async execute(contract: TaskContract, engineeringContext?: ProviderEngineeringContext): Promise<ExecutionResult> {
     if (!this.runner) return unavailableResult(contract.task_id, this.name, 'Codex execution adapter is not configured for this runtime');
+    if (!validateProviderEngineeringContext(contract.task_id, engineeringContext)) return unavailableResult(contract.task_id, this.name, 'Engineering Control context is invalid or missing');
     try {
-      const result = await this.runner.run(contract);
+      const result = await this.runner.run(contract, projectProviderEngineeringContext(engineeringContext));
       if (result.usage) this.lastUsage = result.usage;
       return parseResult(contract.task_id, result.finalResponse, result.usage);
     } catch (error) {

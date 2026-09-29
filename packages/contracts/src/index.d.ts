@@ -14,6 +14,7 @@ export type { BrainCoverage, BrainOperation, BrainRequest, BrainResponse, ReachS
 export type { ResearchLimits, ResearchRequest, ResearchResult, ResearchStatus } from "./research.js";
 export type { ReachOutcome, ReachRequest } from "./reach.js";
 export type { SkillEvent, SkillRegistryEntry, TaskSkillSet } from "./skills.js";
+export type { LoadedEngineeringSkill, ProviderEngineeringContext } from "./execution/port.js";
 export type { ProjectFactoryDiscoveryBudget, ProjectFactoryDisposition, ProjectFactoryPlan, ProjectFactoryRequest, ProjectFactoryResourceDecision, ProjectFactoryRisk, ProjectFactoryStatus, ProjectFactoryTaskSeed } from "./project-factory.js";
 export type { MaestriDecisionInput, MaestriDecisionPolicy, MaestriDecisionResult, MaestriDecisionRisk, MaestriDecisionSignals, MaestriDecisionSource } from "./maestri-decision.js";
 export type { NexusLocalWorkspaceBinding, NexusProject, NexusProjectV2 } from "./project.js";

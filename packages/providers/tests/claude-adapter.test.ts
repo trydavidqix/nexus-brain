@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ClaudeAdapter } from "@nexus-brain/providers/claude/adapter";
+import type { ProviderEngineeringContext } from "../src/engineering-context.js";
 import type { TaskContract } from "@nexus-brain/contracts/execution/port";
 
 const contract: TaskContract = {
@@ -18,6 +19,39 @@ const contract: TaskContract = {
   evidence_required: ["tests"],
 };
 
+const engineeringContext: ProviderEngineeringContext = {
+  engineering_plan: {
+    task_id: contract.task_id,
+    agent_id: "agent-claude",
+    task_type: "REVIEW",
+    risk_level: "R1",
+    scope_size: "bounded",
+    expected_files: ["packages/execution/src/cloud-fabric"],
+    expected_tests: ["tests"],
+    contract_impact: [],
+    testability: "read-only review",
+    execution_mode: "read_only",
+    autonomy_level: "A1",
+    skill_policy: { required: [], optional: [], forbidden: [], loaded: [], completed: [] },
+    context_budget: { input_tokens: 1000 },
+    tool_profile: ["read_file"],
+    verification_gates: ["tests"],
+    delivery_policy: { commit: false },
+  },
+  task_skill_set: {
+    task_id: contract.task_id,
+    agent_id: "agent-claude",
+    required: [],
+    optional: [],
+    forbidden: [],
+    loaded: [],
+    completed: [],
+    context_budget: { input_tokens: 1000 },
+  },
+  tool_profile: ["read_file"],
+  loaded_skills: [],
+};
+
 describe("Claude execution adapter", () => {
   it("passes the canonical context packet through the provider contract", async () => {
     let received: TaskContract | undefined;
@@ -33,7 +67,7 @@ describe("Claude execution adapter", () => {
       },
     });
 
-    await adapter.execute({ ...contract, context_packet });
+    await adapter.execute({ ...contract, context_packet }, engineeringContext);
 
     expect(received?.context_packet).toEqual(context_packet);
   });
@@ -45,7 +79,7 @@ describe("Claude execution adapter", () => {
       }),
     });
 
-    await expect(adapter.execute(contract)).resolves.toMatchObject({ task_id: "task-claude", status: "success", summary: "inspected" });
+    await expect(adapter.execute(contract, engineeringContext)).resolves.toMatchObject({ task_id: "task-claude", status: "success", summary: "inspected" });
   });
 
   it("does not claim health without an explicit probe", async () => {
@@ -68,7 +102,7 @@ describe("Claude execution adapter", () => {
       }),
     });
 
-    const result = await adapter.execute(contract);
+    const result = await adapter.execute(contract, engineeringContext);
     expect(result.usage).toEqual({ input_tokens: 2, cached_tokens: 37, output_tokens: 4, duration_ms: 1683, cost_usd: 0.14, measurement_type: 'exact', cost_measurement_type: 'exact' });
     await expect(adapter.usage()).resolves.toEqual(result.usage);
   });
