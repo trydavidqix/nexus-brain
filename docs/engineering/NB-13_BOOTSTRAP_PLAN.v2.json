@@ -1,0 +1,90 @@
+{
+  "bootstrap_metadata": {
+    "classification": "BOOTSTRAP_ONLY",
+    "issuer": "owner-authorized-bootstrap",
+    "owner_decision_date": "2026-09-29",
+    "owner_decision": "Temporary exception only for NB-13: create an explicit versioned plan and resolve a minimum TaskSkillSet; remove bootstrap after native Maestri plan and Resolver issuance are verified.",
+    "branch_scope": "codex/nb13-maestri-control-plane",
+    "not_runtime_authority": true,
+    "expires_when": "NB-13 native Maestri plan and TaskSkillSet issuance are implemented and revalidated"
+  },
+  "engineering_plan_contract": "nexus.engineering-plan.v2",
+  "engineering_plan": {
+    "task_id": "nexus-task-1-nb13",
+    "agent_id": "/root",
+    "goal_id": "nexus-task-1-25-milestones",
+    "task_type": "ARCHITECTURE",
+    "risk_level": "R3",
+    "ceremony": "HEAVY",
+    "autonomy_level": "A3",
+    "quality_profile": "DEEP",
+    "scope_size": "NB-13 only on codex/nb13-maestri-control-plane",
+    "expected_files": [
+      "packages/contracts/src/engineering/plan.ts",
+      "packages/contracts/src/index.d.ts",
+      "packages/contracts/src/index.mjs",
+      "packages/contracts/schemas/engineering-plan/engineering-plan.v2.schema.json",
+      "packages/contracts/tests/engineering-plan-v2.test.mjs",
+      "packages/control-plane/src/",
+      "packages/control-plane/tests/",
+      "packages/providers/src/engineering-context.ts",
+      "packages/providers/tests/engineering-context.test.ts",
+      "docs/engineering/"
+    ],
+    "expected_tests": [
+      "pnpm --filter @nexus-brain/contracts test:unit",
+      "pnpm --filter @nexus-brain/contracts typecheck",
+      "pnpm --filter @nexus-brain/control-plane test:unit",
+      "pnpm --filter @nexus-brain/control-plane typecheck",
+      "pnpm --filter @nexus-brain/providers test:unit",
+      "pnpm --filter @nexus-brain/providers typecheck",
+      "repository-required architecture, syntax, security and GitHub Actions checks"
+    ],
+    "contract_impact": [
+      "Add versioned EngineeringPlan v2 fields goal_id, ceremony, quality_profile, model_profile, stop_conditions.",
+      "Preserve EngineeringPlan v1 validation and compatibility.",
+      "Migrate provider adapters to accept Maestri-issued v2 while retaining v1 compatibility."
+    ],
+    "testability": "Contract tests plus task-isolation and orchestration integration tests; verify v1 compatibility and v2 adapter transport.",
+    "execution_mode": "write",
+    "skill_policy": {
+      "required": ["core-discipline", "test-driven-development", "verification-before-completion"],
+      "optional": [],
+      "forbidden": ["full-skill-catalog", "parallel-router-authority", "provider-owned-identity-or-dispatch"],
+      "loaded": ["core-discipline", "test-driven-development", "verification-before-completion"],
+      "completed": []
+    },
+    "context_budget": {
+      "input_tokens": 10000,
+      "output_tokens": 6000,
+      "context_percent": 30,
+      "definitions": 0,
+      "calls": 0,
+      "seconds": 3600,
+      "cost_usd": 0
+    },
+    "tool_profile": ["git-read-write-on-feature-branch", "node", "pnpm", "GitHub Actions"],
+    "model_profile": "default-codex",
+    "verification_gates": [
+      "focused contract, control-plane and provider tests pass",
+      "relevant typechecks pass",
+      "NB-13 identity, policy, task-agent isolation and adapter-boundary invariants pass",
+      "independent review has no blocker",
+      "required GitHub Actions pass on final PR head",
+      "PR integrates and main synchronizes cleanly"
+    ],
+    "stop_conditions": [
+      "Any required behavior cannot be derived from the Blueprint or approved Owner decisions.",
+      "A change would create parallel identity, policy, routing, scheduling or dispatch authority.",
+      "A required cloud resource, paid service, production change, credential or external approval appears.",
+      "A test or security gate fails for a pre-existing blocking reason that cannot be isolated."
+    ],
+    "delivery_policy": {
+      "bootstrap_only": true,
+      "bootstrap_exception_scope": "This task only; remove implementation bootstrap after native Maestri issuance is verified.",
+      "main_policy": "PR only; no direct main edits, no force-push, no history rewrite.",
+      "cost_policy": "No paid resources, cloud provisioning, billing changes or production deployment.",
+      "owner_decision": "Owner authorization in chat dated 2026-09-29"
+    }
+  }
+}

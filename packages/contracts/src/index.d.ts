@@ -1,8 +1,8 @@
 export type ContractType =
   | "task" | "event" | "trace" | "telemetry" | "agent" | "runtime"
-  | "tool" | "plugin" | "mcp" | "alert" | "eval" | "artifact" | "engineering-plan" | "identity" | "nexus-task" | "memory" | "evidence" | "permission" | "browser-plan" | "browser-task" | "browser-session" | "browser-observation" | "browser-action" | "browser-backend" | "browser-host" | "browser-profile" | "browser-recipe" | "brain-request" | "brain-response" | "research-request" | "research-result" | "reach-request" | "reach-outcome" | "skill-registry-entry" | "task-skill-set" | "skill-event" | "project-factory-request" | "project-factory-plan" | "maestri-decision-input" | "maestri-decision-result" | "project" | "project-v2" | "goal";
+  | "tool" | "plugin" | "mcp" | "alert" | "eval" | "artifact" | "engineering-plan" | "engineering-plan-v2" | "identity" | "nexus-task" | "memory" | "evidence" | "permission" | "browser-plan" | "browser-task" | "browser-session" | "browser-observation" | "browser-action" | "browser-backend" | "browser-host" | "browser-profile" | "browser-recipe" | "brain-request" | "brain-response" | "research-request" | "research-result" | "reach-request" | "reach-outcome" | "skill-registry-entry" | "task-skill-set" | "skill-event" | "project-factory-request" | "project-factory-plan" | "maestri-decision-input" | "maestri-decision-result" | "project" | "project-v2" | "goal";
 
-export type { EngineeringAutonomyLevel, EngineeringPlan, EngineeringSkillPolicy, EngineeringTaskType } from "./engineering/plan.js";
+export type { EngineeringAutonomyLevel, EngineeringCeremony, EngineeringPlan, EngineeringPlanV2, EngineeringQualityProfile, EngineeringSkillPolicy, EngineeringTaskType } from "./engineering/plan.js";
 export type { NexusIdentity } from "./identity.js";
 export type { NexusTask } from "./nexus-task.js";
 export type { NexusEvidence } from "./evidence.js";

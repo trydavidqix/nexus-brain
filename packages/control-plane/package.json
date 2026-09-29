@@ -33,6 +33,10 @@
       "types": "./src/decisions/maestri-decision.ts",
       "import": "./src/decisions/maestri-decision.ts"
     },
+    "./engineering": {
+      "types": "./src/engineering/orchestration.ts",
+      "import": "./src/engineering/orchestration.ts"
+    },
     "./decisions/local-decision-benchmark": {
       "types": "./src/decisions/local-decision-benchmark.ts",
       "import": "./src/decisions/local-decision-benchmark.ts"

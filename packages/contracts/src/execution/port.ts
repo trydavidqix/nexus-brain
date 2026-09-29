@@ -3,7 +3,7 @@ import type { ContextPacket } from '../context/packet.js';
 export type { ContextPacket } from '../context/packet.js';
 
 import type { RiskLevel } from '../workforce/types.js';
-import type { EngineeringPlan } from '../engineering/plan.js';
+import type { EngineeringPlan, EngineeringPlanV2 } from '../engineering/plan.js';
 import type { TaskSkillSet } from '../skills.js';
 
 export function executionRiskFromPlanRisk(risk: RiskLevel): ExecutionRiskLevel {
@@ -70,7 +70,7 @@ export interface LoadedEngineeringSkill {
 
 /** Already-resolved task/agent context passed through the provider boundary. */
 export interface ProviderEngineeringContext {
-  engineering_plan: EngineeringPlan;
+  engineering_plan: EngineeringPlan | EngineeringPlanV2;
   task_skill_set: TaskSkillSet;
   tool_profile: string[];
   loaded_skills: LoadedEngineeringSkill[];

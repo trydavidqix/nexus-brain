@@ -10,7 +10,7 @@
 
 - **Completed:** 15/25 work packages (60%)
 - **Last completed:** NB-12
-- **Current milestone:** NB-13 — Maestri control plane, BLOCKED before implementation by the mandatory Maestri-issued plan/Resolver SkillSet gate; Owner approved versioned EngineeringPlan v2 and adapter migration
+- **Current milestone:** NB-13 — Maestri control plane, IN_PROGRESS under Owner-authorized `BOOTSTRAP_ONLY` exception; component passes local validation, but production task-entry/policy/dispatch integration is undefined. See [`NB-13 progress`](NB-13_MAESTRI_CONTROL_PLANE_PROGRESS.md).
 - **NB-11 Owner decision:** DPAPI CurrentUser approved; key restore is limited to the same Windows user profile and machine
 - **NB-08 branch:** `codex/nb08-hybrid-retrieval`
 - **NB-11 branch:** `codex/nb11-snapshot-restore`, PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127)
@@ -57,7 +57,8 @@
 - NB-09 completed through PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), head `96fe754`, squash merge `f528849`. The Owner-approved corpus has 24 deterministic cases (14/4/6); the 6-case held-out set observed 0 risk false negatives and 0 approval false negatives. Focused Maestri tests 9/9, Control Plane 27/27, Contracts Node 46/46 + Vitest 1/1, both typechecks, independent review, and all final-head GitHub checks including Windows CBM, MCG, OpenTofu and security passed. The classifier remains benchmark/shadow-only because held-out route accuracy is below the deterministic baseline.
 - NB-12 is complete through PR [#128](https://github.com/trydavidqix/nexus-brain/pull/128), squash-merged as `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`; the Owner-approved adapter boundary, local tests/typechecks, independent review, required GitHub checks and synchronized `main` are recorded in [`NB-12 progress`](NB-12_PROVIDER_ADAPTERS_PROGRESS.md).
 - NB-13 discovery found that the subordinate Engineering Control Plane plan lists `goal_id`, `ceremony`, `quality_profile`, `model_profile` and `stop_conditions`, absent from v1. The Owner approved a versioned v2 plus adapter migration; v1 remains preserved. Implementation is on `codex/nb13-maestri-control-plane`.
-- NB-13 implementation has not started: `.agents/skills/engineering/core-discipline/SKILL.md` requires an EngineeringPlan issued by Maestri plus the Resolver-selected SkillSet for the exact task/agent before code changes. The repository does not yet expose that Maestri/Resolver execution path to this task, creating a bootstrap gate. No production files were changed. Resume only after the Owner supplies the issued plan/SkillSet or explicitly authorizes a narrow NB-13 bootstrap exception.
+- NB-13 uses the Owner-authorized, task-only `BOOTSTRAP_ONLY` exception because the milestone implements native Maestri plan/SkillSet issuance. Versioned plan and NB-09 Resolver-issued minimum TaskSkillSet are [`NB-13 bootstrap evidence`](NB-13_BOOTSTRAP_PLAN.v2.json) and [`NB-13 bootstrap SkillSet`](NB-13_BOOTSTRAP_SKILLSET.json). This bootstrap is not runtime authority and must be removed/disabled after native issuance is implemented and revalidated.
+- NB-13 component tests currently pass, but independent review blocked milestone completion: no production callsite requires the Maestri EngineeringPlan before execution; the Project policy shape is opaque; and model-profile dispatch has no canonical binding. See [`NB-13 progress`](NB-13_MAESTRI_CONTROL_PLANE_PROGRESS.md). Do not mark DONE or disable the bootstrap until the entry, policy, and dispatch boundary are defined and verified.
 
 ## Update and sync rules
 

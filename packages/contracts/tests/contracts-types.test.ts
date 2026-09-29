@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { JOB_EVENT_TYPES, JOB_STATUSES, type Job } from "@nexus-brain/contracts/job";
 import { RUNTIME_PROTOCOL_VERSION, assertRuntimeCommand, type RuntimeCommand } from "@nexus-brain/contracts/runtime";
-import type { EngineeringPlan, GoalRisk, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusGoal, NexusIdentity, NexusMemoryEvent, NexusProject, NexusProjectV2, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
+import type { EngineeringPlan, EngineeringPlanV2, GoalRisk, NexusCanonicalMemoryRecord, NexusEvidenceSighting, NexusGoal, NexusIdentity, NexusMemoryEvent, NexusProject, NexusProjectV2, NexusResearchRun, NexusTask } from "@nexus-brain/contracts";
 
 describe("shared TypeScript contracts", () => {
   it("keeps job and runtime protocol definitions importable from contracts", () => {
@@ -46,6 +46,15 @@ describe("shared TypeScript contracts", () => {
       verification_gates: ["unit-tests"],
       delivery_policy: {},
     };
+    const versionedPlan: EngineeringPlanV2 = {
+      ...plan,
+      goal_id: "goal-17",
+      ceremony: "NORMAL",
+      quality_profile: "STANDARD",
+      model_profile: "default-codex",
+      stop_conditions: ["scope exceeded"],
+    };
+    expectPlanV2(versionedPlan);
     const identity: NexusIdentity = {
       project_id: "nexus-brain",
       task_id: "task-17",
@@ -178,3 +187,7 @@ describe("shared TypeScript contracts", () => {
     expect(sighting.run_id).toBe(researchRun.run_id);
   });
 });
+
+function expectPlanV2(plan: EngineeringPlanV2): void {
+  if (plan.quality_profile !== "STANDARD") throw new Error("EngineeringPlan v2 type export unavailable");
+}

@@ -1,10 +1,12 @@
 import type { TaskSkillSet } from "@nexus-brain/contracts";
+import { validateContract } from "@nexus-brain/contracts";
 import type { ProviderEngineeringContext } from "@nexus-brain/contracts/execution/port";
 
 export type { ProviderEngineeringContext } from "@nexus-brain/contracts/execution/port";
 
 const CONTEXT_KEYS = ["engineering_plan", "loaded_skills", "task_skill_set", "tool_profile"];
 const PLAN_KEYS = ["agent_id", "autonomy_level", "context_budget", "contract_impact", "delivery_policy", "execution_mode", "expected_files", "expected_tests", "risk_level", "scope_size", "skill_policy", "task_id", "task_type", "testability", "tool_profile", "verification_gates"];
+const PLAN_V2_KEYS = [...PLAN_KEYS, "ceremony", "goal_id", "model_profile", "quality_profile", "stop_conditions"].sort();
 const SKILL_SET_KEYS = ["agent_id", "completed", "context_budget", "forbidden", "loaded", "optional", "required", "task_id"];
 const SKILL_POLICY_KEYS = ["completed", "forbidden", "loaded", "optional", "required"];
 const BUDGET_KEYS = ["input_tokens", "output_tokens", "context_percent", "definitions", "calls", "seconds", "cost_usd"] as const;
@@ -13,6 +15,12 @@ function hasExactKeys(value: object, expected: readonly string[]): boolean {
   const actual = Object.keys(value).sort();
   const sortedExpected = [...expected].sort();
   return actual.length === sortedExpected.length && actual.every((key, index) => key === sortedExpected[index]);
+}
+
+function isValidPlan(plan: ProviderEngineeringContext["engineering_plan"]): boolean {
+  if (hasExactKeys(plan, PLAN_KEYS)) return validateContract("engineering-plan", plan).valid;
+  if (hasExactKeys(plan, PLAN_V2_KEYS)) return validateContract("engineering-plan-v2", plan).valid;
+  return false;
 }
 
 function sameStrings(left: unknown, right: unknown): boolean {
@@ -33,7 +41,7 @@ export function validateProviderEngineeringContext(
 
   const { engineering_plan: plan, task_skill_set: skills, tool_profile: toolProfile, loaded_skills: loadedBodies } = context;
   if (!plan || !skills
-    || !hasExactKeys(plan, PLAN_KEYS)
+    || !isValidPlan(plan)
     || !hasExactKeys(skills, SKILL_SET_KEYS)
     || !plan.skill_policy
     || !hasExactKeys(plan.skill_policy, SKILL_POLICY_KEYS)

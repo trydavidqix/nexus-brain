@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { contractSchema, contractTypes, normalizeLegacy, validateContract } from '../src/index.mjs';
-assert.equal(contractTypes().length,47);
+assert.equal(contractTypes().length,48);
+assert.ok(contractTypes().includes('engineering-plan-v2'));
 assert.equal(contractSchema('trace').$id,'lumenva.trace.v1');
 assert.equal(validateContract('trace',{trace_id:'tr-1',timestamp:new Date().toISOString(),source:'test'}).valid,true);
 const invalid=validateContract('trace',{timestamp:'not-a-date'});assert.equal(invalid.valid,false);assert.ok(invalid.errors.some(error=>error.includes('trace_id')));
