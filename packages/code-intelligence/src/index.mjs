@@ -13,7 +13,7 @@ const MAX_SOURCE_BYTES = 24 * 1024 * 1024;
 const MAX_FILE_BYTES = 1024 * 1024;
 const MAX_MATCHES = 200;
 const MAX_CROSS_REPO_TARGETS = 3;
-const CROSS_REPO_EDGE_QUERY = "MATCH (s)-[e]->(t) WHERE type(e) STARTS WITH 'CROSS_' RETURN type(e) AS relation, e.target_project AS target_project, e.target_function AS target_function, e.target_file AS target_file, e.url_path AS url_path LIMIT 200";
+const CROSS_REPO_EDGE_QUERY = "MATCH (s)-[e:CROSS_HTTP_CALLS|CROSS_ASYNC_CALLS|CROSS_CHANNEL|CROSS_GRPC_CALLS|CROSS_GRAPHQL_CALLS|CROSS_TRPC_CALLS]->(t) RETURN type(e) AS relation, e.target_project AS target_project, e.target_function AS target_function, e.target_file AS target_file, e.url_path AS url_path LIMIT 200";
 const SOURCE_EXTENSIONS = new Set(['.c', '.cc', '.cpp', '.cs', '.go', '.h', '.hpp', '.java', '.js', '.jsx', '.mjs', '.mts', '.php', '.py', '.rb', '.rs', '.ts', '.tsx', '.vue']);
 const SOURCE_IGNORES = new Set(['.git', '.nexus', '.codebase-memory', 'build', 'coverage', 'dist', 'node_modules', 'target', 'vendor']);
 

@@ -14,6 +14,7 @@ const runtimeBinary = process.env.CBM_BINARY;
 function queryFailureCategory(value) {
   const text = String(value || '').toLowerCase();
   if (!text) return 'no_diagnostic_text';
+  if (text.includes('unsupported function') && text.includes('where')) return 'unsupported_where_function';
   if (text.includes('syntax') || text.includes('parse')) return 'query_syntax';
   if (text.includes('unsupported') && text.includes('query')) return 'unsupported_query';
   if (text.includes('project') && (text.includes('not found') || text.includes('unknown'))) return 'project_not_found';
