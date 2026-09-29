@@ -5,7 +5,7 @@ import { decide } from '../src/decisions/maestri-decision';
 import { prepareEngineeringContext } from '../src/engineering/orchestration';
 
 const identity: NexusIdentity = { project_id: 'project-a', task_id: 'task-a', agent_id: 'agent-a' };
-const principal = { identity: { ...identity }, capabilities: [] };
+const principal = { identity: { ...identity }, capabilities: ['engineering.execute'] };
 const task: NexusTask = {
   ...identity,
   objective: 'Fix a defect',
@@ -63,7 +63,7 @@ const project = {
   lifecycle: 'active',
   stack: [],
   permissions: {},
-  policies: {},
+  policies: { engineering: { denied: false, approval_required: false, retry_allowed: true } },
   approvals: {},
   budgets: {},
   memory_namespace: 'project:project-a',
@@ -181,11 +181,35 @@ describe('NB-13 engineering orchestration', () => {
 
     await expect(prepareEngineeringContext({ stateStore: makeStore(), skillRegistry }, request({
       task: { ...task, capabilities: ['code.search'] },
-      principal: { ...principal, capabilities: [] },
+      principal: { ...principal, capabilities: ['engineering.execute'] },
     }))).rejects.toThrow(/task_capability_not_authenticated/);
 
     expect(skillRegistry.resolveSkills).not.toHaveBeenCalled();
     expect(skillRegistry.loadSkill).not.toHaveBeenCalled();
+  });
+
+  it('requires the authenticated engineering.execute capability before resolution', async () => {
+    const skillRegistry = makeTrackedRegistry();
+
+    await expect(prepareEngineeringContext({ stateStore: makeStore(), skillRegistry }, request({
+      principal: { ...principal, capabilities: [] },
+    }))).rejects.toThrow(/engineering_capability_not_authenticated/);
+
+    expect(skillRegistry.resolveSkills).not.toHaveBeenCalled();
+    expect(skillRegistry.loadSkill).not.toHaveBeenCalled();
+  });
+
+  it('blocks when the registered Project engineering policy denies the task even if caller policy allows it', async () => {
+    const skillRegistry = makeTrackedRegistry();
+    const deniedProject = { ...project, policies: { engineering: { denied: true, approval_required: false, retry_allowed: true } } };
+    const result = await prepareEngineeringContext({
+      stateStore: makeStore({ project: deniedProject, version: 1 }),
+      skillRegistry,
+    }, request({ decision_input: { ...decisionInput, policy: { denied: false, approval_required: false, retry_allowed: true } } }));
+
+    expect(result.status).toBe('blocked');
+    expect(result.decision.reason_codes).toContain('policy_denied');
+    expect(skillRegistry.resolveSkills).not.toHaveBeenCalled();
   });
 
   it('rejects a malformed v2 plan before skill resolution', async () => {

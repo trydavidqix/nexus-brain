@@ -68,6 +68,24 @@ describe("ResourceRouter V2", () => {
     expect(target.model).toBe("claude-configured");
   });
 
+  it("honors the exact Maestri model profile and never substitutes another candidate", async () => {
+    const codex = provider("codex", { remaining: 100, remainingPercent: 80 });
+    const claude = provider("claude", { remaining: 100, remainingPercent: 80 });
+    const router = new ResourceRouter({ codex, claude, modelRegistry: new ModelRegistry([
+      { id: "codex-default", provider: "codex", model: "codex-default-model", tier: 3, capabilities: ["coding"], preferred_for: ["coding"], max_risk: "R4", max_complexity: "EXCLUSIVE", subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 1, relative_latency: 1, reliability: 1 },
+      { id: "claude-selected", provider: "claude", model: "claude-exact-model", tier: 1, capabilities: ["coding"], preferred_for: [], max_risk: "R2", max_complexity: "NORMAL", subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 9, relative_latency: 9, reliability: 0.5 },
+    ]) });
+
+    const selected = await router.route({ capability: ["coding"], priority: 1, risk: "R1", complexity: "LIGHT", phase: "execute", model_profile: "claude-selected" });
+    const unavailable = await router.route({ capability: ["coding"], priority: 1, risk: "R1", complexity: "LIGHT", phase: "execute", model_profile: "missing-profile" });
+
+    expect(selected.model_id).toBe("claude-selected");
+    expect(selected.model).toBe("claude-exact-model");
+    expect(selected.provider).toBe("claude");
+    expect(unavailable.adapter).toBeUndefined();
+    expect(unavailable.reason).toBe("required_model_profile_unavailable");
+  });
+
   it("keeps the default router from treating unavailable adapters as executable", async () => {
     const target = await new ResourceRouter().route({ capability: ["read_only"], priority: 1 });
 

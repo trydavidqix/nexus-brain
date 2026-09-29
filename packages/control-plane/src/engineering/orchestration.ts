@@ -2,6 +2,7 @@ import { assertContract } from '@nexus-brain/contracts';
 import type {
   EngineeringPlanV2,
   MaestriDecisionInput,
+  MaestriDecisionPolicy,
   MaestriDecisionResult,
   NexusGoal,
   NexusIdentity,
@@ -76,6 +77,34 @@ function requireSkillSetIdentity(skillSet: TaskSkillSet, identity: NexusIdentity
 
 function sameStrings(left: readonly string[], right: readonly string[]): boolean {
   return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+function combineEngineeringPolicies(
+  projectPolicy: MaestriDecisionPolicy,
+  callerPolicy: MaestriDecisionPolicy,
+): MaestriDecisionPolicy {
+  if (projectPolicy.confidence_threshold !== undefined
+    && callerPolicy.confidence_threshold !== undefined
+    && projectPolicy.confidence_threshold_version !== callerPolicy.confidence_threshold_version) {
+    throw new Error('engineering_policy_threshold_version_conflict');
+  }
+  const confidenceThreshold = [projectPolicy.confidence_threshold, callerPolicy.confidence_threshold]
+    .filter((value): value is number => value !== undefined)
+    .reduce<number | undefined>((highest, value) => highest === undefined ? value : Math.max(highest, value), undefined);
+  return {
+    denied: projectPolicy.denied || callerPolicy.denied,
+    approval_required: projectPolicy.approval_required || callerPolicy.approval_required,
+    ...(projectPolicy.ceo_required !== undefined || callerPolicy.ceo_required !== undefined
+      ? { ceo_required: projectPolicy.ceo_required === true || callerPolicy.ceo_required === true }
+      : {}),
+    retry_allowed: projectPolicy.retry_allowed === true && callerPolicy.retry_allowed === true,
+    ...(confidenceThreshold !== undefined ? { confidence_threshold: confidenceThreshold } : {}),
+    ...(confidenceThreshold !== undefined && projectPolicy.confidence_threshold_version
+      ? { confidence_threshold_version: projectPolicy.confidence_threshold_version }
+      : confidenceThreshold !== undefined && callerPolicy.confidence_threshold_version
+        ? { confidence_threshold_version: callerPolicy.confidence_threshold_version }
+        : {}),
+  };
 }
 
 const RISK_ORDER: Record<RiskLevel, number> = { R0: 0, R1: 1, R2: 2, R3: 3, R4: 4 };
@@ -161,6 +190,9 @@ async function prepareEngineeringContextAsync(
   if (request.identity.project_id !== request.task.project_id || request.identity.task_id !== request.task.task_id) {
     throw new Error('engineering_task_identity_mismatch');
   }
+  if (!request.principal.capabilities.includes('engineering.execute')) {
+    throw new Error('engineering_capability_not_authenticated');
+  }
   const requiredCapabilities = request.task.capabilities ?? [];
   if (requiredCapabilities.some(capability => !request.principal.capabilities.includes(capability))) {
     throw new Error('engineering_task_capability_not_authenticated');
@@ -170,6 +202,11 @@ async function prepareEngineeringContextAsync(
   if (!registeredProject || registeredProject.project.project_id !== request.identity.project_id) {
     throw new Error('engineering_project_not_registered');
   }
+  assertContract(Object.hasOwn(registeredProject.project, 'workspace_bindings') ? 'project-v2' : 'project', registeredProject.project);
+  const engineeringPolicy = registeredProject.project.policies.engineering;
+  if (!engineeringPolicy || typeof engineeringPolicy !== 'object' || Array.isArray(engineeringPolicy)) {
+    throw new Error('engineering_project_policy_required');
+  }
 
   const registeredGoal = dependencies.stateStore.getGoal(request.identity.project_id, request.goal_id);
   if (!registeredGoal) throw new Error('engineering_plan_goal_not_registered');
@@ -178,13 +215,22 @@ async function prepareEngineeringContextAsync(
     throw new Error('engineering_plan_goal_scope_mismatch');
   }
 
-  assertContract('maestri-decision-input', request.decision_input);
-  requireIdentityMatch(request.identity, request.decision_input, 'decision');
-  const risk = effectiveRisk(registeredGoal.goal.risk, request.task.risk, request.plan_fields.risk_level, request.decision_input.risk);
+  const projectPolicyInput: MaestriDecisionInput = {
+    ...request.decision_input,
+    policy: engineeringPolicy,
+  };
+  assertContract('maestri-decision-input', projectPolicyInput);
+  const decisionInput: MaestriDecisionInput = {
+    ...request.decision_input,
+    policy: combineEngineeringPolicies(projectPolicyInput.policy, request.decision_input.policy),
+  };
+  assertContract('maestri-decision-input', decisionInput);
+  requireIdentityMatch(request.identity, decisionInput, 'decision');
+  const risk = effectiveRisk(registeredGoal.goal.risk, request.task.risk, request.plan_fields.risk_level, decisionInput.risk);
   validateEngineeringPlanCandidate(request.identity, registeredGoal.goal, request.plan_fields, risk);
 
-  const decision = decide({ ...request.decision_input, risk });
-  if (decision.route === 'blocked' || decision.route === 'approval' || decision.route === 'fallback'
+  const decision = decide({ ...decisionInput, risk });
+  if (decision.route !== 'execute'
     || decision.needs_approval || decision.needs_ceo || decision.abstain || decision.decision_source === 'fallback') {
     return { status: 'blocked', decision };
   }

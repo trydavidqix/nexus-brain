@@ -1,3 +1,5 @@
+import type { MaestriDecisionPolicy } from './maestri-decision.js';
+
 export interface NexusProject {
   project_id: string;
   repo: string;
@@ -6,7 +8,7 @@ export interface NexusProject {
   lifecycle: string;
   stack: string[];
   permissions: Record<string, unknown>;
-  policies: Record<string, unknown>;
+  policies: Record<string, unknown> & { engineering?: MaestriDecisionPolicy };
   approvals: Record<string, unknown>;
   budgets: Record<string, unknown>;
   memory_namespace: string;

@@ -119,6 +119,29 @@ test('Project v2 requires typed local workspace bindings and a project-derived m
   assert.equal(validateContract('project-v2', { ...projectV2, extra: true }).valid, false);
 });
 
+test('Project policies type the optional engineering policy for v1 and v2', () => {
+  const engineeringPolicy = {
+    denied: false,
+    approval_required: false,
+    retry_allowed: true,
+    confidence_threshold: 0.8,
+    confidence_threshold_version: 'policy-v1',
+  };
+  for (const [type, value] of [['project', project], ['project-v2', projectV2]]) {
+    assert.equal(validateContract(type, { ...value, policies: { engineering: engineeringPolicy, unrelated_policy: { opaque: true } } }).valid, true);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: 'false', approval_required: false } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false, approval_required: false, extra: true } } }).valid, false);
+  }
+});
+
+test('stored legacy Project v1 and v2 records remain valid without engineering policy', () => {
+  assert.equal(validateContract('project', project).valid, true);
+  assert.equal(validateContract('project-v2', projectV2).valid, true);
+  assert.equal(Object.hasOwn(project.policies, 'engineering'), false);
+  assert.equal(Object.hasOwn(projectV2.policies, 'engineering'), false);
+});
+
 test('Goal v1 requires every field, validates types and rejects unknown top-level fields', () => {
   for (const field of Object.keys(goal)) {
     const { [field]: _omitted, ...missingField } = goal;
