@@ -1,6 +1,6 @@
 # NB-08 Hybrid Retrieval progress
 
-**Status:** IN PROGRESS — local validation and independent review pass; final PR checks and integration remain pending.
+**Status:** IN PROGRESS — local validation, independent review and PR checks pass; integration remains pending.
 **Dependencies:** NB-05 and NB-07 are accepted on `main`.
 **Branch:** `codex/nb08-hybrid-retrieval`.
 **Scope:** project memory, Code Intelligence and governed research-evidence retrieval; bounded research fanout; normalized, deduplicated and ranked evidence; grounded findings; scoped cross-project reuse; abstention and partial coverage.
@@ -34,8 +34,11 @@ Run on 2026-09-29 after the final code change:
 
 Final read-only review approved the implementation. It confirmed project/task/agent scope, opt-in authorized global reuse, untrusted evidence handling, the shared deadline, and preservation of provider results completed before timeout. No contract or security blocker remains. The background continuation limitation above is documented.
 
+## GitHub Actions evidence
+
+PR [#124](https://github.com/trydavidqix/nexus-brain/pull/124) head `738771c88f91bcca632411a418d340cfe2ad912e` passed all listed checks: Windows CBM fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP baseline, and OSV Scanner. Workflow runs: `36507877514`, `36507877532`, `36507877535`, `36507877576`, and `36507877601`.
+
 ## Pending integration gates
 
-- Create and push the NB-08 pull request.
-- Pass required GitHub Actions on the final PR head.
+- Squash-merge PR #124 after final checks.
 - Complete integration and synchronize `main` before marking NB-08 DONE.
