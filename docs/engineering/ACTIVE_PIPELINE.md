@@ -8,14 +8,14 @@
 
 ## Progress
 
-- **Completed:** 14/25 work packages (56%)
-- **Last completed:** NB-11
-- **Current milestone:** NB-12 — provider adapters and project integrations, IN_PROGRESS under the Owner-approved adapter boundary; PR [#128](https://github.com/trydavidqix/nexus-brain/pull/128)
+- **Completed:** 15/25 work packages (60%)
+- **Last completed:** NB-12
+- **Current milestone:** NB-13 — Maestri control plane. Owner-approved bounded fallback is implemented and independently reviewed; fresh local checks pass. Final PR-head GitHub Actions and integration remain; bootstrap is disabled after native plan/SkillSet revalidation. See [`NB-13 progress`](NB-13_MAESTRI_CONTROL_PLANE_PROGRESS.md).
 - **NB-11 Owner decision:** DPAPI CurrentUser approved; key restore is limited to the same Windows user profile and machine
 - **NB-08 branch:** `codex/nb08-hybrid-retrieval`
 - **NB-11 branch:** `codex/nb11-snapshot-restore`, PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127)
 - **NB-09:** PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), squash-merged as `f528849`
-- **Current main after NB-11:** `da816af1de6da55dffd56519d9adb933497a6d6f`
+- **Current main after NB-12:** `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`
 - **Earlier integration:** PR [#124](https://github.com/trydavidqix/nexus-brain/pull/124), squash-merged as `25265fc`
 
 ## Completed work packages
@@ -37,7 +37,7 @@
 
 - [x] NB-09
 - [x] NB-11
-- [ ] NB-12
+- [x] NB-12
 - [ ] NB-13
 - [ ] NB-14
 - [ ] NB-15
@@ -55,7 +55,9 @@
 - NB-08 completed through PR #124. Final PR head `e4231f0128f69b83e9aa276957f0c577cf1fe37f` passed all listed GitHub checks, including Windows CBM, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer, Semgrep, ZAP and OSV. Independent review approved it. Local Brain/Contracts tests and typechecks, integration (26 tests), architecture (16 packages), sensitive-data scan (365 files), frozen-lockfile install and focused timeout tests passed. Merge `25265fc7747614bc70db06f8a11db88161648e83` is synchronized on `main`. Adapters that ignore `AbortSignal` can continue pending operations in background after the bounded response; details are in [`NB-08 progress`](NB-08_HYBRID_RETRIEVAL_PROGRESS.md).
 - NB-11 Owner decision approved Windows DPAPI CurrentUser for the persistent key, limited to the same profile/machine. PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127) contains the implementation, 14/14 focused and 60/60 Edge unit tests, typecheck, independent review approval, and final GitHub Actions; queue-cap locking is tested across two processes at the real cap of 100.
 - NB-09 completed through PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), head `96fe754`, squash merge `f528849`. The Owner-approved corpus has 24 deterministic cases (14/4/6); the 6-case held-out set observed 0 risk false negatives and 0 approval false negatives. Focused Maestri tests 9/9, Control Plane 27/27, Contracts Node 46/46 + Vitest 1/1, both typechecks, independent review, and all final-head GitHub checks including Windows CBM, MCG, OpenTofu and security passed. The classifier remains benchmark/shadow-only because held-out route accuracy is below the deterministic baseline.
-- Owner decision received for NB-12: preserve NB-12 → NB-13 → NB-14. Provider adapters accept an existing `EngineeringPlan`, the NB-09 Resolver-selected task/agent `TaskSkillSet`, and tool profile; adapters do not resolve identity, route, schedule, or dispatch. Maestri wiring and plan creation remain NB-13. Implementation and local validation are in progress on PR [#128](https://github.com/trydavidqix/nexus-brain/pull/128); see [`NB-12 progress`](NB-12_PROVIDER_ADAPTERS_PROGRESS.md).
+- NB-12 is complete through PR [#128](https://github.com/trydavidqix/nexus-brain/pull/128), squash-merged as `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`; the Owner-approved adapter boundary, local tests/typechecks, independent review, required GitHub checks and synchronized `main` are recorded in [`NB-12 progress`](NB-12_PROVIDER_ADAPTERS_PROGRESS.md).
+- NB-13 discovery found that the subordinate Engineering Control Plane plan lists `goal_id`, `ceremony`, `quality_profile`, `model_profile` and `stop_conditions`, absent from v1. The Owner approved a versioned v2 plus adapter migration; v1 remains preserved. Implementation is on `codex/nb13-maestri-control-plane`.
+- NB-13 Owner decisions require `engineering.execute`, typed `Project.policies.engineering`, exact ModelRegistry profile, mandatory Maestri context before dispatch, and Maestri as sole authority. Optional `fallback_model_profile` is exact, allowed only after Maestri abstain/fallback, limited to one attempt, fail-closed when absent, and recorded with profile, decision ID and reasons. Independent review and fresh local checks pass; final-head CI and integration remain. Bootstrap evidence is retained historically and marked disabled after native plan/SkillSet revalidation.
 
 ## Update and sync rules
 

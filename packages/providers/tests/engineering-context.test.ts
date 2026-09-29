@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { EngineeringPlanV2 } from '@nexus-brain/contracts';
 import type { ProviderEngineeringContext } from '@nexus-brain/providers/engineering-context';
 import type { TaskContract } from '@nexus-brain/contracts/execution/port';
 import { CodexAdapter } from '@nexus-brain/providers/codex/adapter';
@@ -60,6 +61,16 @@ const engineeringInput: ProviderEngineeringContext = {
   loaded_skills: [{ skill_id: 'skill.required', version: '1.0.0', body: 'Only the resolver-selected body.' }],
 };
 
+const engineeringPlanV2: EngineeringPlanV2 = {
+  ...engineeringInput.engineering_plan,
+  goal_id: 'goal-provider-context',
+  ceremony: 'NORMAL',
+  quality_profile: 'STANDARD',
+  model_profile: 'default-codex',
+  stop_conditions: ['scope exceeded'],
+};
+const engineeringInputV2: ProviderEngineeringContext = { ...engineeringInput, engineering_plan: engineeringPlanV2 };
+
 const unrelatedCatalogBody = 'UNRELATED_CATALOG_SKILL_MUST_NEVER_REACH_PROVIDER';
 
 function invalidInputs(): Array<[string, ProviderEngineeringContext]> {
@@ -114,6 +125,53 @@ describe.each([
       expect(received).not.toHaveProperty(`task_skill_set.${authorityKey}`);
       expect(received).not.toHaveProperty(authorityKey);
     }
+  });
+
+  it('passes versioned EngineeringPlan v2 through the existing provider boundary', async () => {
+    let calls = 0;
+    let received: unknown;
+    const runner = {
+      run: async (...args: unknown[]) => {
+        calls += 1;
+        received = args[1];
+        return _provider === 'Codex'
+          ? { finalResponse: JSON.stringify({ status: 'success', summary: 'ok', files_changed: [], commands: [], tests: [], evidence: [] }) }
+          : { output: JSON.stringify({ status: 'success', summary: 'ok', files_changed: [], commands: [], tests: [], evidence: [] }) };
+      },
+    };
+    const adapter = createAdapter(runner);
+
+    await adapter.execute(contract, engineeringInputV2);
+
+    expect(calls).toBe(1);
+    expect(received).toEqual(engineeringInputV2);
+    expect((received as ProviderEngineeringContext).engineering_plan).toMatchObject({
+      goal_id: 'goal-provider-context',
+      ceremony: 'NORMAL',
+      quality_profile: 'STANDARD',
+      model_profile: 'default-codex',
+      stop_conditions: ['scope exceeded'],
+    });
+  });
+
+  it.each([
+    ['missing stop condition', { ...engineeringInputV2, engineering_plan: { ...engineeringInputV2.engineering_plan, stop_conditions: [] } }],
+    ['parallel dispatch authority', { ...engineeringInputV2, engineering_plan: { ...engineeringInputV2.engineering_plan, dispatch: { provider: 'untrusted' } } }],
+  ])('does not dispatch v2 plan with %s', async (_caseName, input) => {
+    let calls = 0;
+    const runner = {
+      run: async (..._args: unknown[]) => {
+        calls += 1;
+        return _provider === 'Codex'
+          ? { finalResponse: JSON.stringify({ status: 'success', summary: 'ok', files_changed: [], commands: [], tests: [], evidence: [] }) }
+          : { output: JSON.stringify({ status: 'success', summary: 'ok', files_changed: [], commands: [], tests: [], evidence: [] }) };
+      },
+    };
+    const adapter = createAdapter(runner);
+
+    await adapter.execute(contract, input as ProviderEngineeringContext);
+
+    expect(calls).toBe(0);
   });
 
   it.each(invalidInputs())('does not dispatch when %s', async (_caseName, input) => {

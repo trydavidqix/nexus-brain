@@ -13,7 +13,26 @@
     "lifecycle": { "type": "string", "minLength": 1 },
     "stack": { "type": "array", "items": { "type": "string", "minLength": 1 } },
     "permissions": { "type": "object", "additionalProperties": true },
-    "policies": { "type": "object", "additionalProperties": true },
+    "policies": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "engineering": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["denied", "approval_required"],
+          "properties": {
+            "denied": { "type": "boolean" },
+            "approval_required": { "type": "boolean" },
+            "ceo_required": { "type": "boolean" },
+            "retry_allowed": { "type": "boolean" },
+            "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "confidence_threshold_version": { "type": "string", "minLength": 1 },
+            "fallback_model_profile": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
     "approvals": { "type": "object", "additionalProperties": true },
     "budgets": { "type": "object", "additionalProperties": true },
     "memory_namespace": { "type": "string", "minLength": 1 },

@@ -47,3 +47,16 @@ export interface EngineeringPlan {
   verification_gates: string[];
   delivery_policy: Record<string, unknown>;
 }
+
+export type EngineeringCeremony = 'TINY' | 'LIGHT' | 'NORMAL' | 'HEAVY';
+export type EngineeringQualityProfile = 'FAST' | 'STANDARD' | 'DEEP' | 'RELEASE' | 'INCIDENT';
+
+/** Versioned plan contract. V1 remains available for persisted/provider compatibility. */
+export interface EngineeringPlanV2 extends EngineeringPlan {
+  goal_id: string;
+  ceremony: EngineeringCeremony;
+  quality_profile: EngineeringQualityProfile;
+  /** Opaque profile identifier; Maestri resolves its meaning. */
+  model_profile: string;
+  stop_conditions: string[];
+}

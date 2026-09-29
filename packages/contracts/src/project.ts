@@ -1,3 +1,10 @@
+import type { MaestriDecisionPolicy } from './maestri-decision.js';
+
+export interface NexusEngineeringProjectPolicy extends MaestriDecisionPolicy {
+  /** Exact Maestri-approved ModelRegistry ID used only when decide() abstains to fallback. */
+  fallback_model_profile?: string;
+}
+
 export interface NexusProject {
   project_id: string;
   repo: string;
@@ -6,7 +13,7 @@ export interface NexusProject {
   lifecycle: string;
   stack: string[];
   permissions: Record<string, unknown>;
-  policies: Record<string, unknown>;
+  policies: Record<string, unknown> & { engineering?: NexusEngineeringProjectPolicy };
   approvals: Record<string, unknown>;
   budgets: Record<string, unknown>;
   memory_namespace: string;

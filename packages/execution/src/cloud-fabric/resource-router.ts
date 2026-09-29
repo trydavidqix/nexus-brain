@@ -27,6 +27,8 @@ export interface TaskRequirements {
   risk_level?: 'low' | 'medium' | 'high';
   risk?: RiskLevel;
   complexity?: TaskComplexity;
+  /** Exact model profile issued by Maestri; when set, no profile substitution is allowed. */
+  model_profile?: string;
   phase?: 'plan' | 'execute' | 'verify';
   historical_success?: Record<string, number>;
   exclude_providers?: string[];
@@ -48,15 +50,15 @@ export class ResourceRouter {
   }
 
   async route(requirements: TaskRequirements): Promise<ExecutionTarget> {
-    if (requirements.requires_gpu) {
+    if (!requirements.model_profile && requirements.requires_gpu) {
       return { provider: CloudProvider.GOOGLE_CLOUD, capacity: 'high' };
     }
     
-    if (requirements.capability.includes('windows')) {
+    if (!requirements.model_profile && requirements.capability.includes('windows')) {
       return { provider: CloudProvider.LOCAL_WINDOWS };
     }
     
-    if (requirements.capability.includes('linux')) {
+    if (!requirements.model_profile && requirements.capability.includes('linux')) {
       return { provider: CloudProvider.LOCAL_LINUX };
     }
 
@@ -65,7 +67,11 @@ export class ResourceRouter {
     const complexity = requirements.complexity ?? 'NORMAL';
     const phase = requirements.phase ?? 'execute';
     const adapters = [this.codex, this.claude, this.antigravity].filter((adapter) => !excluded.has(adapter.name.toLowerCase()));
-    const candidates = this.modelRegistry.candidates({ capabilities: requirements.capability, risk, complexity });
+    const candidates = this.modelRegistry.candidates({ capabilities: requirements.capability, risk, complexity })
+      .filter((profile) => !requirements.model_profile || profile.id === requirements.model_profile);
+    if (requirements.model_profile && candidates.length === 0) {
+      return { provider: CloudProvider.OPENAI_CLOUD, reason: 'required_model_profile_unavailable' };
+    }
     const providerQuota: Record<string, ReturnType<typeof quotaState>> = {};
     await Promise.all(adapters.map(async (adapter) => {
       try {
@@ -106,6 +112,9 @@ export class ResourceRouter {
       }
     }
 
-    return { provider: CloudProvider.OPENAI_CLOUD, reason: 'no_healthy_provider_with_verified_quota' };
+    return {
+      provider: CloudProvider.OPENAI_CLOUD,
+      reason: requirements.model_profile ? 'required_model_profile_unavailable' : 'no_healthy_provider_with_verified_quota',
+    };
   }
 }

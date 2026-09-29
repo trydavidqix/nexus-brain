@@ -216,6 +216,9 @@ importers:
       '@nexus-brain/brain':
         specifier: workspace:*
         version: link:../brain
+      '@nexus-brain/control-plane':
+        specifier: workspace:*
+        version: link:../control-plane
       '@nexus-brain/context-gateway':
         specifier: workspace:*
         version: link:../context-gateway

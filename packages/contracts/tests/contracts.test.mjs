@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { contractSchema, contractTypes, normalizeLegacy, validateContract } from '../src/index.mjs';
-assert.equal(contractTypes().length,47);
+assert.equal(contractTypes().length,48);
+assert.ok(contractTypes().includes('engineering-plan-v2'));
 assert.equal(contractSchema('trace').$id,'lumenva.trace.v1');
 assert.equal(validateContract('trace',{trace_id:'tr-1',timestamp:new Date().toISOString(),source:'test'}).valid,true);
 const invalid=validateContract('trace',{timestamp:'not-a-date'});assert.equal(invalid.valid,false);assert.ok(invalid.errors.some(error=>error.includes('trace_id')));
@@ -116,6 +117,32 @@ test('Project v2 requires typed local workspace bindings and a project-derived m
   assert.equal(validateContract('project-v2', { ...projectV2, workspace_bindings: [{ kind: 'local', location: 'opaque://local-workspace/path' }] }).valid, true);
   assert.equal(validateContract('project-v2', { ...projectV2, memory_namespace: 'other-project-memory' }).valid, false);
   assert.equal(validateContract('project-v2', { ...projectV2, extra: true }).valid, false);
+});
+
+test('Project policies type the optional engineering policy for v1 and v2', () => {
+  const engineeringPolicy = {
+    denied: false,
+    approval_required: false,
+    retry_allowed: true,
+    confidence_threshold: 0.8,
+    confidence_threshold_version: 'policy-v1',
+  };
+  for (const [type, value] of [['project', project], ['project-v2', projectV2]]) {
+    assert.equal(validateContract(type, { ...value, policies: { engineering: engineeringPolicy, unrelated_policy: { opaque: true } } }).valid, true);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: 'codex-sol' } } }).valid, true);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: '' } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: 7 } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: 'false', approval_required: false } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false, approval_required: false, extra: true } } }).valid, false);
+  }
+});
+
+test('stored legacy Project v1 and v2 records remain valid without engineering policy', () => {
+  assert.equal(validateContract('project', project).valid, true);
+  assert.equal(validateContract('project-v2', projectV2).valid, true);
+  assert.equal(Object.hasOwn(project.policies, 'engineering'), false);
+  assert.equal(Object.hasOwn(projectV2.policies, 'engineering'), false);
 });
 
 test('Goal v1 requires every field, validates types and rejects unknown top-level fields', () => {

@@ -16,6 +16,7 @@
   "dependencies": {
     "@nexus-brain/brain": "workspace:*",
     "@nexus-brain/contracts": "workspace:*",
+    "@nexus-brain/control-plane": "workspace:*",
     "@nexus-brain/context-gateway": "workspace:*",
     "@nexus-brain/evidence": "workspace:*",
     "@nexus-brain/providers": "workspace:*",
