@@ -74,7 +74,7 @@ test('pinned CBM CLI proves the Windows adapter mappings against an isolated loc
   await mkdir(join(repoPath, 'tests'), { recursive: true });
   await mkdir(join(providerPath, 'src'), { recursive: true });
   await mkdir(cachePath, { recursive: true });
-  t.after(() => rm(scratch, { recursive: true, force: true }));
+  t.after(() => rm(scratch, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }));
   process.env.CBM_CACHE_DIR = cachePath;
   process.env.CBM_ALLOWED_ROOT = repoPath;
 
