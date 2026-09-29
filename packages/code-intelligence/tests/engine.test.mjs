@@ -329,6 +329,27 @@ test('returns direct-source evidence if CBM is unavailable without claiming grap
   assert.equal(result.coverage.state, 'unknown');
   assert.equal(result.data.direct_source.matches.length, 1);
   assert.equal(result.data.direct_source.matches[0].relation, 'unclassified-text-match');
+
+  const partialName = await engine.getCallers({ project_id: 'alpha', workspace_binding: selected, function_name: 'hel' });
+  assert.equal(partialName.data.direct_source.matches.length, 0);
+});
+
+test('preserves JavaScript word-boundary behavior for non-word symbol edges', async t => {
+  const root = await fixture(t);
+  await writeFile(join(root, 'src', 'helper.ts'), 'const x$foo = 1; const foo$x = 2; const foo$! = 3;\n');
+  const selected = project('alpha').workspace_bindings[0];
+  const engine = new CodeIntelligenceEngine({
+    stateStore: { getProject: () => ({ project: project('alpha'), version: 1 }) },
+    resolveWorkspace: async () => root,
+    adapter: fakeAdapter({ fail: true }),
+  });
+
+  const prefixed = await engine.searchSymbol({ project_id: 'alpha', workspace_binding: selected, name: '$foo' });
+  assert.equal(prefixed.data.direct_source.matches.length, 1);
+  const suffixed = await engine.searchSymbol({ project_id: 'alpha', workspace_binding: selected, name: 'foo$' });
+  assert.equal(suffixed.data.direct_source.matches.length, 1);
+  const noTrailingBoundary = await engine.searchSymbol({ project_id: 'alpha', workspace_binding: selected, name: 'foo$!' });
+  assert.equal(noTrailingBoundary.data.direct_source.matches.length, 0);
 });
 
 test('indexes only through the injected CBM adapter and includes bounded direct file evidence', async t => {

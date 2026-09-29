@@ -167,6 +167,25 @@ function symbolNeedle(request) {
   return signatureStart === -1 ? symbol : symbol.slice(0, signatureStart);
 }
 
+function isWordCharacter(character = '') {
+  const code = character.charCodeAt(0);
+  return (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122) || code === 95;
+}
+
+function hasWordBoundaryMatch(text, needle) {
+  if (!needle) return false;
+  let position = text.indexOf(needle);
+  while (position !== -1) {
+    const before = position === 0 ? '' : text[position - 1];
+    const after = text[position + needle.length] ?? '';
+    const startsAtBoundary = isWordCharacter(before) !== isWordCharacter(text[position]);
+    const endsAtBoundary = isWordCharacter(text[position + needle.length - 1]) !== isWordCharacter(after);
+    if (startsAtBoundary && endsAtBoundary) return true;
+    position = text.indexOf(needle, position + 1);
+  }
+  return false;
+}
+
 function boundedInteger(value, fallback, maximum) {
   if (!Number.isInteger(value) || value < 1) return fallback;
   return Math.min(value, maximum);
@@ -224,13 +243,11 @@ async function directSourceEvidence(operation, request, rootPath, commit) {
   }
   const needle = symbolNeedle(request);
   if (!needle) return { kind: 'direct-source', available: false, reason: 'A symbol or file target is required.' };
-  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(`\\b${escaped}\\b`);
   const matches = [];
   for (const file of snapshot.files) {
     const lines = file.content.split(/\r?\n/);
     for (let index = 0; index < lines.length; index += 1) {
-      if (!pattern.test(lines[index])) continue;
+      if (!hasWordBoundaryMatch(lines[index], needle)) continue;
       matches.push({ file_path: file.relativePath, line: index + 1, text: lines[index].slice(0, 500), relation: 'unclassified-text-match' });
       if (matches.length >= MAX_MATCHES) break;
     }
