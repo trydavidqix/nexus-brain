@@ -14,6 +14,10 @@
     "./context-engine": "./src/context/context-engine.ts",
     "./learning": "./src/learning/learning-os.ts",
     "./memory-engine": "./src/memory-engine.mjs",
+    "./research-engine": {
+      "types": "./src/research-engine.d.mts",
+      "import": "./src/research-engine.mjs"
+    },
     "./local-memory": "./src/local-memory.mjs",
     "./hindsight-adapter": "./src/hindsight-adapter.mjs",
     "./postgres-memory-store": "./src/postgres-memory-store.mjs",
@@ -33,6 +37,7 @@
   },
   "dependencies": {
     "@nexus-brain/contracts": "workspace:*",
+    "@nexus-brain/evidence": "workspace:*",
     "pg": "8.23.0"
   }
 }
