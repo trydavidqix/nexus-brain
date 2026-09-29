@@ -27,7 +27,8 @@
             "ceo_required": { "type": "boolean" },
             "retry_allowed": { "type": "boolean" },
             "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
-            "confidence_threshold_version": { "type": "string", "minLength": 1 }
+            "confidence_threshold_version": { "type": "string", "minLength": 1 },
+            "fallback_model_profile": { "type": "string", "minLength": 1 }
           }
         }
       }

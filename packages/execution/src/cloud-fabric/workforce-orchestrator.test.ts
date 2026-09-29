@@ -4,12 +4,14 @@ import { ResourceRouter } from './resource-router.js';
 import { ModelRegistry } from './model-registry.js';
 import { WorkforceOrchestrator } from './workforce-orchestrator.js';
 import { InMemoryWorkforcePersistence } from './durable-stores.js';
+import { IdempotencyStore } from './idempotency.js';
+import type { ExecutionLoopResult } from './execution-loop.js';
 import type { ExecutionPort, ExecutionResult, TaskContract } from './execution-port.js';
 import type { ProviderEngineeringContext } from './execution-port.js';
 import { createSkillRegistry } from '@nexus-brain/control-plane/skills/registry';
 import type { EngineeringOrchestrationRequest, EngineeringOrchestratorDependencies } from '@nexus-brain/control-plane/engineering';
 import type { MasterPlanTask } from './workforce-types.js';
-import type { EngineeringPlanV2, MaestriDecisionPolicy, NexusIdentity, NexusTask } from '@nexus-brain/contracts';
+import type { EngineeringPlanV2, MaestriDecisionInput, NexusEngineeringProjectPolicy, NexusIdentity, NexusTask } from '@nexus-brain/contracts';
 import type { WorkforceEngineeringAuthorization } from './workforce-orchestrator.js';
 
 function executionPort(name: string, status: ExecutionResult['status'], received: TaskContract[], contexts: ProviderEngineeringContext[] = []): ExecutionPort {
@@ -30,7 +32,7 @@ function executionPort(name: string, status: ExecutionResult['status'], received
   };
 }
 
-function engineeringAuthorization(task: MasterPlanTask, modelProfile = 'codex-coding', options: { projectPolicy?: MaestriDecisionPolicy; decisionPolicy?: MaestriDecisionPolicy; agentId?: string; taskType?: EngineeringPlanV2['task_type']; goalRisk?: MasterPlanTask['risk'] } = {}): Omit<EngineeringOrchestrationRequest, 'task'> & { orchestration: EngineeringOrchestratorDependencies; task: NexusTask } {
+function engineeringAuthorization(task: MasterPlanTask, modelProfile = 'codex-coding', options: { projectPolicy?: NexusEngineeringProjectPolicy; decisionPolicy?: MaestriDecisionInput['policy']; decisionExact?: boolean; agentId?: string; taskType?: EngineeringPlanV2['task_type']; goalRisk?: MasterPlanTask['risk'] } = {}): Omit<EngineeringOrchestrationRequest, 'task'> & { orchestration: EngineeringOrchestratorDependencies; task: NexusTask } {
   const projectId = 'project-workforce';
   const agentId = options.agentId ?? 'agent-workforce';
   const identity: NexusIdentity = { project_id: projectId, task_id: task.task_id, agent_id: agentId };
@@ -122,7 +124,7 @@ function engineeringAuthorization(task: MasterPlanTask, modelProfile = 'codex-co
       risk: task.risk,
       priority: 1,
       policy: options.decisionPolicy ?? { denied: false, approval_required: false, retry_allowed: true },
-      signals: { exact: true },
+      signals: { exact: options.decisionExact ?? true },
       evidence_refs: [`evidence-${task.task_id}`],
     },
   };
@@ -183,6 +185,106 @@ describe('WorkforceOrchestrator provider routing integration', () => {
     expect(result.blocked).toEqual(['task-denied']);
     expect(result.results[0]?.reason).toBe('maestri_decision_blocked');
     expect(calls).toHaveLength(0);
+  });
+
+  it('blocks Maestri fallback when Project has no configured profile', async () => {
+    const calls: TaskContract[] = [];
+    const codex = executionPort('codex', 'success', calls);
+    const router = new ResourceRouter({ codex, modelRegistry: new ModelRegistry([
+      { id: 'codex-coding', provider: 'codex', model: 'configured-codex-model', tier: 2, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 2, relative_latency: 2, reliability: 0.95 },
+    ]) });
+    const plan = createMasterPlan({ objective: 'Require configured fallback', tasks: [{ task_id: 'task-no-fallback', objective: 'Implement within scope', capabilities: ['coding'], allowed_paths: ['packages/core'], risk: 'R1', acceptance_criteria: ['unit passes'] }] });
+
+    const result = await new WorkforceOrchestrator(router, { resolve: () => codex }).runPlan(plan, 'base-sha', workforceEngineering(plan.tasks[0]!, { decisionExact: false }));
+
+    expect(result.blocked).toEqual(['task-no-fallback']);
+    expect(result.results[0]?.reason).toBe('maestri_decision_blocked');
+    expect(calls).toHaveLength(0);
+  });
+
+  it('blocks an unregistered exact fallback profile without resolving or dispatching a provider', async () => {
+    const calls: TaskContract[] = [];
+    const codex = executionPort('codex', 'success', calls);
+    const resolved: string[] = [];
+    const router = new ResourceRouter({ codex, modelRegistry: new ModelRegistry([
+      { id: 'codex-coding', provider: 'codex', model: 'configured-codex-model', tier: 2, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 2, relative_latency: 2, reliability: 0.95 },
+    ]) });
+    const plan = createMasterPlan({ objective: 'Require exact fallback profile', tasks: [{ task_id: 'task-invalid-fallback', objective: 'Implement within scope', capabilities: ['coding'], allowed_paths: ['packages/core'], risk: 'R1', acceptance_criteria: ['unit passes'] }] });
+    const engineering = workforceEngineering(plan.tasks[0]!, { decisionExact: false, projectPolicy: { denied: false, approval_required: false, retry_allowed: true, fallback_model_profile: 'unknown-profile' } });
+
+    const result = await new WorkforceOrchestrator(router, { resolve: provider => { resolved.push(provider); return codex; } }).runPlan(plan, 'base-sha', engineering);
+
+    expect(result.blocked).toEqual(['task-invalid-fallback']);
+    expect(result.results[0]?.reason).toBe('required_model_profile_unavailable');
+    expect(result.results[0]?.fallback).toMatchObject({ used: false, status: 'blocked', model_profile: 'unknown-profile' });
+    expect(resolved).toEqual([]);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('blocks the exact fallback profile when its provider quota is unavailable', async () => {
+    const calls: TaskContract[] = [];
+    const codex = executionPort('codex', 'success', calls);
+    const unavailableCodex: ExecutionPort = {
+      ...codex,
+      async quota() { return { provider: 'codex', tokens_used: 100, cost_usd: 1, remaining_budget: 0, remaining_percent: 0, available: false }; },
+    };
+    const resolved: string[] = [];
+    const router = new ResourceRouter({ codex: unavailableCodex, modelRegistry: new ModelRegistry([
+      { id: 'codex-strong-approved', provider: 'codex', model: 'configured-strong-model', tier: 3, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 3, relative_latency: 3, reliability: 0.99 },
+    ]) });
+    const plan = createMasterPlan({ objective: 'Require quota for fallback', tasks: [{ task_id: 'task-fallback-quota', objective: 'Implement within scope', capabilities: ['coding'], allowed_paths: ['packages/core'], risk: 'R1', acceptance_criteria: ['unit passes'] }] });
+    const engineering = workforceEngineering(plan.tasks[0]!, { decisionExact: false, projectPolicy: { denied: false, approval_required: false, retry_allowed: true, fallback_model_profile: 'codex-strong-approved' } });
+
+    const result = await new WorkforceOrchestrator(router, { resolve: provider => { resolved.push(provider); return unavailableCodex; } })
+      .runPlan(plan, 'base-sha', engineering);
+
+    expect(result.blocked).toEqual(['task-fallback-quota']);
+    expect(result.results[0]?.reason).toBe('required_model_profile_unavailable');
+    expect(result.results[0]?.fallback).toMatchObject({ used: false, status: 'blocked', model_profile: 'codex-strong-approved' });
+    expect(resolved).toEqual([]);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('uses one exact configured fallback attempt and records Maestri evidence', async () => {
+    const calls: TaskContract[] = [];
+    const codex = executionPort('codex', 'failure', calls);
+    const router = new ResourceRouter({ codex, modelRegistry: new ModelRegistry([
+      { id: 'codex-coding', provider: 'codex', model: 'configured-codex-model', tier: 2, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 2, relative_latency: 2, reliability: 0.95 },
+      { id: 'codex-strong-approved', provider: 'codex', model: 'configured-strong-model', tier: 3, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 3, relative_latency: 3, reliability: 0.99 },
+      { id: 'codex-strong-other', provider: 'codex', model: 'configured-other-strong-model', tier: 3, capabilities: ['coding'], preferred_for: ['coding'], max_risk: 'R4', max_complexity: 'EXCLUSIVE', subscription_backed: true, gateway_backed: false, enabled: true, relative_cost: 4, relative_latency: 4, reliability: 0.99 },
+    ]) });
+    const persistence = new InMemoryWorkforcePersistence();
+    const idempotency = new IdempotencyStore<ExecutionLoopResult>();
+    const plan = createMasterPlan({ objective: 'Bound approved fallback', tasks: [{ task_id: 'task-fallback', objective: 'Implement within scope', capabilities: ['coding'], allowed_paths: ['packages/core'], risk: 'R1', acceptance_criteria: ['unit passes'] }] });
+    const engineering = workforceEngineering(plan.tasks[0]!, { decisionExact: false, projectPolicy: { denied: false, approval_required: false, retry_allowed: true, fallback_model_profile: 'codex-strong-approved' } });
+
+    const result = await new WorkforceOrchestrator(router, { resolve: () => codex }, undefined, persistence, idempotency).runPlan(plan, 'base-sha', engineering);
+
+    expect(result.failed).toEqual(['task-fallback']);
+    expect(calls).toHaveLength(1);
+    expect(result.results[0]?.contract.preferred_model).toBe('configured-strong-model');
+    expect(result.results[0]?.fallback).toMatchObject({
+      used: true,
+      status: 'dispatched',
+      model_profile: 'codex-strong-approved',
+      decision_id: 'decision-task-fallback',
+      reason_codes: ['classifier_threshold_unavailable'],
+    });
+    expect(persistence.routingTraces[0]?.execution_target?.reason).toContain('maestri_fallback_authorized:codex-strong-approved:decision-task-fallback:classifier_threshold_unavailable');
+
+    const cachedResult = await new WorkforceOrchestrator(router, { resolve: () => codex }, undefined, undefined, idempotency)
+      .runPlan(plan, 'base-sha', engineering);
+    expect(calls).toHaveLength(1);
+    expect(cachedResult.failed).toEqual(['task-fallback']);
+    expect(cachedResult.results[0]?.fallback).toMatchObject({ used: false, status: 'cached', model_profile: 'codex-strong-approved' });
+
+    const otherProfileAuth = workforceEngineering(plan.tasks[0]!, { decisionExact: false, projectPolicy: { denied: false, approval_required: false, retry_allowed: true, fallback_model_profile: 'codex-strong-other' } });
+    const otherProfileResult = await new WorkforceOrchestrator(router, { resolve: () => codex }, undefined, undefined, idempotency)
+      .runPlan(plan, 'base-sha', otherProfileAuth);
+    expect(calls).toHaveLength(2);
+    expect(otherProfileResult.failed).toEqual(['task-fallback']);
+    expect(otherProfileResult.results[0]?.contract.preferred_model).toBe('configured-other-strong-model');
+    expect(otherProfileResult.results[0]?.fallback).toMatchObject({ used: true, status: 'dispatched', model_profile: 'codex-strong-other' });
   });
 
   it('blocks an unregistered exact model profile before provider resolution or dispatch', async () => {

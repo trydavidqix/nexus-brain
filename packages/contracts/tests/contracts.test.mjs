@@ -129,6 +129,9 @@ test('Project policies type the optional engineering policy for v1 and v2', () =
   };
   for (const [type, value] of [['project', project], ['project-v2', projectV2]]) {
     assert.equal(validateContract(type, { ...value, policies: { engineering: engineeringPolicy, unrelated_policy: { opaque: true } } }).valid, true);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: 'codex-sol' } } }).valid, true);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: '' } } }).valid, false);
+    assert.equal(validateContract(type, { ...value, policies: { engineering: { ...engineeringPolicy, fallback_model_profile: 7 } } }).valid, false);
     assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: 'false', approval_required: false } } }).valid, false);
     assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false } } }).valid, false);
     assert.equal(validateContract(type, { ...value, policies: { engineering: { denied: false, approval_required: false, extra: true } } }).valid, false);

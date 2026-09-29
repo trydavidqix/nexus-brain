@@ -24,12 +24,14 @@ import type { ReviewResult } from './independent-review';
 import { executeIndependentReview } from './reviewer-executor';
 import { createRoutingTrace } from './trace-factory';
 import { executeWithRetry, type ExecutionLoopResult } from './execution-loop';
+import { DEFAULT_RETRY_POLICY } from './retry-controller';
 import { nextEscalation, type EscalationState } from './escalation-engine';
 import { readyTasks } from './master-plan';
 import { scopeViolations } from './scope-guard';
 import { prepareEngineeringContext } from '@nexus-brain/control-plane/engineering';
 import type {
   EngineeringOrchestrationRequest,
+  EngineeringOrchestrationResult,
   EngineeringOrchestratorDependencies,
 } from '@nexus-brain/control-plane/engineering';
 import type { ProviderEngineeringContext } from '@nexus-brain/contracts/execution/port';
@@ -45,6 +47,13 @@ export interface OrchestrationTaskResult {
   review?: ReviewResult;
   status: 'completed' | 'blocked' | 'failed';
   reason?: string;
+  fallback?: {
+    used: boolean;
+    status: 'blocked' | 'dispatched' | 'cached';
+    model_profile: string;
+    decision_id: string;
+    reason_codes: string[];
+  };
 }
 
 export interface OrchestrationRun {
@@ -127,6 +136,7 @@ export class WorkforceOrchestrator {
         let reviewEngineeringContext: ProviderEngineeringContext | undefined;
         let reviewModelProfile: string | undefined;
         let reviewEffectiveRisk: RiskLevel | undefined;
+        let fallbackAuthorization: NonNullable<EngineeringOrchestrationResult['fallback']> | undefined;
         try {
           const prepared = await prepareEngineeringContext(engineering.orchestration, {
             ...taskAuthorization,
@@ -140,6 +150,7 @@ export class WorkforceOrchestrator {
           engineeringContext = prepared.provider_context;
           modelProfile = prepared.engineering_plan.model_profile;
           effectiveRisk = prepared.engineering_plan.risk_level;
+          fallbackAuthorization = prepared.fallback;
           if (prepared.decision.needs_review) {
             const reviewAuthorization = engineering.review_tasks?.[task.task_id];
             if (!reviewAuthorization) {
@@ -180,15 +191,22 @@ export class WorkforceOrchestrator {
           results.push({ task, contract, status: 'blocked', reason: error instanceof Error ? error.message : 'engineering_context_invalid' });
           continue;
         }
+        const fallbackBlocked = fallbackAuthorization ? {
+          used: false,
+          status: 'blocked' as const,
+          model_profile: fallbackAuthorization.model_profile,
+          decision_id: fallbackAuthorization.decision_id,
+          reason_codes: [...fallbackAuthorization.reason_codes],
+        } : undefined;
         if (contract.execution_mode === 'write' && contract.allowed_paths.length === 0) {
           blocked.add(task.task_id);
-          results.push({ task, contract, status: 'blocked', reason: 'allowed_paths_required' });
+          results.push({ task, contract, status: 'blocked', reason: 'allowed_paths_required', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
           continue;
         }
         if (requiresOwnerApproval(contract)) {
           await this.approvals?.save(createApprovalRequest(contract));
           blocked.add(task.task_id);
-          results.push({ task, contract, status: 'blocked', reason: 'owner_approval_required' });
+          results.push({ task, contract, status: 'blocked', reason: 'owner_approval_required', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
           continue;
         }
 
@@ -204,7 +222,7 @@ export class WorkforceOrchestrator {
 
         if (routed.reason === 'required_model_profile_unavailable' || routed.model_id !== modelProfile) {
           blocked.add(task.task_id);
-          results.push({ task, contract, status: 'blocked', reason: 'required_model_profile_unavailable' });
+          results.push({ task, contract, status: 'blocked', reason: 'required_model_profile_unavailable', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
           continue;
         }
 
@@ -214,7 +232,7 @@ export class WorkforceOrchestrator {
           const reviewAuthorization = engineering.review_tasks?.[task.task_id];
           if (!reviewAuthorization) {
             blocked.add(task.task_id);
-            results.push({ task, contract, status: 'blocked', reason: 'review_engineering_plan_required' });
+            results.push({ task, contract, status: 'blocked', reason: 'review_engineering_plan_required', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
             continue;
           }
           reviewTarget = await this.router.route({
@@ -229,14 +247,14 @@ export class WorkforceOrchestrator {
           });
           if (reviewTarget.reason === 'required_model_profile_unavailable' || reviewTarget.model_id !== reviewModelProfile) {
             blocked.add(task.task_id);
-            results.push({ task, contract, status: 'blocked', reason: 'required_review_model_profile_unavailable' });
+            results.push({ task, contract, status: 'blocked', reason: 'required_review_model_profile_unavailable', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
             continue;
           }
           const reviewerProvider = String(reviewTarget.provider);
           reviewerPort = reviewTarget.adapter ?? this.ports.resolve(reviewerProvider);
           if (!reviewerPort || reviewerProvider === String(routed.provider)) {
             blocked.add(task.task_id);
-            results.push({ task, contract, status: 'blocked', reason: 'independent_reviewer_unavailable' });
+            results.push({ task, contract, status: 'blocked', reason: 'independent_reviewer_unavailable', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
             continue;
           }
         }
@@ -244,7 +262,7 @@ export class WorkforceOrchestrator {
         const port = routed.adapter ?? this.ports.resolve(String(routed.provider));
         if (!port) {
           blocked.add(task.task_id);
-          results.push({ task, contract, status: 'blocked', reason: 'execution_port_unavailable' });
+          results.push({ task, contract, status: 'blocked', reason: 'execution_port_unavailable', ...(fallbackBlocked ? { fallback: fallbackBlocked } : {}) });
           continue;
         }
 
@@ -260,9 +278,23 @@ export class WorkforceOrchestrator {
         const packet = this.context.compilePacket(packetInput);
         contract.context_packet = packet;
 
-        const executionKey = executionIdempotencyKey(plan.plan_id, task.task_id, baseSha, 1);
-        await this.persistence?.saveRoutingTrace(createRoutingTrace({ task_id: task.task_id, phase: 'execute', execution_target: { provider: String(routed.provider), reason: routed.reason }, context_packet_id: packet.packet_id }));
-        const loop = await this.idempotency.once(executionKey, () => executeWithRetry(port, contract, undefined, undefined, engineeringContext));
+        const executionKey = executionIdempotencyKey(plan.plan_id, task.task_id, baseSha, 1, fallbackAuthorization?.model_profile);
+        const routingReason = fallbackAuthorization
+          ? `${routed.reason ?? 'exact_profile_selected'};maestri_fallback_authorized:${fallbackAuthorization.model_profile}:${fallbackAuthorization.decision_id}:${fallbackAuthorization.reason_codes.join(',')}`
+          : routed.reason;
+        await this.persistence?.saveRoutingTrace(createRoutingTrace({ task_id: task.task_id, phase: 'execute', execution_target: { provider: String(routed.provider), reason: routingReason }, context_packet_id: packet.packet_id }));
+        const retryPolicy = fallbackAuthorization ? { ...DEFAULT_RETRY_POLICY, max_attempts: 1 } : undefined;
+        const { value: loop, reused: cachedExecutionReused } = await this.idempotency.onceWithStatus(
+          executionKey,
+          () => executeWithRetry(port, contract, retryPolicy, undefined, engineeringContext),
+        );
+        const fallbackDispatch = fallbackAuthorization ? {
+          used: !cachedExecutionReused,
+          status: cachedExecutionReused ? 'cached' as const : 'dispatched' as const,
+          model_profile: fallbackAuthorization.model_profile,
+          decision_id: fallbackAuthorization.decision_id,
+          reason_codes: [...fallbackAuthorization.reason_codes],
+        } : undefined;
         let execution = loop.result;
         const scopeErrors = scopeViolations({
           mode: contract.execution_mode ?? 'write',
@@ -288,7 +320,7 @@ export class WorkforceOrchestrator {
             ? blocked
             : failed;
           target.add(task.task_id);
-          results.push({ task, contract, execution, status: target === blocked ? 'blocked' : 'failed', reason: gate.reasons.join(',') });
+          results.push({ task, contract, execution, status: target === blocked ? 'blocked' : 'failed', reason: gate.reasons.join(','), ...(fallbackDispatch ? { fallback: fallbackDispatch } : {}) });
           continue;
         }
 
@@ -323,7 +355,7 @@ export class WorkforceOrchestrator {
 
           if (!review.accepted) {
             failed.add(task.task_id);
-            results.push({ task, contract, execution, review, status: 'failed', reason: review.reasons.join(',') });
+            results.push({ task, contract, execution, review, status: 'failed', reason: review.reasons.join(','), ...(fallbackDispatch ? { fallback: fallbackDispatch } : {}) });
             continue;
           }
         }
@@ -331,7 +363,7 @@ export class WorkforceOrchestrator {
         completed.add(task.task_id);
         const digest = toResultDigest(execution);
         await this.persistence?.saveDigest(digest);
-        results.push({ task, contract, execution, ...(review ? { review } : {}), status: 'completed' });
+        results.push({ task, contract, execution, ...(review ? { review } : {}), status: 'completed', ...(fallbackDispatch ? { fallback: fallbackDispatch } : {}) });
       }
     }
 

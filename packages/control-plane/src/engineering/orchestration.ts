@@ -47,6 +47,12 @@ export interface EngineeringOrchestrationResult {
   engineering_plan?: EngineeringPlanV2;
   decision: MaestriDecisionResult;
   provider_context?: ProviderEngineeringContext;
+  fallback?: {
+    authorized: true;
+    model_profile: string;
+    decision_id: string;
+    reason_codes: string[];
+  };
 }
 
 export interface EngineeringOrchestratorDependencies {
@@ -215,9 +221,10 @@ async function prepareEngineeringContextAsync(
     throw new Error('engineering_plan_goal_scope_mismatch');
   }
 
+  const { fallback_model_profile: fallbackModelProfile, ...projectDecisionPolicy } = engineeringPolicy;
   const projectPolicyInput: MaestriDecisionInput = {
     ...request.decision_input,
-    policy: engineeringPolicy,
+    policy: projectDecisionPolicy,
   };
   assertContract('maestri-decision-input', projectPolicyInput);
   const decisionInput: MaestriDecisionInput = {
@@ -230,7 +237,27 @@ async function prepareEngineeringContextAsync(
   validateEngineeringPlanCandidate(request.identity, registeredGoal.goal, request.plan_fields, risk);
 
   const decision = decide({ ...decisionInput, risk });
-  if (decision.route !== 'execute'
+  const authorizedFallback = decision.route === 'fallback'
+    && decision.abstain
+    && decision.decision_source === 'fallback'
+    && decision.escalation_target === 'strong_model'
+    && !decision.needs_approval
+    && !decision.needs_ceo;
+  let planFields = request.plan_fields;
+  let fallback: EngineeringOrchestrationResult['fallback'];
+  if (authorizedFallback) {
+    if (typeof fallbackModelProfile !== 'string' || fallbackModelProfile.length === 0) {
+      return { status: 'blocked', decision };
+    }
+    planFields = { ...request.plan_fields, model_profile: fallbackModelProfile };
+    validateEngineeringPlanCandidate(request.identity, registeredGoal.goal, planFields, risk);
+    fallback = {
+      authorized: true,
+      model_profile: fallbackModelProfile,
+      decision_id: decision.decision_id,
+      reason_codes: [...decision.reason_codes],
+    };
+  } else if (decision.route !== 'execute'
     || decision.needs_approval || decision.needs_ceo || decision.abstain || decision.decision_source === 'fallback') {
     return { status: 'blocked', decision };
   }
@@ -242,16 +269,16 @@ async function prepareEngineeringContextAsync(
   const selectionInput = {
     task_id: request.identity.task_id,
     agent_id: request.identity.agent_id,
-    task_type: request.plan_fields.task_type,
+    task_type: planFields.task_type,
     risk_level: risk,
-    required: request.plan_fields.skill_policy.required,
-    optional: request.plan_fields.skill_policy.optional,
-    forbidden: request.plan_fields.skill_policy.forbidden,
-    context_budget: request.plan_fields.context_budget as Record<string, unknown> & { input_tokens: number },
+    required: planFields.skill_policy.required,
+    optional: planFields.skill_policy.optional,
+    forbidden: planFields.skill_policy.forbidden,
+    context_budget: planFields.context_budget as Record<string, unknown> & { input_tokens: number },
   };
   const initialResolution = dependencies.skillRegistry.resolveSkills(selectionInput);
   requireSkillSetIdentity(initialResolution.skill_set, request.identity);
-  const planSkillPolicy = request.plan_fields.skill_policy;
+  const planSkillPolicy = planFields.skill_policy;
   const resolvedSkillPolicy = initialResolution.skill_set;
   if (!sameStrings(resolvedSkillPolicy.required, planSkillPolicy.required)
     || !sameStrings(resolvedSkillPolicy.optional, planSkillPolicy.optional)
@@ -274,7 +301,7 @@ async function prepareEngineeringContextAsync(
     || !sameStrings(resolution.skill_set.forbidden, planSkillPolicy.forbidden)) {
     throw new Error('engineering_plan_skill_policy_mismatch');
   }
-  const engineeringPlan = issueEngineeringPlan(request.identity, registeredGoal.goal, request.plan_fields, resolution.skill_set, risk);
+  const engineeringPlan = issueEngineeringPlan(request.identity, registeredGoal.goal, planFields, resolution.skill_set, risk);
 
   const loadedSkills = dependencies.skillRegistry.getActiveSkills({
     task_id: request.identity.task_id,
@@ -290,6 +317,7 @@ async function prepareEngineeringContextAsync(
     status: 'ready',
     engineering_plan: engineeringPlan,
     decision,
+    ...(fallback ? { fallback } : {}),
     provider_context: {
       engineering_plan: engineeringPlan,
       task_skill_set: resolution.skill_set,

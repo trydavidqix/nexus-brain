@@ -288,6 +288,43 @@ describe('NB-13 engineering orchestration', () => {
     expect(skillRegistry.getActiveSkills).not.toHaveBeenCalled();
   });
 
+  it('uses only the Project-configured exact profile after Maestri authorizes fallback', async () => {
+    const skillRegistry = makeTrackedRegistry();
+    const fallbackProject = {
+      ...project,
+      policies: { engineering: { denied: false, approval_required: false, retry_allowed: true, fallback_model_profile: 'codex-sol' } },
+    };
+    const fallbackInput = { ...decisionInput, signals: { exact: false } };
+    const result = await prepareEngineeringContext({
+      stateStore: makeStore({ project: fallbackProject, version: 1 }),
+      skillRegistry,
+    }, request({ decision_input: fallbackInput }));
+
+    expect(result.status).toBe('ready');
+    expect(result.decision).toEqual(decide(fallbackInput));
+    expect(result.decision.route).toBe('fallback');
+    expect(result.engineering_plan?.model_profile).toBe('codex-sol');
+    expect(result.fallback).toEqual({
+      authorized: true,
+      model_profile: 'codex-sol',
+      decision_id: result.decision.decision_id,
+      reason_codes: result.decision.reason_codes,
+    });
+  });
+
+  it('blocks Maestri fallback without a configured profile before Resolver selection', async () => {
+    const skillRegistry = makeTrackedRegistry();
+    const fallbackInput = { ...decisionInput, signals: { exact: false } };
+    const result = await prepareEngineeringContext({ stateStore: makeStore(), skillRegistry }, request({ decision_input: fallbackInput }));
+
+    expect(result.status).toBe('blocked');
+    expect(result.decision.route).toBe('fallback');
+    expect(result.fallback).toBeUndefined();
+    expect(result.provider_context).toBeUndefined();
+    expect(skillRegistry.resolveSkills).not.toHaveBeenCalled();
+    expect(skillRegistry.loadSkill).not.toHaveBeenCalled();
+  });
+
   it('keeps resolver state isolated by both task and agent', async () => {
     const skillRegistry = makeRegistry();
     const initialSelection = skillRegistry.resolveSkills({
