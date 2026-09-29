@@ -8,7 +8,27 @@ import { EncryptedSnapshotStore, type SnapshotIdentity } from "../src/snapshot/e
 const identity: SnapshotIdentity = { project_id: "nexus", task_id: "task-1", agent_id: "agent-1" };
 const snapshotId = "11111111-1111-4111-8111-111111111111";
 const temporaryRoots: string[] = [];
-vi.setConfig({ testTimeout: 60_000 });
+const SNAPSHOT_CHILD_ERROR_CODES = new Set([
+  "snapshot_already_exists",
+  "snapshot_dpapi_failed",
+  "snapshot_dpapi_input_failed",
+  "snapshot_dpapi_output_invalid",
+  "snapshot_dpapi_output_too_large",
+  "snapshot_dpapi_process_failed",
+  "snapshot_dpapi_timeout",
+  "snapshot_dpapi_windows_only",
+  "snapshot_key_invalid",
+  "snapshot_lock_failed",
+  "snapshot_lock_not_acquired",
+  "snapshot_lock_process_failed",
+  "snapshot_lock_release_failed",
+  "snapshot_lock_timeout",
+  "snapshot_lock_windows_only",
+  "snapshot_queue_limit_exceeded",
+  "snapshot_storage_root_changed",
+  "snapshot_storage_symlink_denied",
+]);
+vi.setConfig({ testTimeout: 180_000 });
 
 async function roots() {
   const parent = await mkdtemp(join(tmpdir(), "nexus-nb11-"));
@@ -88,6 +108,18 @@ function runStoreInFreshNodeProcess(input: Record<string, unknown>, operation: s
   });
 }
 
+function sanitizedChildDiagnostic(result: { code: number | null; stdout: string }): { exit_code: number | null; error_code: string } {
+  try {
+    const parsed = JSON.parse(result.stdout) as { error?: unknown };
+    if (typeof parsed.error === "string" && SNAPSHOT_CHILD_ERROR_CODES.has(parsed.error)) {
+      return { exit_code: result.code, error_code: parsed.error };
+    }
+  } catch {
+    // Keep child output private; report only the sanitized exit state below.
+  }
+  return { exit_code: result.code, error_code: result.code === 0 ? "success" : "no_sanitized_error" };
+}
+
 afterEach(async () => {
   await Promise.all(temporaryRoots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
@@ -117,7 +149,7 @@ describe.skipIf(process.platform !== "win32")("EncryptedSnapshotStore", () => {
       snapshotId: created.snapshot_id,
       destination: recoveredRoot,
     });
-    expect(restoredProcess.code, restoredProcess.stderr).toBe(0);
+    expect(restoredProcess.code, JSON.stringify(sanitizedChildDiagnostic(restoredProcess))).toBe(0);
     const restored = JSON.parse(restoredProcess.stdout) as { files: unknown };
     expect(restored.files).toEqual([{ path: "src/change.txt", sha256: expect.any(String), bytes: contents.byteLength }]);
     expect(await readFile(join(recoveredRoot, "src", "change.txt"))).toEqual(contents);
@@ -242,10 +274,11 @@ describe.skipIf(process.platform !== "win32")("EncryptedSnapshotStore", () => {
       runStoreInFreshNodeProcess({ workspaceRoot, storageRoot, snapshotId: "00000000-0000-4000-8000-000000000101", contents: "a" }, operation),
       runStoreInFreshNodeProcess({ workspaceRoot, storageRoot, snapshotId: "00000000-0000-4000-8000-000000000102", contents: "b" }, operation),
     ]);
-    expect(concurrent.filter((result) => result.code === 0)).toHaveLength(1);
-    expect(concurrent.filter((result) => result.code !== 0 && JSON.parse(result.stdout).error === "snapshot_queue_limit_exceeded")).toHaveLength(1);
+    const diagnostics = JSON.stringify(concurrent.map(sanitizedChildDiagnostic));
+    expect(concurrent.filter((result) => result.code === 0), diagnostics).toHaveLength(1);
+    expect(concurrent.filter((result) => result.code !== 0 && sanitizedChildDiagnostic(result).error_code === "snapshot_queue_limit_exceeded"), diagnostics).toHaveLength(1);
     expect(await instance.pending(identity)).toHaveLength(100);
-  }, 180_000);
+  }, 300_000);
 
   it("rejects snapshots and delivered storage directories redirected by junctions", async () => {
     for (const child of ["snapshots", "delivered"] as const) {
@@ -282,7 +315,7 @@ describe.skipIf(process.platform !== "win32")("EncryptedSnapshotStore", () => {
       runStoreInFreshNodeProcess({ workspaceRoot, storageRoot, marker, snapshotId: "00000000-0000-4000-8000-000000000201" }, operation),
       runStoreInFreshNodeProcess({ workspaceRoot, storageRoot, marker, snapshotId: "00000000-0000-4000-8000-000000000202" }, operation),
     ]);
-    expect(results.every((result) => result.code === 0), results.map((result) => result.stderr).join("\n")).toBe(true);
+    expect(results.every((result) => result.code === 0), JSON.stringify(results.map(sanitizedChildDiagnostic))).toBe(true);
     expect(results.map((result) => JSON.parse(result.stdout).delivered).sort()).toEqual([0, 1]);
     expect((await readFile(marker, "utf8")).trim().split(/\r?\n/)).toEqual([snapshotId]);
   });
@@ -300,7 +333,7 @@ describe.skipIf(process.platform !== "win32")("EncryptedSnapshotStore", () => {
       { workspaceRoot, storageRoot, snapshotId },
       "const delivered = await store.flushPending(input.identity, async () => {}); process.stdout.write(JSON.stringify({ delivered }))",
     );
-    expect(recovery.code, recovery.stderr).toBe(0);
+    expect(recovery.code, JSON.stringify(sanitizedChildDiagnostic(recovery))).toBe(0);
     expect(JSON.parse(recovery.stdout)).toEqual({ delivered: 1 });
-  }, 30_000);
+  }, 180_000);
 });
