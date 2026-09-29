@@ -1,0 +1,32 @@
+{
+  "name": "@nexus-brain/code-intelligence",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.mjs"
+    },
+    "./cbm-adapter": {
+      "types": "./src/cbm-adapter.d.ts",
+      "import": "./src/cbm-adapter.mjs"
+    }
+  },
+  "scripts": {
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:cbm-integration": "node --test tests/cbm-runtime.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nexus-brain/contracts": "workspace:*",
+    "@nexus-brain/state": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
