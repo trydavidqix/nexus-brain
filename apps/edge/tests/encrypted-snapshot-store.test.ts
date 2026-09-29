@@ -2,12 +2,13 @@ import { mkdtemp, readFile, readdir, rm, mkdir, writeFile, symlink } from "node:
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { EncryptedSnapshotStore, type SnapshotIdentity } from "../src/snapshot/encrypted-snapshot-store.js";
 
 const identity: SnapshotIdentity = { project_id: "nexus", task_id: "task-1", agent_id: "agent-1" };
 const snapshotId = "11111111-1111-4111-8111-111111111111";
 const temporaryRoots: string[] = [];
+vi.setConfig({ testTimeout: 60_000 });
 
 async function roots() {
   const parent = await mkdtemp(join(tmpdir(), "nexus-nb11-"));

@@ -277,7 +277,7 @@ function protectKeyWithCurrentUserDpapi(key: Uint8Array, operation: "Protect" | 
     const timer = setTimeout(() => {
       child.kill();
       fail("snapshot_dpapi_timeout");
-    }, 10_000);
+    }, 30_000);
     timer.unref();
 
     const fail = (code: string) => {
