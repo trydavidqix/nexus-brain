@@ -6,6 +6,9 @@
     "owner_decision": "Temporary exception only for NB-13: create an explicit versioned plan and resolve a minimum TaskSkillSet; remove bootstrap after native Maestri plan and Resolver issuance are verified.",
     "branch_scope": "codex/nb13-maestri-control-plane",
     "not_runtime_authority": true,
+    "status": "DISABLED_AFTER_NATIVE_PLAN_AND_SKILLSET_REVALIDATION",
+    "disabled_date": "2026-09-29",
+    "historical_evidence_only": true,
     "expires_when": "NB-13 native Maestri plan and TaskSkillSet issuance are implemented and revalidated"
   },
   "engineering_plan_contract": "nexus.engineering-plan.v2",

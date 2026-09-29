@@ -1,5 +1,8 @@
 {
   "classification": "BOOTSTRAP_ONLY",
+  "current_status": "DISABLED_AFTER_NATIVE_PLAN_AND_SKILLSET_REVALIDATION",
+  "disabled_date": "2026-09-29",
+  "historical_evidence_only": true,
   "task_id": "nexus-task-1-nb13",
   "agent_id": "/root",
   "resolver": "packages/control-plane/src/skills/skill-registry.mjs (NB-09 Skill Resolver)",
