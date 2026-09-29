@@ -32,6 +32,14 @@
     "./decisions/maestri": {
       "types": "./src/decisions/maestri-decision.ts",
       "import": "./src/decisions/maestri-decision.ts"
+    },
+    "./decisions/local-decision-benchmark": {
+      "types": "./src/decisions/local-decision-benchmark.ts",
+      "import": "./src/decisions/local-decision-benchmark.ts"
+    },
+    "./skills/registry": {
+      "types": "./src/skills/skill-registry.d.mts",
+      "import": "./src/skills/skill-registry.mjs"
     }
   },
   "scripts": {

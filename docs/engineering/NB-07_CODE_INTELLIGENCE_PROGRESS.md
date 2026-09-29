@@ -1,6 +1,6 @@
 # NB-07 Code Intelligence progress
 
-**Status:** IN PROGRESS. Implementation is validated at code commit `9b836c8`; PR #123 integration remains pending.
+**Status:** DONE. PR #123 was squash-merged into `main` as `91ddfb40e00ef67b26330e861f1b7d337ba59666`; final-head validation evidence is recorded below.
 **Dependencies:** NB-01, NB-06 and NB-06A are present on `main`.
 **Scope:** provider-neutral `CodeIntelligenceEngine`, initial pinned CBM 0.11.0 adapter, Project v2 workspace binding isolation, advisory graph evidence, bounded direct-source/Git fallback, explicit cross-repository target selection, and Windows CI fixture.
 **Validation policy:** tests, typecheck, integration and security validation run only in GitHub Actions. No local tests, typecheck, package installation or CBM execution are authorized on this PC.
@@ -22,13 +22,21 @@
 
 ## Current checkpoint — 2026-09-29
 
+- NB-07 is accepted. PR #123 was squash-merged on 2026-09-29; merge commit `91ddfb40e00ef67b26330e861f1b7d337ba59666` is present on synchronized `main`.
+- Final PR head was `5d0be4228c084fe9858e671bae9fc84f52c5e979`. GitHub Actions passed Windows CBM fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP, and OSV. Runs: `36503988652`, `36503988666`, `36503988679`, `36503988625`, `36503988614`, `36504052159`, `36503986083`.
+- Independent review approved the CBM query correction, allowlisted diagnostics, cleanup retry, literal source search, and evidence record. Both PR review threads were resolved before integration.
+- Validation stayed on GitHub Actions. No local tests, typecheck, install, or CBM execution ran on this PC, per the NB-07 policy.
+- The main worktree is clean and synchronized at `91ddfb40e00ef67b26330e861f1b7d337ba59666`.
+
+## Pre-integration checkpoint — 2026-09-29
+
 - PR #123 carries implementation commit `9b836c8b1fc6c15657e8f20c810af1f90b1aab83` on `codex/nb07-code-intelligence`.
 - Commit `685fd7f` fixes CBM 0.11.0's unsupported `type(e)` WHERE expression by listing its six supported cross-edge relationship types. The Windows runtime fixture passed in runs `36502938536` and `36502934633`.
 - Commit `7d42b94` adds bounded cleanup retries for transient Windows `EBUSY` locks. The fixture passed after this change.
 - Commit `9b836c8` removes dynamic RegExp construction from direct-source search and preserves JavaScript `\\b` boundary behavior with literal search. Regression coverage includes `$foo`, `foo$`, `foo$!`, and partial-name rejection.
 - Independent review approved the query fix, safe diagnostic categories, cleanup retries, and final source-search fix. No local tests, typecheck, install, or CBM execution were run; validation stays on GitHub Actions per this milestone's policy.
 - Fresh Actions evidence on `9b836c8`: Windows fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP, and OSV passed. Runs: `36502934633`, `36502938536`, `36502938509`, `36502938586`, `36502938596`, `36502938712`; see [PR #123 checks](https://github.com/trydavidqix/nexus-brain/pull/123).
-- Required checks on implementation commit `9b836c8` are green and review threads are resolved. NB-07 remains unaccepted until the final PR head passes checks and squash integration completes.
+- Required checks on implementation commit `9b836c8` passed before the final evidence sync and squash integration.
 
 ## Historical checkpoint — 2026-09-28
 

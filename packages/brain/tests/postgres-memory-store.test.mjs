@@ -72,6 +72,24 @@ test('raw evidence contract rejects a trusted classification before database acc
   assert.equal(queried, false);
 });
 
+test('research evidence lookup is constrained to the current project, task, agent and untrusted successful runs', async () => {
+  let captured;
+  const store = new PostgresMemoryStore({ connect: async () => ({ release() {} }), query: async (sql, values) => { captured = { sql, values }; return { rows: [] }; } });
+  await store.searchEvidence({ project_id: 'project-a', task_id: 'task-a', agent_id: 'agent-a', query: 'local retrieval', limit: 500 });
+  assert.match(captured.sql, /r\.task_id = \$2/);
+  assert.match(captured.sql, /r\.agent_id = \$3/);
+  assert.match(captured.sql, /r\.status IN \('OK', 'PARTIAL'\)/);
+  assert.match(captured.sql, /e\.trust_level = 'UNTRUSTED'/);
+  assert.deepEqual(captured.values, ['project-a', 'task-a', 'agent-a', 'local retrieval', 100]);
+});
+
+test('research evidence lookup fails closed without complete task identity', async () => {
+  let queried = false;
+  const store = new PostgresMemoryStore({ connect: async () => ({ release() {} }), query: async () => { queried = true; return { rows: [] }; } });
+  await assert.rejects(store.searchEvidence({ project_id: 'project-a', task_id: 'task-a', query: 'local retrieval' }), /project, task, agent, and query scope/);
+  assert.equal(queried, false);
+});
+
 test('PostgreSQL store rejects canonical promotion without an explicit approval authorizer', async () => {
   let connected = false;
   const store = new PostgresMemoryStore({ query: async () => ({ rows: [] }), connect: async () => { connected = true; throw new Error('unexpected connection'); } });
