@@ -91,7 +91,7 @@ afterEach(async () => {
   await Promise.all(temporaryRoots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
-describe("EncryptedSnapshotStore", () => {
+describe.skipIf(process.platform !== "win32")("EncryptedSnapshotStore", () => {
   it("creates encrypted snapshots and restores them after a separate Node process restart", async () => {
     const { workspaceRoot, storageRoot } = await roots();
     const contents = Buffer.from("synthetic uncommitted change");
@@ -174,6 +174,20 @@ describe("EncryptedSnapshotStore", () => {
     await expect(instance.restore({ snapshot_id: created.snapshot_id, identity, destination: join(workspaceRoot, "tampered") }))
       .rejects.toThrow("snapshot_authentication_failed");
     await expect(readdir(join(workspaceRoot, "tampered"))).rejects.toThrow();
+  });
+
+  it("rejects an authenticated-encryption tag shorter than 16 bytes", async () => {
+    const { workspaceRoot, storageRoot } = await roots();
+    const instance = store({ workspaceRoot, storageRoot });
+    const created = await instance.create({ identity, files: [{ path: "file.txt", contents: Buffer.from("x") }] });
+    const snapshotPath = join(storageRoot, "snapshots", `${created.snapshot_id}.snapshot`);
+    const envelope = JSON.parse(await readFile(snapshotPath, "utf8")) as { auth_tag: string };
+    envelope.auth_tag = Buffer.from(envelope.auth_tag, "base64").subarray(0, 15).toString("base64");
+    await writeFile(snapshotPath, JSON.stringify(envelope));
+
+    await expect(instance.restore({ snapshot_id: created.snapshot_id, identity, destination: join(workspaceRoot, "truncated-tag") }))
+      .rejects.toThrow("snapshot_authentication_failed");
+    await expect(readdir(join(workspaceRoot, "truncated-tag"))).rejects.toThrow();
   });
 
   it("keeps failed deliveries queued and acknowledges only successful encrypted delivery", async () => {

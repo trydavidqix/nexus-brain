@@ -489,7 +489,7 @@ export class EncryptedSnapshotStore {
   private async decrypt(envelope: EncryptedSnapshotEnvelope, expectedId: string): Promise<SnapshotPayload> {
     if (envelope.format !== FORMAT || envelope.snapshot_id !== expectedId) throw new Error("snapshot_envelope_invalid");
     try {
-      const decipher = createDecipheriv("aes-256-gcm", await this.loadOrCreateKey(), Buffer.from(envelope.nonce, "base64"));
+      const decipher = createDecipheriv("aes-256-gcm", await this.loadOrCreateKey(), Buffer.from(envelope.nonce, "base64"), { authTagLength: 16 });
       decipher.setAAD(Buffer.from(`${FORMAT}\0${expectedId}`, "utf8"));
       decipher.setAuthTag(Buffer.from(envelope.auth_tag, "base64"));
       const plaintext = Buffer.concat([decipher.update(Buffer.from(envelope.ciphertext, "base64")), decipher.final()]);

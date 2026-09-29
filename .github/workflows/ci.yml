@@ -123,6 +123,10 @@ jobs:
           cache: pnpm
       - name: Install workspace dependencies
         run: pnpm --filter @nexus-brain/code-intelligence... install --frozen-lockfile --ignore-scripts
+      - name: Install Edge package dependencies
+        run: pnpm --filter @nexus-brain/edge... install --frozen-lockfile --ignore-scripts
+      - name: Edge package Windows unit tests
+        run: pnpm --filter @nexus-brain/edge test:unit
       - name: Download and verify pinned CBM Windows archive
         shell: pwsh
         run: |
