@@ -6,10 +6,11 @@
     "./codex/usage": "./src/codex/usage.mjs",
     "./codex/adapter": "./src/codex/adapter.ts",
     "./claude/adapter": "./src/claude/adapter.ts",
-    "./antigravity/adapter": "./src/antigravity/adapter.ts"
+    "./antigravity/adapter": "./src/antigravity/adapter.ts",
+    "./engineering-context": "./src/engineering-context.ts"
   },
   "scripts": {
-    "test:unit": "node --test tests/*.test.mjs && vitest run tests/claude-adapter.test.ts tests/antigravity-adapter.test.ts",
+    "test:unit": "node --test tests/*.test.mjs && vitest run tests/claude-adapter.test.ts tests/antigravity-adapter.test.ts tests/engineering-context.test.ts tests/engineering-adapter-generator.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

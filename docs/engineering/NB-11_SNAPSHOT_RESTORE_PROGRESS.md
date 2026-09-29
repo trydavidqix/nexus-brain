@@ -1,6 +1,6 @@
 # NB-11 — Local Uncommitted Snapshot and Restore
 
-**Status:** Ready for final GitHub Actions and PR integration; independent review approved.
+**Status:** DONE — merged through PR #127 (`da816af`) after independent review and final GitHub Actions passed.
 
 ## Scope and recovery boundary
 
@@ -22,10 +22,12 @@ The implementation serializes create-capacity checks and flush delivery with a W
 - Windows Edge package unit suite: 10 files, 60 tests passed. Edge package TypeScript check passed. `actionlint .github/workflows/ci.yml` passed. Syntax/import smoke parsed 172 modules. Sensitive-data scan passed across 364 files. `git diff --check` passed.
 - Windows runner timeout tuning: each DPAPI subprocess has a finite 120-second timeout; the snapshot test file uses a 180-second default Vitest timeout, the cross-process queue-cap test has a 300-second timeout, and mutex-recovery test has a 180-second timeout. Queue failure diagnostics expose only child exit codes and allowlisted error codes, never stderr, paths, or secrets. Final Windows validation after this tuning: focused snapshot suite 14/14 passed in 78.74 seconds; complete Edge suite 10 files / 60 tests passed in 81.15 seconds; typecheck and actionlint passed.
 - Sanitized assertion diagnostics follow-up: after replacing the remaining raw-stderr assertion messages with the allowlisted child diagnostic, focused Windows snapshot suite passed 14/14 in 104.77 seconds; Edge typecheck and `git diff --check` passed.
+- Final local verification on PR head `1b93f27c791b88c5d2ceb4dac3da533c5dfaa36b`: focused snapshot suite 14/14, full Edge unit suite 10 files / 60 tests, Edge typecheck, `actionlint .github/workflows/ci.yml`, and `git diff --check` passed. Independent review approved. All PR checks passed, including the Windows CBM fixture, CodeQL, dependency review, Gitleaks, OSV, Semgrep, ZAP, MCG and OpenTofu.
 - `pnpm install --frozen-lockfile` could not build unrelated `better-sqlite3` because Visual Studio C++ build tools are absent. `pnpm install --frozen-lockfile --ignore-scripts` linked existing locked dependencies without downloads; Edge tests/typecheck do not require that native addon.
 
 Cross-process queue admission and flush serialization apply within the same Windows logon session. Delivery is at-least-once if the process exits after callback success but before local acknowledgement; the callback must treat `snapshot_id` as an idempotency key. The implementation does not claim cross-session locking or elimination of hostile same-user filesystem TOCTOU races.
 
-## Acceptance still pending
+## Integration
 
-- Final-head GitHub Actions, Blueprint status reconciliation, PR creation, and merge remain; root owns those gates. Independent review approved with no blocker.
+- PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127) merged by squash on 2026-09-29 as `da816af1de6da55dffd56519d9adb933497a6d6f`.
+- `main` is fast-forward synchronized to `origin/main` at `da816af1de6da55dffd56519d9adb933497a6d6f`; the canonical workspace is clean.
