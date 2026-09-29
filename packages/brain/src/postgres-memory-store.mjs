@@ -74,6 +74,27 @@ export class PostgresMemoryStore {
     return { inserted: result.rowCount === 1, sighting_id: sighting.sighting_id };
   }
 
+  async searchEvidence({ project_id, task_id, agent_id, query, limit = 10 } = {}) {
+    if (!project_id || !task_id || !agent_id || typeof query !== 'string' || !query.trim()) throw new Error('Research evidence lookup requires project, task, agent, and query scope.');
+    const boundedLimit = Number.isSafeInteger(limit) && limit > 0 ? Math.min(limit, 100) : 10;
+    const result = await this.pool.query(
+      `SELECT e.evidence_id, e.project_id, e.run_id, e.source, e.provider, e.capability,
+        e.url, e.canonical_url, e.title, e.body, e.snippet, e.author, e.published_at,
+        e.fetched_at, e.engagement, e.relevance, e.freshness, e.authority, e.query,
+        e.extraction_method, e.backend, e.content_hash, e.trust_level,
+        e.provenance || jsonb_build_object('task_id', r.task_id, 'agent_id', r.agent_id) AS provenance
+      FROM nexus_evidence_records e
+      JOIN nexus_research_runs r ON r.run_id = e.run_id AND r.project_id = e.project_id
+      WHERE e.project_id = $1 AND r.task_id = $2 AND r.agent_id = $3
+        AND r.status IN ('OK', 'PARTIAL') AND e.trust_level = 'UNTRUSTED'
+        AND position(lower($4) in lower(concat_ws(' ', e.title, e.snippet, e.body))) > 0
+      ORDER BY e.relevance DESC NULLS LAST, e.fetched_at DESC, e.evidence_id
+      LIMIT $5`,
+      [project_id, task_id, agent_id, query.trim().slice(0, 4_000), boundedLimit]
+    );
+    return result.rows;
+  }
+
   async persistRecord(record, { actor = { actor_id: 'system', actor_type: 'system' } } = {}) {
     const validation = validateContract('memory-record', record);
     if (!validation.valid) throw new Error('Canonical memory record failed the versioned memory-record contract.');
