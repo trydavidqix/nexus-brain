@@ -1,8 +1,10 @@
 # NB-13 Maestri control plane progress
 
-**Status:** IN_PROGRESS — implementation and independent review pass; final-head CI and integration pending
+**Status:** DONE — final-head GitHub Actions and independent review passed; PR #129 squash-merged and `main` synchronized
 **Branch:** `codex/nb13-maestri-control-plane`
-**Base:** `main` at `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`
+**Final branch head:** `0f3f2636b29ce4283fbf7e79825d3be6ac058a58`
+**PR:** [#129](https://github.com/trydavidqix/nexus-brain/pull/129), squash merge `aed758fcdc15f1a0f238e9ef8b3392f5edea0c8a` on 2026-09-29
+**Synchronized main:** `aed758fcdc15f1a0f238e9ef8b3392f5edea0c8a`
 **Owner decisions (2026-09-29):** EngineeringPlan v2 and the task-scoped bootstrap were approved. The production contract requires authenticated `engineering.execute`, typed `Project.policies.engineering`, exact registered `EngineeringPlanV2.model_profile`, ResourceRouter validation without profile substitution, mandatory `prepareEngineeringContext` before coding dispatch, and Maestri as sole authority for plan/decision/SkillSet/dispatch. The Owner also approved optional `policies.engineering.fallback_model_profile`: exact existing ModelRegistry ID, usable only after Maestri abstain/fallback authorization, at most one attempt, fail closed when absent, no router substitution, with use evidence recorded.
 
 ## Implemented locally
@@ -32,9 +34,9 @@ Fresh checks on the current branch passed on 2026-09-29 after fallback and idemp
 - Providers: 3 Node tests + 59 Vitest tests; typecheck passed.
 - Integration: 26/26; architecture: 16 packages; syntax/import: 178 modules; sensitive-data scan: 378 files; `git diff --check` passed.
 - Independent read-only review approved the fallback gate, exact profile, one-attempt limit, cache semantics, persistent trace, risk propagation, capability gate and legacy schema compatibility.
+- Final PR-head GitHub Actions passed: CBM Windows, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer, Semgrep OSS/SAST, ZAP baseline, and OSV Scanner.
 
-## Remaining acceptance work
+## Integration evidence
 
-1. Push the approved implementation and evidence to PR #129.
-2. Obtain green required GitHub Actions on the final PR head.
-3. Integrate PR #129 and synchronize `main`.
+- PR #129 was merged using the repository's squash-only flow after all final-head checks passed.
+- Canonical `main` was fast-forwarded from `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8` to `aed758fcdc15f1a0f238e9ef8b3392f5edea0c8a`; `HEAD` matched `origin/main` and the worktree was clean.

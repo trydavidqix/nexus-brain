@@ -8,14 +8,14 @@
 
 ## Progress
 
-- **Completed:** 15/25 work packages (60%)
-- **Last completed:** NB-12
-- **Current milestone:** NB-13 — Maestri control plane. Owner-approved bounded fallback is implemented and independently reviewed; fresh local checks pass. Final PR-head GitHub Actions and integration remain; bootstrap is disabled after native plan/SkillSet revalidation. See [`NB-13 progress`](NB-13_MAESTRI_CONTROL_PLANE_PROGRESS.md).
+- **Completed:** 16/25 work packages (64%)
+- **Last completed:** NB-13
+- **Current milestone:** NB-14 — Agent Factory, policy, approvals and bounded execution. Read-only discovery is complete. Code is blocked because the required Maestri-issued EngineeringPlan and Resolver-selected TaskSkillSet are not available in this terminal (`MAESTRI_PIPE not set`). See [`NB-14 progress`](NB-14_AGENT_FACTORY_PROGRESS.md).
 - **NB-11 Owner decision:** DPAPI CurrentUser approved; key restore is limited to the same Windows user profile and machine
 - **NB-08 branch:** `codex/nb08-hybrid-retrieval`
 - **NB-11 branch:** `codex/nb11-snapshot-restore`, PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127)
 - **NB-09:** PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), squash-merged as `f528849`
-- **Current main after NB-12:** `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`
+- **Current main after NB-13:** `aed758fcdc15f1a0f238e9ef8b3392f5edea0c8a`
 - **Earlier integration:** PR [#124](https://github.com/trydavidqix/nexus-brain/pull/124), squash-merged as `25265fc`
 
 ## Completed work packages
@@ -38,7 +38,7 @@
 - [x] NB-09
 - [x] NB-11
 - [x] NB-12
-- [ ] NB-13
+- [x] NB-13
 - [ ] NB-14
 - [ ] NB-15
 - [ ] NB-16
@@ -56,8 +56,9 @@
 - NB-11 Owner decision approved Windows DPAPI CurrentUser for the persistent key, limited to the same profile/machine. PR [#127](https://github.com/trydavidqix/nexus-brain/pull/127) contains the implementation, 14/14 focused and 60/60 Edge unit tests, typecheck, independent review approval, and final GitHub Actions; queue-cap locking is tested across two processes at the real cap of 100.
 - NB-09 completed through PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), head `96fe754`, squash merge `f528849`. The Owner-approved corpus has 24 deterministic cases (14/4/6); the 6-case held-out set observed 0 risk false negatives and 0 approval false negatives. Focused Maestri tests 9/9, Control Plane 27/27, Contracts Node 46/46 + Vitest 1/1, both typechecks, independent review, and all final-head GitHub checks including Windows CBM, MCG, OpenTofu and security passed. The classifier remains benchmark/shadow-only because held-out route accuracy is below the deterministic baseline.
 - NB-12 is complete through PR [#128](https://github.com/trydavidqix/nexus-brain/pull/128), squash-merged as `9aa6547b68475b62d41c4fb491fb8d90cfd4c9f8`; the Owner-approved adapter boundary, local tests/typechecks, independent review, required GitHub checks and synchronized `main` are recorded in [`NB-12 progress`](NB-12_PROVIDER_ADAPTERS_PROGRESS.md).
-- NB-13 discovery found that the subordinate Engineering Control Plane plan lists `goal_id`, `ceremony`, `quality_profile`, `model_profile` and `stop_conditions`, absent from v1. The Owner approved a versioned v2 plus adapter migration; v1 remains preserved. Implementation is on `codex/nb13-maestri-control-plane`.
-- NB-13 Owner decisions require `engineering.execute`, typed `Project.policies.engineering`, exact ModelRegistry profile, mandatory Maestri context before dispatch, and Maestri as sole authority. Optional `fallback_model_profile` is exact, allowed only after Maestri abstain/fallback, limited to one attempt, fail-closed when absent, and recorded with profile, decision ID and reasons. Independent review and fresh local checks pass; final-head CI and integration remain. Bootstrap evidence is retained historically and marked disabled after native plan/SkillSet revalidation.
+- NB-13 discovery found that the subordinate Engineering Control Plane plan lists `goal_id`, `ceremony`, `quality_profile`, `model_profile` and `stop_conditions`, absent from v1. The Owner approved a versioned v2 plus adapter migration; v1 remains preserved. The native path was integrated in PR #129, squash merge `aed758f`.
+- NB-13 is complete: Owner decisions require `engineering.execute`, typed `Project.policies.engineering`, exact ModelRegistry profile, mandatory Maestri context before dispatch, and Maestri as sole authority. Optional `fallback_model_profile` is exact, allowed only after Maestri abstain/fallback, limited to one attempt, fail-closed when absent, and recorded with profile, decision ID and reasons. Independent review, focused/local checks, final-head GitHub Actions, PR integration and synchronized clean `main` are evidenced in [`NB-13 progress`](NB-13_MAESTRI_CONTROL_PLANE_PROGRESS.md). Bootstrap evidence remains historical and disabled after native plan/SkillSet revalidation.
+- NB-14 read-only discovery confirmed NB-13 integrated and mapped partial existing enforcement in Skill Resolver, Workforce Orchestrator, approval, scope and evidence gates. Implementation has not started: `core-discipline` requires the task's Maestri-issued EngineeringPlan and Resolver-selected task/agent SkillSet; the Maestri CLI reports `MAESTRI_PIPE not set` in this terminal. See [`NB-14 progress`](NB-14_AGENT_FACTORY_PROGRESS.md). No browser runtime/host work from NB-15 is in scope.
 
 ## Update and sync rules
 
