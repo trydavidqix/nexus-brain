@@ -1,6 +1,6 @@
 # NB-07 Code Intelligence progress
 
-**Status:** IN PROGRESS. Implementation is on `codex/nb07-code-intelligence`; do not mark accepted until the pinned CBM Windows integration fixture and required GitHub Actions checks pass.
+**Status:** IN PROGRESS. Implementation is validated at code commit `9b836c8`; PR #123 integration remains pending.
 **Dependencies:** NB-01, NB-06 and NB-06A are present on `main`.
 **Scope:** provider-neutral `CodeIntelligenceEngine`, initial pinned CBM 0.11.0 adapter, Project v2 workspace binding isolation, advisory graph evidence, bounded direct-source/Git fallback, explicit cross-repository target selection, and Windows CI fixture.
 **Validation policy:** tests, typecheck, integration and security validation run only in GitHub Actions. No local tests, typecheck, package installation or CBM execution are authorized on this PC.
@@ -20,14 +20,24 @@
 3. Independent static review reports no blocker; any remediation is followed by fresh GitHub Actions checks.
 4. Final evidence, commit and merge are recorded here and in the canonical Blueprint before NB-07 is marked DONE.
 
-## Current checkpoint — 2026-09-28
+## Current checkpoint — 2026-09-29
+
+- PR #123 carries implementation commit `9b836c8b1fc6c15657e8f20c810af1f90b1aab83` on `codex/nb07-code-intelligence`.
+- Commit `685fd7f` fixes CBM 0.11.0's unsupported `type(e)` WHERE expression by listing its six supported cross-edge relationship types. The Windows runtime fixture passed in runs `36502938536` and `36502934633`.
+- Commit `7d42b94` adds bounded cleanup retries for transient Windows `EBUSY` locks. The fixture passed after this change.
+- Commit `9b836c8` removes dynamic RegExp construction from direct-source search and preserves JavaScript `\\b` boundary behavior with literal search. Regression coverage includes `$foo`, `foo$`, `foo$!`, and partial-name rejection.
+- Independent review approved the query fix, safe diagnostic categories, cleanup retries, and final source-search fix. No local tests, typecheck, install, or CBM execution were run; validation stays on GitHub Actions per this milestone's policy.
+- Fresh Actions evidence on `9b836c8`: Windows fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP, and OSV passed. Runs: `36502934633`, `36502938536`, `36502938509`, `36502938586`, `36502938596`, `36502938712`; see [PR #123 checks](https://github.com/trydavidqix/nexus-brain/pull/123).
+- Required checks on implementation commit `9b836c8` are green and review threads are resolved. NB-07 remains unaccepted until the final PR head passes checks and squash integration completes.
+
+## Historical checkpoint — 2026-09-28
 
 - PR #123 is open from `codex/nb07-code-intelligence` with latest implementation commit `a9ff5b802866142f5ac901b2817793af72aaef81`; the working tree was clean before this documentation synchronization.
 - At implementation commit `a9ff5b802866142f5ac901b2817793af72aaef81`, Windows CBM runtime checks failed on runs `36456609716` and `36456604691`; a separate CodeQL run failed (`109044845613`). MCG, OpenTofu, dependency review, Gitleaks, Jazzer.js, Semgrep and ZAP/OSV reporting checks passed in the observed runs. PR #123 was merge-blocked; see [PR #123 checks](https://github.com/trydavidqix/nexus-brain/pull/123). The current documentation sync does not change implementation code.
 - CI confirmed source and target index generations, but `query_graph` exited nonzero. The exact error is not established from safely retained evidence.
 - The test helper at that implementation commit still returns structured error text after heuristic redactions. Independent review identified this as a blocker because the redactions cannot guarantee that paths or secrets are removed. Keep raw CI diagnostics out of project notes; replace the output with an allowlisted category plus safe metadata before another run.
 - NB-07 remains IN PROGRESS and is not eligible for merge or DONE. Implementation execution is paused; this update records documentation state only.
-## Current evidence
+## Historical implementation evidence
 
 - The package and Windows workflow are present in the working tree; the CI job is configured to download and checksum-verify the pinned CBM archive, then run the isolated Windows fixture.
 - No test, typecheck, install, adapter execution or runtime check has run locally on this PC. The first PR run confirmed Linux unit tests and OpenTofu checks pass, but the Windows fixture setup attempted to build unrelated `better-sqlite3` native code and failed because the hosted runner has no Visual Studio C++ workload. Commit `d4104f9` changed the Windows job to install only the Code Intelligence dependency closure with lifecycle scripts disabled.
