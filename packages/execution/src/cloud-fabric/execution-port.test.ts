@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { AntigravityAdapter } from "@nexus-brain/providers/antigravity/adapter";
 import { CodexAdapter } from "@nexus-brain/providers/codex/adapter";
-import type { TaskContract } from "@nexus-brain/contracts/execution/port";
+import type { ProviderEngineeringContext, TaskContract } from "@nexus-brain/contracts/execution/port";
 
 const contract: TaskContract = {
   task_id: "task-1",
@@ -17,6 +17,39 @@ const contract: TaskContract = {
   execution_budget: { seconds: 30, cost_usd: 0.1 },
   preferred_provider: "codex",
   evidence_required: ["tests"],
+};
+
+const engineeringContext: ProviderEngineeringContext = {
+  engineering_plan: {
+    task_id: contract.task_id,
+    agent_id: "agent-execution-port-test",
+    task_type: "TEST_ONLY",
+    risk_level: "R1",
+    scope_size: "small",
+    expected_files: ["packages/execution/src/cloud-fabric/execution-port.test.ts"],
+    expected_tests: ["ExecutionPort contract"],
+    contract_impact: [],
+    testability: "unit",
+    execution_mode: "write",
+    autonomy_level: "A1",
+    skill_policy: { required: [], optional: [], forbidden: [], loaded: [], completed: [] },
+    context_budget: contract.context_budget,
+    tool_profile: ["read_file"],
+    verification_gates: ["unit tests"],
+    delivery_policy: { commit: false },
+  },
+  task_skill_set: {
+    task_id: contract.task_id,
+    agent_id: "agent-execution-port-test",
+    required: [],
+    optional: [],
+    forbidden: [],
+    loaded: [],
+    completed: [],
+    context_budget: contract.context_budget,
+  },
+  tool_profile: ["read_file"],
+  loaded_skills: [],
 };
 
 describe("ExecutionPort contract", () => {
@@ -51,7 +84,7 @@ describe("ExecutionPort contract", () => {
       }),
     });
 
-    await expect(adapter.execute(contract)).resolves.toMatchObject({
+    await expect(adapter.execute(contract, engineeringContext)).resolves.toMatchObject({
       task_id: "task-1",
       status: "success",
       files_changed: ["src/example.ts"],
@@ -77,7 +110,7 @@ describe("ExecutionPort contract", () => {
       }),
     });
 
-    const result = await adapter.execute(contract);
+    const result = await adapter.execute(contract, engineeringContext);
     expect(result.usage).toEqual({ input_tokens: 10, cached_tokens: 4, output_tokens: 6, duration_ms: 25, cost_usd: 0 });
     await expect(adapter.usage()).resolves.toEqual(result.usage);
   });
