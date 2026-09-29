@@ -1,6 +1,6 @@
 # NB-08 Hybrid Retrieval progress
 
-**Status:** IN PROGRESS — local validation, independent review and PR checks pass; integration remains pending.
+**Status:** DONE — PR #124 was squash-merged into `main` as `25265fc7747614bc70db06f8a11db88161648e83`.
 **Dependencies:** NB-05 and NB-07 are accepted on `main`.
 **Branch:** `codex/nb08-hybrid-retrieval`.
 **Scope:** project memory, Code Intelligence and governed research-evidence retrieval; bounded research fanout; normalized, deduplicated and ranked evidence; grounded findings; scoped cross-project reuse; abstention and partial coverage.
@@ -36,9 +36,8 @@ Final read-only review approved the implementation. It confirmed project/task/ag
 
 ## GitHub Actions evidence
 
-PR [#124](https://github.com/trydavidqix/nexus-brain/pull/124) head `738771c88f91bcca632411a418d340cfe2ad912e` passed all listed checks: Windows CBM fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP baseline, and OSV Scanner. Workflow runs: `36507877514`, `36507877532`, `36507877535`, `36507877576`, and `36507877601`.
+PR [#124](https://github.com/trydavidqix/nexus-brain/pull/124) final head `e4231f0128f69b83e9aa276957f0c577cf1fe37f` passed all listed checks: Windows CBM fixture, MCG, OpenTofu, CodeQL, dependency review, Gitleaks, Jazzer.js, Semgrep OSS/SAST, ZAP baseline, and OSV Scanner. Workflow runs: `36508311391`, `36508315226`, `36508315244`, `36508315250`, `36508315344`, and `36508315379`. PR #124 was squash-merged as `25265fc7747614bc70db06f8a11db88161648e83`; `main` was fast-forward-synchronized to that commit and clean.
 
-## Pending integration gates
+## Acceptance
 
-- Squash-merge PR #124 after final checks.
-- Complete integration and synchronize `main` before marking NB-08 DONE.
+- Implementation, tests, independent review, final-head GitHub Actions, PR integration and `main` synchronization are complete.
