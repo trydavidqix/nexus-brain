@@ -3,7 +3,7 @@
 **Status:** BLOCKED — implementation is in progress; acceptance evidence is incomplete.
 **Branch:** `codex/nb09-decision-tiers`
 **Base:** `779d334ddacae82bdde4643c1a04d5d04c4240a2`
-**Updated:** 2026-09-29 03:39 Europe/Lisbon
+**Updated:** 2026-09-29 03:47 Europe/Lisbon
 
 ## Implemented locally
 
@@ -24,7 +24,8 @@ Final local verification after the event-failure regression test:
 - Control Plane and Contracts typechecks passed.
 - `git diff --check` passed; Git printed line-ending conversion warnings for changed Windows text files.
 - RED/GREEN regressions cover missing/candidate/out-of-scope required skills and dependencies, metadata/state mutation, concurrent load budget, selection revocation during body read, resolver attempts while the `LOADED` event is pending, and event-writer failure with lock release and successful retry.
-- Independent review approved the commit lock and deferred-event coherence. Review of the final event-writer failure test is pending. GitHub Actions have not run because no PR is open yet.
+- Independent review approved the implementation and the final event-writer failure test.
+- Draft PR [#126](https://github.com/trydavidqix/nexus-brain/pull/126), code head `8958c01`: all GitHub Actions passed, including CodeQL, Dependency Review, Gitleaks, Semgrep, OSV, ZAP, MCG, OpenTofu, and the Windows CBM fixture. First MCG attempt failed because the PR title violated the Git naming contract; a policy-compliant title was set and the MCG rerun passed without a code change.
 
 The standard frozen install initially failed while building the existing `better-sqlite3` native addon because Visual Studio C++ Build Tools are unavailable. `pnpm install --frozen-lockfile --ignore-scripts` linked the already-declared JS dependencies without tracked-file or lockfile changes. NB-09 tests do not use the native addon.
 
