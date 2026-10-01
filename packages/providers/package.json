@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@nexus-brain/contracts": "workspace:*",
-    "@openai/codex-sdk": "0.155.1"
+    "@openai/codex-sdk": "0.156.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",
